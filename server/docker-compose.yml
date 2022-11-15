@@ -1,10 +1,11 @@
 version: '3'
 
 services:
-  blogdb:
+  blog:
     image: postgres
     restart: always
     ports:
       - '5432:5432'
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
