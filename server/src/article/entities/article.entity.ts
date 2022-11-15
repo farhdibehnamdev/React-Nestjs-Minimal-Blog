@@ -36,6 +36,12 @@ export default class Article {
   @Column({ default: 0 })
   likes: number;
 
+  @Column({ default: 0 })
+  views: number;
+
+  @Column()
+  mainImageUrl: string;
+
   @ManyToOne(() => User, (user) => user.articles)
   user: User;
 
