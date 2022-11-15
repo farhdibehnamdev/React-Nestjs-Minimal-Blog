@@ -1,3 +1,4 @@
+import { Category } from 'src/category/entities/Category.entity';
 import { Tag } from 'src/tag/entities/tag.entity';
 import User from 'src/user/entities/user.entity';
 import {
@@ -37,6 +38,9 @@ export default class Article {
 
   @ManyToOne(() => User, (user) => user.articles)
   user: User;
+
+  @ManyToOne(() => Category, (Category) => Category.articles)
+  category: Category;
 
   @JoinTable()
   @ManyToMany(() => Tag, (tag) => tag.articles)
