@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import Article from 'src/article/entities/article.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export default class User {
@@ -18,5 +19,8 @@ export default class User {
   password: string;
 
   @Column()
-  passwordConfirm: string;
+  confirmPassword: string;
+
+  @OneToMany(() => Article, (article) => article.user)
+  articles: Article[];
 }
