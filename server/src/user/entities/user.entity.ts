@@ -18,9 +18,6 @@ export default class User {
   @Column()
   password: string;
 
-  @Column()
-  confirmPassword: string;
-
   @OneToMany(() => Article, (article) => article.user)
   articles: Article[];
 }
