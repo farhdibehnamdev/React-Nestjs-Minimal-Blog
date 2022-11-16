@@ -1,5 +1,11 @@
-import { IsString, IsBoolean, IsDate, IsNotEmpty } from 'class-validator';
-import { Column } from 'typeorm';
+import {
+  IsString,
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsUUID,
+} from 'class-validator';
+
 export class CreateArticleDto {
   @IsString()
   title: string;
@@ -11,9 +17,18 @@ export class CreateArticleDto {
   @IsBoolean()
   isPublished: boolean;
 
-  @IsDate()
-  publishedAt: Date;
+  @IsString()
+  publishedAt: string;
 
-  @Column()
+  @IsString()
   mainImageUrl: string;
+
+  @IsNumber()
+  categoryId: number;
+
+  @IsUUID()
+  userId: string;
+
+  @IsString({ each: true })
+  tags: string[];
 }
