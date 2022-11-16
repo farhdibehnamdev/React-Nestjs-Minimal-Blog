@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ArticleModule } from './article/article.module';
-import { CategoryModule } from './categories/categories.module';
-import { TagsController } from './tags/tags.controller';
+import { CategoryModule } from './category/category.module';
+import { TagController } from './tag/tag.controller';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { TagService } from './tag/tag.service';
+import { TagModule } from './tag/tag.module';
 
 import * as dotenv from 'dotenv';
 dotenv.config({ path: '.env' });
@@ -24,12 +26,9 @@ dotenv.config({ path: '.env' });
     ArticleModule,
     CategoryModule,
     UserModule,
+    TagModule,
   ],
-  controllers: [TagsController],
+  controllers: [TagController],
+  providers: [TagService],
 })
-export class AppModule {
-  constructor() {
-    console.log(process.env.USERNAMEDB);
-    console.log(process.env.POSTGRES_PASSWORD);
-  }
-}
+export class AppModule {}
