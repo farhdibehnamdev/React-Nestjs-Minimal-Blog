@@ -28,9 +28,9 @@ export class ArticleService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: number) {
     const article = await this.articleRepository.findOne({
-      where: { id: parseInt(id, 10) },
+      where: { id },
     });
     if (!article) {
       throw new NotFoundException(`We couldn't find your article!!`);
