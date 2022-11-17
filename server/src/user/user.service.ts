@@ -72,7 +72,7 @@ export class UserService {
     return this.userRepository.remove(userFound);
   }
 
-  async refreshToken(token: string): Promise<JWTTokens> {
+  async refreshTokens(token: string): Promise<JWTTokens> {
     try {
       const { sub: email } = await this.jwtService.verifyAsync(token, {
         secret: this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET'),
