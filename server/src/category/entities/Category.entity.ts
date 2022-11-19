@@ -1,6 +1,6 @@
 import Article from 'src/article/entities/article.entity';
-import { Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+@Entity()
 export class Category {
   @PrimaryGeneratedColumn()
   id: number;
@@ -8,6 +8,9 @@ export class Category {
   @Column()
   title: string;
 
-  @OneToMany(() => Article, (article) => article.category)
+  @Column({ nullable: true })
+  description: string;
+
+  @OneToMany(() => Article, (article) => article.category, { cascade: true })
   articles: Article[];
 }
