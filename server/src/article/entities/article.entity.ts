@@ -1,4 +1,4 @@
-import { Category } from 'src/category/entities/Category.entity';
+import { Category } from 'src/category/entities/category.entity';
 import { Tag } from 'src/tag/entities/tag.entity';
 import User from 'src/user/entities/user.entity';
 import {
@@ -30,7 +30,7 @@ export default class Article {
   @Column()
   publishedAt: Date;
 
-  @Column()
+  @Column({ nullable: true })
   updatedAt: Date;
 
   @Column({ default: 0 })
@@ -49,6 +49,6 @@ export default class Article {
   category: Category;
 
   @JoinTable()
-  @ManyToMany(() => Tag, (tag) => tag.articles)
+  @ManyToMany(() => Tag, (tag) => tag.articles, { cascade: true })
   tags: Tag[];
 }
