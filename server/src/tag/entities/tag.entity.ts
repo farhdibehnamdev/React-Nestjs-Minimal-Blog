@@ -8,6 +8,9 @@ export class Tag {
   @Column()
   title: string;
 
+  @Column({ nullable: true })
+  description: string;
+
   @ManyToMany(() => Article, (article) => article.tags)
   articles: Article[];
 }
