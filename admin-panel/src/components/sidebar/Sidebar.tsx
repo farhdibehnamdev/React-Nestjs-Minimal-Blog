@@ -5,22 +5,36 @@ import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
-import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
-
+import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import LogoutIcon from "@mui/icons-material/Logout";
+import Person2OutlinedIcon from "@mui/icons-material/Person2Outlined";
+import {
+  Avatar,
+  Badge,
+  TextField,
+  InputAdornment,
+  Stack,
+  Grid,
+} from "@mui/material";
+import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
+import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
+import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
+import FormatListBulletedOutlinedIcon from "@mui/icons-material/FormatListBulletedOutlined";
+import sidebarStyle from "./Sidebar.style";
+import FullscreenOutlinedIcon from "@mui/icons-material/FullscreenOutlined";
+import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
+import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
+import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
+import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 const drawerWidth = 240;
-
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
   transition: theme.transitions.create("width", {
@@ -41,6 +55,35 @@ const closedMixin = (theme: Theme): CSSObject => ({
     width: `calc(${theme.spacing(8)} + 1px)`,
   },
 });
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  "& .MuiBadge-badge": {
+    backgroundColor: "#44b700",
+    color: "#44b700",
+    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+    "&::after": {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      borderRadius: "50%",
+      animation: "ripple 1.2s infinite ease-in-out",
+      border: "1px solid currentColor",
+      content: '""',
+    },
+  },
+  "@keyframes ripple": {
+    "0%": {
+      transform: "scale(.8)",
+      opacity: 1,
+    },
+    "100%": {
+      transform: "scale(2.4)",
+      opacity: 0,
+    },
+  },
+}));
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -66,7 +109,6 @@ const AppBar = styled(MuiAppBar, {
   }),
   ...(open && {
     marginLeft: drawerWidth,
-    boxShadow: "none",
     width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
@@ -94,7 +136,7 @@ const Drawer = styled(MuiDrawer, {
 
 export default function MiniDrawer() {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -106,117 +148,279 @@ export default function MiniDrawer() {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar position="fixed" sx={{ textAlign: "right" }} open={open}>
-        <Toolbar>
+      <AppBar
+        position="fixed"
+        sx={{
+          textAlign: "right",
+          background: "none",
+          boxShadow: "none",
+          marginTop: "10px",
+        }}
+        open={open}
+      >
+        <Toolbar sx={{ display: "flex", alignItems: "center", gap: "30px" }}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
-            edge="start"
+            edge="end"
+            // sx={{
+            //   marginRight: 5,
+            //   ...(open && { display: "none" }),
+            // }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: "8px",
+                background: "#fff",
+                borderRadius: "4px",
+              }}
+            >
+              <MenuIcon sx={{ color: "#000" }} />
+            </Box>
+          </IconButton>
+          <Grid item>
+            <TextField
+              variant="filled"
+              hiddenLabel
+              InputLabelProps={{
+                disableAnimation: true,
+                shrink: false,
+              }}
+              InputProps={{
+                disableUnderline: true,
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <SearchOutlinedIcon />
+                  </InputAdornment>
+                ),
+                style: {
+                  background: "#fff",
+                  borderRadius: "5px",
+                  height: 40,
+                  width: "30vw",
+                },
+              }}
+              sx={{
+                background: "#fff",
+                outline: 0,
+                margin: 0,
+                borderRadius: "5px",
+                display: "flex",
+                alignItems: "flex-start",
+                justifyContent: "center",
+              }}
+              id="search"
+              placeholder="جستجو"
+            />
+          </Grid>
+          <Box
             sx={{
-              marginRight: 5,
-              ...(open && { display: "none" }),
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginLeft: "auto",
             }}
           >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Mini variant drawer
-          </Typography>
+            <IconButton
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "20px",
+              }}
+            >
+              <FullscreenOutlinedIcon
+                sx={{ color: "#000", width: "24px", height: "24px" }}
+              />
+              <ChatBubbleOutlineOutlinedIcon
+                sx={{ color: "#000", width: "24px", height: "24px" }}
+              />
+              <NotificationsOutlinedIcon
+                sx={{ color: "#000", width: "24px", height: "24px" }}
+              />
+            </IconButton>
+          </Box>
         </Toolbar>
       </AppBar>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <DrawerHeader />
-        <Typography paragraph>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus
-          dolor purus non enim praesent elementum facilisis leo vel. Risus at
-          ultrices mi tempus imperdiet. Semper risus in hendrerit gravida rutrum
-          quisque non tellus. Convallis convallis tellus id interdum velit
-          laoreet id donec ultrices. Odio morbi quis commodo odio aenean sed
-          adipiscing. Amet nisl suscipit adipiscing bibendum est ultricies
-          integer quis. Cursus euismod quis viverra nibh cras. Metus vulputate
-          eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo
-          quis imperdiet massa tincidunt. Cras tincidunt lobortis feugiat
-          vivamus at augue. At augue eget arcu dictum varius duis at consectetur
-          lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa sapien
-          faucibus et molestie ac.
-        </Typography>
-        <Typography paragraph>
-          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est
-          ullamcorper eget nulla facilisi etiam dignissim diam. Pulvinar
-          elementum integer enim neque volutpat ac tincidunt. Ornare suspendisse
-          sed nisi lacus sed viverra tellus. Purus sit amet volutpat consequat
-          mauris. Elementum eu facilisis sed odio morbi. Euismod lacinia at quis
-          risus sed vulputate odio. Morbi tincidunt ornare massa eget egestas
-          purus viverra accumsan in. In hendrerit gravida rutrum quisque non
-          tellus orci ac. Pellentesque nec nam aliquam sem et tortor. Habitant
-          morbi tristique senectus et. Adipiscing elit duis tristique
-          sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
-          eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
-          posuere sollicitudin aliquam ultrices sagittis orci a.
-        </Typography>
-      </Box>
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
+
+      <Drawer variant="permanent" open={open} sx={sidebarStyle}>
+        <DrawerHeader className="logoWrapper">
+          <img className="logo" src="/assets/images/logo.png" alt="logo" />
         </DrawerHeader>
-        <Divider />
-        <List>
-          {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
+        <Box className="boxProfileSidebar">
+          <StyledBadge
+            overlap="circular"
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            variant="dot"
+          >
+            <Avatar
+              className="avatar"
+              alt="Remy Sharp"
+              src="/assets/images/avatar.jpg"
+            />
+          </StyledBadge>
+          <Typography component="h5">جان اسنو</Typography>
+          <Typography component="span" className="typographyUserRoleSpan">
+            مدیر
+          </Typography>
+          <Stack direction="row" spacing={2}>
+            <IconButton
+              sx={{
+                background: "rgba(34, 185, 255, 0.3)",
+                boxShadow: "none",
+                padding: "10px 15px",
+                borderRadius: "4px",
+              }}
+              size="small"
+            >
+              <Person2OutlinedIcon fontSize="inherit" />
+            </IconButton>
+            <IconButton
+              sx={{
+                background: "rgba(16, 183, 89, 0.3) ",
+                boxShadow: "none",
+                padding: "10px 15px",
+                borderRadius: "4px",
+              }}
+              size="small"
+            >
+              <SettingsOutlinedIcon fontSize="inherit" />
+            </IconButton>
+            <IconButton
+              sx={{
+                background: "rgba(255, 63, 63, 0.3)",
+                boxShadow: "none",
+                padding: "10px 15px",
+                borderRadius: "4px",
+              }}
+              size="small"
+            >
+              <LogoutIcon fontSize="inherit" />
+            </IconButton>
+          </Stack>
+        </Box>
+        <List className="menuList">
+          <ListItem disablePadding sx={{ display: "block" }}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+                marginRight: "10px",
+              }}
+            >
+              <ListItemIcon
                 sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
                 }}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {["All mail", "Trash", "Spam"].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
+                <DashboardOutlinedIcon />
+              </ListItemIcon>
+              <ListItemText primary="داشبورد" sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
                 sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
                 }}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          ))}
+                <FormatListBulletedOutlinedIcon />
+              </ListItemIcon>
+              <ListItemText primary="پست ها" sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                <LocalOfferOutlinedIcon />
+              </ListItemIcon>
+              <ListItemText primary="تگ ها" sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                <EmailOutlinedIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="ارسال پیام"
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+            </ListItemButton>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                <ManageAccountsOutlinedIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="مدیریت کاربران"
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+            </ListItemButton>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                <LogoutIcon />
+              </ListItemIcon>
+              <ListItemText primary="خروج" sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
         </List>
       </Drawer>
     </Box>
