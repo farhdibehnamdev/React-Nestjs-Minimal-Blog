@@ -1,15 +1,13 @@
 import React from "react";
-import { Grid } from "@mui/material";
 import Sidebar from "../sidebar/Sidebar";
+import Header from "../header/Header";
+import Dashboard from "../dashboard/Dashboard";
 const Layout = function () {
   return (
     <>
-      <Grid container columnGap={5}>
-        <Grid item>
-          <Sidebar />
-        </Grid>
-        <Grid></Grid>
-      </Grid>
+      <Header />
+      <Dashboard />
+      <Sidebar />
     </>
   );
 };

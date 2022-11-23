@@ -1,24 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import Layout from "./components/layout/Layout";
+import rtlPlugin from "stylis-plugin-rtl";
+import { prefixer } from "stylis";
+import createCache from "@emotion/cache";
+import { CacheProvider } from "@emotion/react";
+import { CssBaseline, Grid, ThemeProvider } from "@mui/material";
+import theme from "./styles/theme";
+
+const cacheRTL = createCache({
+  key: "muirtl",
+  stylisPlugins: [prefixer, rtlPlugin],
+});
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ width: "100%" }}>
+      <CacheProvider value={cacheRTL}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Layout />
+        </ThemeProvider>
+      </CacheProvider>
     </div>
   );
 }
