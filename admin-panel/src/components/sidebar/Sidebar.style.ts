@@ -2,7 +2,7 @@ import { SxProps } from "@mui/material";
 
 const sidebarStyle: SxProps = {
   ".logoWrapper": {
-    display: "felx",
+    display: "flex",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: "20px",
