@@ -1,5 +1,5 @@
 import * as React from "react";
-import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
+import { styled, Theme, CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
@@ -18,8 +18,9 @@ import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlin
 import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
 import FormatListBulletedOutlinedIcon from "@mui/icons-material/FormatListBulletedOutlined";
 import sidebarStyle from "./Sidebar.style";
-
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import { SidebarProps } from "./SidebarProps";
+
 const drawerWidth = 240;
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
@@ -98,6 +99,15 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
+const menuNamesAndIcons: SidebarProps[] = [
+  { menuTitle: "داشبورد", menuIconMUI: <DashboardOutlinedIcon /> },
+  { menuTitle: "پست ها", menuIconMUI: <FormatListBulletedOutlinedIcon /> },
+  { menuTitle: "تگ ها", menuIconMUI: <LocalOfferOutlinedIcon /> },
+  { menuTitle: "ارسال پیام", menuIconMUI: <EmailOutlinedIcon /> },
+  { menuTitle: "مدیریت کاربران", menuIconMUI: <ManageAccountsOutlinedIcon /> },
+  { menuTitle: "خروج", menuIconMUI: <LogoutIcon /> },
+];
+
 export default function MiniDrawer() {
   const [open, setOpen] = React.useState(true);
 
@@ -125,34 +135,19 @@ export default function MiniDrawer() {
           </Typography>
           <Stack direction="row" spacing={2}>
             <IconButton
-              sx={{
-                background: "rgba(34, 185, 255, 0.3)",
-                boxShadow: "none",
-                padding: "10px 15px",
-                borderRadius: "4px",
-              }}
+              className="profileStyleIconButton personIconButton"
               size="small"
             >
               <Person2OutlinedIcon fontSize="inherit" />
             </IconButton>
             <IconButton
-              sx={{
-                background: "rgba(16, 183, 89, 0.3)",
-                boxShadow: "none",
-                padding: "10px 15px",
-                borderRadius: "4px",
-              }}
+              className="profileStyleIconButton settingIconButton"
               size="small"
             >
               <SettingsOutlinedIcon fontSize="inherit" />
             </IconButton>
             <IconButton
-              sx={{
-                background: "rgba(255, 63, 63, 0.3)",
-                boxShadow: "none",
-                padding: "10px 15px",
-                borderRadius: "4px",
-              }}
+              className="profileStyleIconButton exitIconButton"
               size="small"
             >
               <LogoutIcon fontSize="inherit" />
@@ -161,121 +156,29 @@ export default function MiniDrawer() {
         </Box>
         <List className="menuList">
           <ListItem disablePadding sx={{ display: "block" }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-                marginRight: "10px",
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
-                }}
-              >
-                <DashboardOutlinedIcon />
-              </ListItemIcon>
-              <ListItemText primary="داشبورد" sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
-                }}
-              >
-                <FormatListBulletedOutlinedIcon />
-              </ListItemIcon>
-              <ListItemText primary="پست ها" sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
-                }}
-              >
-                <LocalOfferOutlinedIcon />
-              </ListItemIcon>
-              <ListItemText primary="تگ ها" sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
-                }}
-              >
-                <EmailOutlinedIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary="ارسال پیام"
-                sx={{ opacity: open ? 1 : 0 }}
-              />
-            </ListItemButton>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
-                }}
-              >
-                <ManageAccountsOutlinedIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary="مدیریت کاربران"
-                sx={{ opacity: open ? 1 : 0 }}
-              />
-            </ListItemButton>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
-                }}
-              >
-                <LogoutIcon />
-              </ListItemIcon>
-              <ListItemText primary="خروج" sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
+            {menuNamesAndIcons.map((item) => {
+              return (
+                <ListItemButton
+                  className="listStyleItemButton"
+                  sx={{
+                    justifyContent: open ? "initial" : "center",
+                  }}
+                >
+                  <ListItemIcon
+                    className="listStyleItemIcon"
+                    sx={{
+                      mr: open ? 3 : "auto",
+                    }}
+                  >
+                    {item.menuIconMUI}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={item.menuTitle}
+                    sx={{ opacity: open ? 1 : 0 }}
+                  />
+                </ListItemButton>
+              );
+            })}
           </ListItem>
         </List>
       </Drawer>
