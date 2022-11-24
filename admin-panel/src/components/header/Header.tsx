@@ -9,6 +9,7 @@ import FullscreenOutlinedIcon from "@mui/icons-material/FullscreenOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
+import headerStyle from "./Header.style";
 const drawerWidth = 240;
 
 interface AppBarProps extends MuiAppBarProps {
@@ -35,7 +36,7 @@ const AppBar = styled(MuiAppBar, {
 const Header = function () {
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
-    setOpen(true);
+    setOpen(!open);
   };
 
   const handleDrawerClose = () => {
@@ -44,38 +45,19 @@ const Header = function () {
 
   return (
     <>
-      <AppBar
-        position="fixed"
-        sx={{
-          textAlign: "right",
-          background: "none",
-          boxShadow: "none",
-          marginTop: "10px",
-        }}
-        open={open}
-      >
-        <Toolbar sx={{ display: "flex", alignItems: "center", gap: "30px" }}>
+      <AppBar sx={headerStyle} open={open}>
+        <Toolbar className="toolbarStyle">
           <IconButton
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="end"
-            // sx={{
-            //   marginRight: 5,
-            //   ...(open && { display: "none" }),
-            // }}
+            sx={{
+              marginLeft: 5,
+            }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                padding: "8px",
-                background: "#fff",
-                borderRadius: "4px",
-              }}
-            >
-              <MenuIcon sx={{ color: "#000" }} />
+            <Box className="boxHeaderMenuIconStyle">
+              <MenuIcon className="menuIconHeaderColorStyle" />
             </Box>
           </IconButton>
           <Grid item>
@@ -93,51 +75,18 @@ const Header = function () {
                     <SearchOutlinedIcon />
                   </InputAdornment>
                 ),
-                style: {
-                  background: "#fff",
-                  borderRadius: "5px",
-                  height: 40,
-                  width: "30vw",
-                },
+                className: "textFieldHeaderInputPropsStyle",
               }}
-              sx={{
-                background: "#fff",
-                outline: 0,
-                margin: 0,
-                borderRadius: "5px",
-                display: "flex",
-                alignItems: "flex-start",
-                justifyContent: "center",
-              }}
+              className="textFieldHeaderStyle"
               id="search"
               placeholder="جستجو"
             />
           </Grid>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              marginLeft: "auto",
-            }}
-          >
-            <IconButton
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "20px",
-              }}
-            >
-              <FullscreenOutlinedIcon
-                sx={{ color: "#000", width: "24px", height: "24px" }}
-              />
-              <ChatBubbleOutlineOutlinedIcon
-                sx={{ color: "#000", width: "24px", height: "24px" }}
-              />
-              <NotificationsOutlinedIcon
-                sx={{ color: "#000", width: "24px", height: "24px" }}
-              />
+          <Box className="boxContainerMenuIconsStyle">
+            <IconButton className="headerIconButtonStyle">
+              <FullscreenOutlinedIcon className="headerIconButtonSizeStyle" />
+              <ChatBubbleOutlineOutlinedIcon className="headerIconButtonSizeStyle" />
+              <NotificationsOutlinedIcon className="headerIconButtonSizeStyle" />
             </IconButton>
           </Box>
         </Toolbar>
