@@ -3,6 +3,15 @@ import "./font.theme.css";
 
 const theme = createTheme({
   direction: "rtl",
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1200,
+      xl: 1536,
+    },
+  },
   palette: {
     background: {
       default: "#f1f2f7",
