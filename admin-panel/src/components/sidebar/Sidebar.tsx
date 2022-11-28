@@ -12,7 +12,7 @@ import ListItemText from "@mui/material/ListItemText";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Person2OutlinedIcon from "@mui/icons-material/Person2Outlined";
-import { Avatar, Badge, Stack } from "@mui/material";
+import { Avatar, Badge, Stack, useMediaQuery, useTheme } from "@mui/material";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
@@ -32,14 +32,18 @@ const openedMixin = (theme: Theme): CSSObject => ({
 });
 
 const closedMixin = (theme: Theme): CSSObject => ({
+  // [theme.breakpoints.between("sm", "md")]: {
+  //   display: "none",
+  // },
   transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
   overflowX: "hidden",
   width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
+  [theme.breakpoints.between("xs", "md")]: {
+    // width: `calc(${theme.spacing(8)} + 1px)`,
+    width: 0,
   },
 });
 
@@ -93,6 +97,7 @@ const Drawer = styled(MuiDrawer, {
     ...openedMixin(theme),
     "& .MuiDrawer-paper": openedMixin(theme),
   }),
+
   ...(!open && {
     ...closedMixin(theme),
     "& .MuiDrawer-paper": closedMixin(theme),
@@ -108,12 +113,27 @@ const menuNamesAndIcons: SidebarProps[] = [
   { menuTitle: "خروج", menuIconMUI: <LogoutIcon /> },
 ];
 
-export default function MiniDrawer() {
+export default function Sidebar() {
+  const theme = useTheme();
+  const smallerThanLG = useMediaQuery(theme.breakpoints.down("lg"));
+  const mediaQ = useMediaQuery("(min-width:1200px)");
   const [open, setOpen] = React.useState(true);
-
+  const [hideSidebar, setHideSidebar] = React.useState(false);
+  React.useEffect(() => {
+    setHideSidebar(mediaQ);
+  }, [mediaQ]);
   return (
-    <Box>
-      <Drawer variant="permanent" open={open} sx={sidebarStyle}>
+    <Box
+      sx={{
+        display: { xs: "none", sm: "none", md: "none", lg: "block" },
+      }}
+    >
+      <Drawer
+        variant="permanent"
+        ModalProps={{ keepMounted: true }}
+        open={open}
+        sx={sidebarStyle}
+      >
         <DrawerHeader className="logoWrapper">
           <img className="logo" src="/assets/images/logo.png" alt="logo" />
         </DrawerHeader>
