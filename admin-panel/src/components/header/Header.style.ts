@@ -1,4 +1,20 @@
-import { SxProps } from "@mui/material";
+import { Toolbar, SxProps, AppBar, IconButton } from "@mui/material";
+import { styled } from "@mui/material/styles";
+
+export const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
+  [theme.breakpoints.down("lg")]: {
+    width: "100%",
+  },
+}));
+
+export const IconButtonStyled = styled(IconButton)(({ theme }) => ({
+  [theme.breakpoints.up("lg")]: {
+    marginLeft: "40px",
+  },
+  [theme.breakpoints.down("lg")]: {
+    marginLeft: 0,
+  },
+}));
 
 const headerStyle: SxProps = {
   position: "fixed",
@@ -10,6 +26,7 @@ const headerStyle: SxProps = {
     display: "flex",
     alignItems: "center",
     gap: "30px",
+
     ".boxHeaderMenuIconStyle": {
       display: "flex",
       justifyContent: "center",
