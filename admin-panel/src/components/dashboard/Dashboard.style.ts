@@ -1,7 +1,15 @@
-import { SxProps } from "@mui/material";
+import { Grid, SxProps, Theme } from "@mui/material";
+import { styled } from "@mui/material/styles";
+export const DashboardGridStyled = styled(Grid)(({ theme }) => ({
+  [theme.breakpoints.up("lg")]: {
+    width: "calc(100% - 240px)",
+  },
+  [theme.breakpoints.down("lg")]: {
+    width: "100%",
+  },
+}));
 
-const mainStyleGrid: SxProps = {
-  width: "calc(100% - 240px)",
+const mainStyleGrid: SxProps<Theme> = {
   marginLeft: "auto",
   background: "rebeccapurple",
   ".mainContent": {

@@ -1,10 +1,10 @@
 import React from "react";
-import { Grid, Stack, Box, Container } from "@mui/material";
+import { Grid, Stack, Container } from "@mui/material";
 import Card from "../card/Card";
-import mainStyleGrid from "./Dashboard.style";
+import mainStyleGrid, { DashboardGridStyled } from "./Dashboard.style";
 const Dashboard = function () {
   return (
-    <Grid sx={mainStyleGrid}>
+    <DashboardGridStyled sx={mainStyleGrid}>
       <Grid component="main" className="mainContent">
         <Container maxWidth="lg">
           <Stack flexDirection="row" className="stackStyleWrapperCards">
@@ -17,7 +17,7 @@ const Dashboard = function () {
           </Stack>
         </Container>
       </Grid>
-    </Grid>
+    </DashboardGridStyled>
   );
 };
 
