@@ -6,6 +6,7 @@ import {
   InputAdornment,
   useMediaQuery,
   useTheme,
+  Button,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
@@ -17,6 +18,10 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import headerStyle, { IconButtonStyled, ToolbarStyled } from "./Header.style";
+import { useDispatch } from "react-redux";
+import { toggleSidebar } from "../../features/toggle/toggleSlice";
+import { useSelector } from "react-redux";
+
 const drawerWidth = 240;
 
 interface AppBarProps extends MuiAppBarProps {
@@ -45,22 +50,24 @@ const AppBar = styled(MuiAppBar, {
 }));
 const Header = function () {
   const theme = useTheme();
+  const dispatch = useDispatch();
+  const { toggle } = useSelector((state: any) => state.toggle);
   const mediaQ = useMediaQuery(theme.breakpoints.down("lg"));
-  const [open, setOpen] = React.useState(true);
+  // const [open, setOpen] = React.useState(true);
+
   const handleDrawerOpen = () => {
-    setOpen(!open);
+    dispatch(toggleSidebar(!toggle));
   };
   React.useEffect(() => {
-    mediaQ ? setOpen(false) : setOpen(true);
-    console.log(mediaQ);
+    mediaQ ? dispatch(toggleSidebar(false)) : dispatch(toggleSidebar(true));
   }, [mediaQ]);
 
   const handleDrawerClose = () => {
-    setOpen(false);
+    dispatch(toggleSidebar(false));
   };
 
   return (
-    <AppBar sx={headerStyle} open={open}>
+    <AppBar sx={headerStyle} open={toggle}>
       <ToolbarStyled className="toolbarStyle">
         <IconButtonStyled
           color="inherit"
@@ -72,7 +79,7 @@ const Header = function () {
             <MenuIcon className="menuIconHeaderColorStyle" />
           </Box>
         </IconButtonStyled>
-        <Grid item>
+        <Grid item sx={{ marginLeft: "-10px" }}>
           <TextField
             variant="filled"
             hiddenLabel
@@ -101,6 +108,9 @@ const Header = function () {
             <NotificationsOutlinedIcon className="headerIconButtonSizeStyle" />
           </IconButton>
         </Box>
+        <Button onClick={handleDrawerClose} variant="contained">
+          Close
+        </Button>
       </ToolbarStyled>
     </AppBar>
   );

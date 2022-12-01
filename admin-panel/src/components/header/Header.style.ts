@@ -9,7 +9,7 @@ export const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
 
 export const IconButtonStyled = styled(IconButton)(({ theme }) => ({
   [theme.breakpoints.up("lg")]: {
-    marginLeft: "40px",
+    marginLeft: "65px",
   },
   [theme.breakpoints.down("lg")]: {
     marginLeft: 0,
