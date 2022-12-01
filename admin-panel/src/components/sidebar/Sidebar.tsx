@@ -12,7 +12,7 @@ import ListItemText from "@mui/material/ListItemText";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Person2OutlinedIcon from "@mui/icons-material/Person2Outlined";
-import { Avatar, Badge, Stack, useMediaQuery, useTheme } from "@mui/material";
+import { Avatar, Badge, Divider, Stack } from "@mui/material";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
@@ -20,8 +20,10 @@ import FormatListBulletedOutlinedIcon from "@mui/icons-material/FormatListBullet
 import sidebarStyle from "./Sidebar.style";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { SidebarProps } from "./SidebarProps";
+import { useSelector } from "react-redux";
 
 const drawerWidth = 240;
+
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
   transition: theme.transitions.create("width", {
@@ -32,18 +34,14 @@ const openedMixin = (theme: Theme): CSSObject => ({
 });
 
 const closedMixin = (theme: Theme): CSSObject => ({
-  // [theme.breakpoints.between("sm", "md")]: {
-  //   display: "none",
-  // },
   transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
   overflowX: "hidden",
   width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.between("xs", "md")]: {
-    // width: `calc(${theme.spacing(8)} + 1px)`,
-    width: 0,
+  [theme.breakpoints.up("lg")]: {
+    width: `calc(${theme.spacing(10)} + 1px)`,
   },
 });
 
@@ -76,15 +74,31 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
-  background: "#fff",
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-}));
+const DrawerHeader = styled("div")<BoxRootSidebarStyledProps>(
+  ({ theme, open }) => ({
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: theme.spacing(0, 1),
+    background: "#fff",
+    marginBottom: "20px",
+
+    // ".logo": {
+    //   display: "flex",
+    //   justifyContent: "center",
+    //   alignItems: "center",
+    // },
+    ...theme.mixins.toolbar,
+    [theme.breakpoints.up("lg")]: {
+      ...(!open && {
+        opacity: 0,
+      }),
+      ...(open && {
+        opacity: 1,
+      }),
+    },
+  })
+);
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -97,12 +111,61 @@ const Drawer = styled(MuiDrawer, {
     ...openedMixin(theme),
     "& .MuiDrawer-paper": openedMixin(theme),
   }),
-
   ...(!open && {
     ...closedMixin(theme),
     "& .MuiDrawer-paper": closedMixin(theme),
   }),
+  ".boxUserInfoStyle": {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  ".dividerProfileStyle": {
+    display: "none",
+  },
+  [theme.breakpoints.up("lg")]: {
+    ...(!open && {
+      ".logoWrapper": {
+        display: "none",
+      },
+      ".boxUserInfoStyle": {
+        // opacity: 0,
+        display: "none !important",
+      },
+      ".dividerProfileStyle": {
+        display: "block !important",
+      },
+    }),
+  },
 }));
+interface BoxRootSidebarStyledProps {
+  open?: boolean;
+}
+const BoxRootSidebarStyled = styled(Box)<BoxRootSidebarStyledProps>(
+  ({ theme, open }) => ({
+    [theme.breakpoints.down("lg")]: {
+      ...(open && {
+        ...openedMixin(theme),
+        "& .MuiDrawer-root": {
+          display: "block !important",
+          "& .MuiDrawer-paper": {
+            width: "240px",
+            display: "block",
+            zIndex: 999999,
+          },
+        },
+      }),
+      ...(!open && {
+        ...closedMixin(theme),
+        "& .MuiDrawer-root": {
+          display: "none",
+          zIndex: 999999,
+        },
+      }),
+    },
+  })
+);
 
 const menuNamesAndIcons: SidebarProps[] = [
   { menuTitle: "داشبورد", menuIconMUI: <DashboardOutlinedIcon /> },
@@ -114,28 +177,23 @@ const menuNamesAndIcons: SidebarProps[] = [
 ];
 
 export default function Sidebar() {
-  const theme = useTheme();
-  const smallerThanLG = useMediaQuery(theme.breakpoints.down("lg"));
-  const mediaQ = useMediaQuery("(min-width:1200px)");
-  const [open, setOpen] = React.useState(true);
-  const [hideSidebar, setHideSidebar] = React.useState(false);
-  React.useEffect(() => {
-    setHideSidebar(mediaQ);
-  }, [mediaQ]);
+  const { toggle } = useSelector((state: any) => state.toggle);
+
   return (
-    <Box
+    <BoxRootSidebarStyled
       sx={{
-        display: { xs: "none", sm: "none", md: "none", lg: "block" },
+        display: { lg: "block" },
       }}
+      open={toggle}
     >
       <Drawer
         variant="permanent"
         ModalProps={{ keepMounted: true }}
-        open={open}
+        open={toggle}
         sx={sidebarStyle}
       >
-        <DrawerHeader className="logoWrapper">
-          <img className="logo" src="/assets/images/logo.png" alt="logo" />
+        <DrawerHeader open={toggle}>
+          <img src="/assets/images/logo.png" alt="logo" />
         </DrawerHeader>
         <Box className="boxProfileSidebar">
           <StyledBadge
@@ -149,31 +207,36 @@ export default function Sidebar() {
               src="/assets/images/avatar.jpg"
             />
           </StyledBadge>
-          <Typography component="h5">جان اسنو</Typography>
-          <Typography component="span" className="typographyUserRoleSpan">
-            مدیر
-          </Typography>
-          <Stack direction="row" spacing={2}>
-            <IconButton
-              className="profileStyleIconButton personIconButton"
-              size="small"
-            >
-              <Person2OutlinedIcon fontSize="inherit" />
-            </IconButton>
-            <IconButton
-              className="profileStyleIconButton settingIconButton"
-              size="small"
-            >
-              <SettingsOutlinedIcon fontSize="inherit" />
-            </IconButton>
-            <IconButton
-              className="profileStyleIconButton exitIconButton"
-              size="small"
-            >
-              <LogoutIcon fontSize="inherit" />
-            </IconButton>
-          </Stack>
+          <Box className="boxUserInfoStyle">
+            <Typography className="typographyName" component="h5">
+              جان اسنو
+            </Typography>
+            <Typography component="span" className="typographyUserRoleSpan">
+              مدیر
+            </Typography>
+            <Stack direction="row" spacing={2}>
+              <IconButton
+                className="profileStyleIconButton personIconButton"
+                size="small"
+              >
+                <Person2OutlinedIcon fontSize="inherit" />
+              </IconButton>
+              <IconButton
+                className="profileStyleIconButton settingIconButton"
+                size="small"
+              >
+                <SettingsOutlinedIcon fontSize="inherit" />
+              </IconButton>
+              <IconButton
+                className="profileStyleIconButton exitIconButton"
+                size="small"
+              >
+                <LogoutIcon fontSize="inherit" />
+              </IconButton>
+            </Stack>
+          </Box>
         </Box>
+        <Divider className="dividerProfileStyle" />
         <List className="menuList">
           <ListItem disablePadding sx={{ display: "block" }}>
             {menuNamesAndIcons.map((item) => {
@@ -181,20 +244,20 @@ export default function Sidebar() {
                 <ListItemButton
                   className="listStyleItemButton"
                   sx={{
-                    justifyContent: open ? "initial" : "center",
+                    justifyContent: toggle ? "initial" : "center",
                   }}
                 >
                   <ListItemIcon
                     className="listStyleItemIcon"
                     sx={{
-                      mr: open ? 3 : "auto",
+                      mr: toggle ? 3 : "auto",
                     }}
                   >
                     {item.menuIconMUI}
                   </ListItemIcon>
                   <ListItemText
                     primary={item.menuTitle}
-                    sx={{ opacity: open ? 1 : 0 }}
+                    sx={{ opacity: toggle ? 1 : 0 }}
                   />
                 </ListItemButton>
               );
@@ -202,6 +265,6 @@ export default function Sidebar() {
           </ListItem>
         </List>
       </Drawer>
-    </Box>
+    </BoxRootSidebarStyled>
   );
 }

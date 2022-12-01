@@ -1,17 +1,7 @@
-import { SxProps } from "@mui/material";
+import { SxProps, Theme } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
-const sidebarStyle: SxProps = {
-  ".logoWrapper": {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: "20px",
-    ".logo": {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-  },
+const sidebarStyle: SxProps<Theme> = {
   ".boxProfileSidebar": {
     display: "flex",
     justifyContent: "center",
