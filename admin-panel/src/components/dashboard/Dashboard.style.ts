@@ -1,17 +1,25 @@
 import { Grid, SxProps, Theme } from "@mui/material";
 import { styled } from "@mui/material/styles";
-export const DashboardGridStyled = styled(Grid)(({ theme }) => ({
-  [theme.breakpoints.up("lg")]: {
-    width: "calc(100% - 240px)",
-  },
-  [theme.breakpoints.down("lg")]: {
-    width: "100%",
-  },
-}));
+
+interface DashboardGridStyledProps {
+  open?: boolean;
+}
+export const DashboardGridStyled = styled(Grid)<DashboardGridStyledProps>(
+  ({ theme, open }) => ({
+    [theme.breakpoints.up("lg")]: {
+      ...(open && {
+        width: "calc(100% - 240px)",
+      }),
+      ...(!open && {
+        width: "100%",
+      }),
+    },
+  })
+);
 
 const mainStyleGrid: SxProps<Theme> = {
   marginLeft: "auto",
-  background: "rebeccapurple",
+  // background: "rebeccapurple",
   ".mainContent": {
     display: "flex",
     justifyContent: "center",

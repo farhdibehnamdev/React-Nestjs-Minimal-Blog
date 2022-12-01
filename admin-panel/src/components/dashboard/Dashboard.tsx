@@ -2,9 +2,11 @@ import React from "react";
 import { Grid, Stack, Container } from "@mui/material";
 import Card from "../card/Card";
 import mainStyleGrid, { DashboardGridStyled } from "./Dashboard.style";
+import { useSelector } from "react-redux";
 const Dashboard = function () {
+  const { toggle } = useSelector((state: any) => state.toggle);
   return (
-    <DashboardGridStyled sx={mainStyleGrid}>
+    <DashboardGridStyled sx={mainStyleGrid} open={toggle}>
       <Grid component="main" className="mainContent">
         <Container maxWidth="lg">
           <Stack flexDirection="row" className="stackStyleWrapperCards">
