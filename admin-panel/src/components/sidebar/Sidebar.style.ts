@@ -37,11 +37,12 @@ const sidebarStyle: SxProps<Theme> = {
     marginBottom: "10px",
   },
   ".menuList": {
-    paddingLeft: "10px",
     ".listStyleItemButton": {
       minHeight: 48,
       px: 2.5,
       marginRight: "10px",
+      paddingLeft: "33px",
+      width: "100%",
       ".listStyleItemIcon": {
         minWidth: 0,
         justifyContent: "center",
