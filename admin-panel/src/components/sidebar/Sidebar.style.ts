@@ -110,6 +110,22 @@ export const Drawer = styled(MuiDrawer, {
       ".dividerProfileStyle": {
         display: "block !important",
       },
+      ".listStyleItemButton.menuSelected": {
+        ".listStyleItemIcon": {
+          backgroundColor: " #004deb",
+          padding: " 15px",
+          borderRadius: "10px",
+          color: "white",
+        },
+      },
+      ".listStyleItemButton.menuSelected:before": {
+        display: "none",
+      },
+      ".menuList": {
+        ".listStyleItemButton": {
+          marginLeft: "-5px",
+        },
+      },
     }),
   },
 }));
@@ -139,7 +155,7 @@ export const BoxRootSidebarStyled = styled(Box)<OpenProps>(
   })
 );
 
-const sidebarStyle: SxProps<Theme> = {
+const sidebarStyle: SxProps = {
   ".boxProfileSidebar": {
     display: "flex",
     justifyContent: "center",
@@ -187,10 +203,20 @@ const sidebarStyle: SxProps<Theme> = {
         justifyContent: "center",
       },
     },
-    ".listStyleItemButton:hover": {
+    ".listStyleItemButton.menuSelected": {
       ".menuName span": {
-        color: "black",
+        color: "#004deb",
       },
+    },
+    ".listStyleItemButton.menuSelected:before": {
+      content: "''",
+      height: "80%",
+      background: "#004deb",
+      width: "3%",
+      color: "#004deb",
+      position: "absolute",
+      left: 0,
+      borderRadius: "15px",
     },
   },
 };

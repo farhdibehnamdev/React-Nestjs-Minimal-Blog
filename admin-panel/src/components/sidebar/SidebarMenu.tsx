@@ -10,23 +10,41 @@ import FormatListBulletedOutlinedIcon from "@mui/icons-material/FormatListBullet
 import LogoutIcon from "@mui/icons-material/Logout";
 import { MenuListProps, SidebarProps } from "./SidebarProps";
 const data: SidebarProps[] = [
-  { menuTitle: "داشبورد", menuIconMUI: <DashboardOutlinedIcon /> },
-  { menuTitle: "پست ها", menuIconMUI: <FormatListBulletedOutlinedIcon /> },
-  { menuTitle: "تگ ها", menuIconMUI: <LocalOfferOutlinedIcon /> },
-  { menuTitle: "ارسال پیام", menuIconMUI: <EmailOutlinedIcon /> },
+  { id: 1, menuTitle: "داشبورد", menuIconMUI: <DashboardOutlinedIcon /> },
   {
+    id: 2,
+    menuTitle: "پست ها",
+    menuIconMUI: <FormatListBulletedOutlinedIcon />,
+  },
+  { id: 3, menuTitle: "تگ ها", menuIconMUI: <LocalOfferOutlinedIcon /> },
+  { id: 4, menuTitle: "ارسال پیام", menuIconMUI: <EmailOutlinedIcon /> },
+  {
+    id: 5,
     menuTitle: "مدیریت کاربران",
     menuIconMUI: <ManageAccountsOutlinedIcon />,
   },
-  { menuTitle: "خروج", menuIconMUI: <LogoutIcon /> },
+  { id: 6, menuTitle: "خروج", menuIconMUI: <LogoutIcon /> },
 ];
+
 export const MenuList = function ({ toggle }: MenuListProps): JSX.Element {
+  const [activeMenu, setActiveMenu] = React.useState<any>({});
+  // const activeMenu = activeClass ? "activeMenu" : "";
+  const handleToggleMenu = function (id: any) {
+    setActiveMenu((state: any) => ({
+      [id]: !activeMenu[id],
+    }));
+  };
+
   return (
     <React.Fragment>
-      {data.map((item) => {
+      {data.map((item, index) => {
         return (
           <ListItemButton
-            className="listStyleItemButton"
+            key={item.id}
+            className={`listStyleItemButton ${
+              activeMenu[item.id] ? "menuSelected" : ""
+            }`}
+            onClick={() => handleToggleMenu(item.id)}
             sx={{
               justifyContent: toggle ? "initial" : "center",
             }}
