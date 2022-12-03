@@ -40,6 +40,7 @@ export const MenuList = function ({ toggle }: MenuListProps): JSX.Element {
               {item.menuIconMUI}
             </ListItemIcon>
             <ListItemText
+              className="menuName"
               primary={item.menuTitle}
               sx={{ opacity: toggle ? 1 : 0 }}
             />

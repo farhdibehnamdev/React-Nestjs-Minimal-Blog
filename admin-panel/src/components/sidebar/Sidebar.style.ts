@@ -181,9 +181,15 @@ const sidebarStyle: SxProps<Theme> = {
       marginRight: "10px",
       paddingLeft: "33px",
       width: "100%",
+
       ".listStyleItemIcon": {
         minWidth: 0,
         justifyContent: "center",
+      },
+    },
+    ".listStyleItemButton:hover": {
+      ".menuName span": {
+        color: "black",
       },
     },
   },
