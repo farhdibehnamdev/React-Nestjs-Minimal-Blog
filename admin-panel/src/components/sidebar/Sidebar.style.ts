@@ -94,6 +94,7 @@ export const Drawer = styled(MuiDrawer, {
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
+    gap: "15px",
   },
   ".dividerProfileStyle": {
     display: "none",
@@ -197,7 +198,6 @@ const sidebarStyle: SxProps = {
       marginRight: "10px",
       paddingLeft: "33px",
       width: "100%",
-
       ".listStyleItemIcon": {
         minWidth: 0,
         justifyContent: "center",

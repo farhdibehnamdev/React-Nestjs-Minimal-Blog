@@ -41,6 +41,25 @@ const theme = createTheme({
         },
       },
     },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          fontSize: "13px",
+          fontFamily: "IRANYekan,tahoma",
+          opacity: 0.2,
+        },
+      },
+    },
+    MuiListItemButton: {
+      styleOverrides: {
+        root: {
+          ":hover": {
+            background: "none",
+          },
+        },
+      },
+    },
+
     MuiCssBaseline: {
       styleOverrides: {
         html: {

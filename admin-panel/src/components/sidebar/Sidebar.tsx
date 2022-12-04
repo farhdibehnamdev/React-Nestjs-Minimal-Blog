@@ -6,7 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import ListItem from "@mui/material/ListItem";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Person2OutlinedIcon from "@mui/icons-material/Person2Outlined";
-import { Avatar, Divider, Stack } from "@mui/material";
+import { Avatar, Divider, Stack, Tooltip } from "@mui/material";
 import sidebarStyle, {
   Drawer,
   DrawerHeader,
@@ -51,24 +51,34 @@ export default function Sidebar() {
               مدیر
             </Typography>
             <Stack direction="row" spacing={2}>
-              <IconButton
-                className="profileStyleIconButton personIconButton"
-                size="small"
+              <Tooltip
+                className="tooltipButtonsStyle"
+                title="پروفایل"
+                placement="top"
               >
-                <Person2OutlinedIcon fontSize="inherit" />
-              </IconButton>
-              <IconButton
-                className="profileStyleIconButton settingIconButton"
-                size="small"
-              >
-                <SettingsOutlinedIcon fontSize="inherit" />
-              </IconButton>
-              <IconButton
-                className="profileStyleIconButton exitIconButton"
-                size="small"
-              >
-                <LogoutIcon fontSize="inherit" />
-              </IconButton>
+                <IconButton
+                  className="profileStyleIconButton personIconButton"
+                  size="small"
+                >
+                  <Person2OutlinedIcon fontSize="inherit" />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="تنظیمات" placement="top">
+                <IconButton
+                  className="profileStyleIconButton settingIconButton"
+                  size="small"
+                >
+                  <SettingsOutlinedIcon fontSize="inherit" />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="خروج" placement="top">
+                <IconButton
+                  className="profileStyleIconButton exitIconButton"
+                  size="small"
+                >
+                  <LogoutIcon fontSize="inherit" />
+                </IconButton>
+              </Tooltip>
             </Stack>
           </Box>
         </Box>
