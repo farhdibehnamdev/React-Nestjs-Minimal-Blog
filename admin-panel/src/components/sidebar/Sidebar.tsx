@@ -45,7 +45,7 @@ export default function Sidebar() {
           </StyledBadge>
           <Box className="boxUserInfoStyle">
             <Typography className="typographyName" component="h5">
-              جان اسنو
+              بهنام فرهادی
             </Typography>
             <Typography component="span" className="typographyUserRoleSpan">
               مدیر

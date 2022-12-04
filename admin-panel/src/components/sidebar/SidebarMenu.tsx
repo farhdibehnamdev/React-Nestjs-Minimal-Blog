@@ -9,6 +9,7 @@ import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
 import FormatListBulletedOutlinedIcon from "@mui/icons-material/FormatListBulletedOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { MenuListProps, SidebarProps } from "./SidebarProps";
+import { Tooltip, useMediaQuery, useTheme } from "@mui/material";
 const data: SidebarProps[] = [
   { id: 1, menuTitle: "داشبورد", menuIconMUI: <DashboardOutlinedIcon /> },
   {
@@ -27,7 +28,9 @@ const data: SidebarProps[] = [
 ];
 
 export const MenuList = function ({ toggle }: MenuListProps): JSX.Element {
+  const theme = useTheme();
   const [activeMenu, setActiveMenu] = React.useState<any>({});
+  const mediaQ = useMediaQuery(theme.breakpoints.up("lg"));
   // const activeMenu = activeClass ? "activeMenu" : "";
   const handleToggleMenu = function (id: any) {
     setActiveMenu((state: any) => ({
@@ -39,30 +42,35 @@ export const MenuList = function ({ toggle }: MenuListProps): JSX.Element {
     <React.Fragment>
       {data.map((item, index) => {
         return (
-          <ListItemButton
-            key={item.id}
-            className={`listStyleItemButton ${
-              activeMenu[item.id] ? "menuSelected" : ""
-            }`}
-            onClick={() => handleToggleMenu(item.id)}
-            sx={{
-              justifyContent: toggle ? "initial" : "center",
-            }}
+          <Tooltip
+            title={!toggle && mediaQ ? item.menuTitle : ""}
+            placement="right-start"
           >
-            <ListItemIcon
-              className="listStyleItemIcon"
+            <ListItemButton
+              key={item.id}
+              className={`listStyleItemButton ${
+                activeMenu[item.id] ? "menuSelected" : ""
+              }`}
+              onClick={() => handleToggleMenu(item.id)}
               sx={{
-                mr: toggle ? 3 : "auto",
+                justifyContent: toggle ? "initial" : "center",
               }}
             >
-              {item.menuIconMUI}
-            </ListItemIcon>
-            <ListItemText
-              className="menuName"
-              primary={item.menuTitle}
-              sx={{ opacity: toggle ? 1 : 0 }}
-            />
-          </ListItemButton>
+              <ListItemIcon
+                className="listStyleItemIcon"
+                sx={{
+                  mr: toggle ? 3 : "auto",
+                }}
+              >
+                {item.menuIconMUI}
+              </ListItemIcon>
+              <ListItemText
+                className="menuName"
+                primary={item.menuTitle}
+                sx={{ opacity: toggle ? 1 : 0 }}
+              />
+            </ListItemButton>
+          </Tooltip>
         );
       })}
     </React.Fragment>
