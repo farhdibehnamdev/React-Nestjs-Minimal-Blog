@@ -102,15 +102,21 @@ const Header = function () {
           />
         </Grid>
         <Box className="boxContainerMenuIconsStyle">
-          <IconButton className="headerIconButtonStyle">
-            <FullscreenOutlinedIcon className="headerIconButtonSizeStyle" />
-            <ChatBubbleOutlineOutlinedIcon className="headerIconButtonSizeStyle" />
-            <NotificationsOutlinedIcon className="headerIconButtonSizeStyle" />
-          </IconButton>
+          <Box className="headerIconButtonStyle">
+            <IconButton>
+              <FullscreenOutlinedIcon className="headerIconButtonSizeStyle" />
+            </IconButton>
+            <IconButton>
+              <ChatBubbleOutlineOutlinedIcon className="headerIconButtonSizeStyle" />
+            </IconButton>
+            <IconButton>
+              <NotificationsOutlinedIcon className="headerIconButtonSizeStyle" />
+            </IconButton>
+          </Box>
         </Box>
-        <Button onClick={handleDrawerClose} variant="contained">
+        {/* <Button onClick={handleDrawerClose} variant="contained">
           Close
-        </Button>
+        </Button> */}
       </ToolbarStyled>
     </AppBar>
   );

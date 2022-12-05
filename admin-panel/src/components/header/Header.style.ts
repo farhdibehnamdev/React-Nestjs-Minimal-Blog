@@ -68,6 +68,9 @@ const headerStyle: SxProps = {
           width: "24px",
           height: "24px",
         },
+        ".headerIconButtonSizeStyle:hover": {
+          color: "#004deb",
+        },
       },
     },
   },
