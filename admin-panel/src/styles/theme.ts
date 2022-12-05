@@ -50,6 +50,16 @@ const theme = createTheme({
         },
       },
     },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          ":hover": {
+            background: "none",
+            color: "",
+          },
+        },
+      },
+    },
     MuiListItemButton: {
       styleOverrides: {
         root: {
