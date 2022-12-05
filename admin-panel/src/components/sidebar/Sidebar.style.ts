@@ -62,6 +62,7 @@ export const DrawerHeader = styled("div")<OpenProps>(({ theme, open }) => ({
   padding: theme.spacing(0, 1),
   background: "#fff",
   marginBottom: "20px",
+  marginTop: "15px",
 
   ...theme.mixins.toolbar,
   [theme.breakpoints.up("lg")]: {
@@ -100,6 +101,13 @@ export const Drawer = styled(MuiDrawer, {
     display: "none",
   },
   [theme.breakpoints.up("lg")]: {
+    ...(open && {
+      ".listStyleItemButton:hover": {
+        span: {
+          color: "black",
+        },
+      },
+    }),
     ...(!open && {
       ".logoWrapper": {
         display: "none",
@@ -111,12 +119,18 @@ export const Drawer = styled(MuiDrawer, {
       ".dividerProfileStyle": {
         display: "block !important",
       },
+
       ".listStyleItemButton.menuSelected": {
         ".listStyleItemIcon": {
-          backgroundColor: " #004deb",
+          backgroundColor: "#004deb",
           padding: " 15px",
           borderRadius: "10px",
           color: "white",
+        },
+      },
+      ".listStyleItemButton:hover": {
+        ".listStyleItemIcon": {
+          color: "#004deb",
         },
       },
       ".listStyleItemButton.menuSelected:before": {
