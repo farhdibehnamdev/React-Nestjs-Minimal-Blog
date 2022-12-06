@@ -1,5 +1,6 @@
-import { Toolbar, SxProps, AppBar, IconButton } from "@mui/material";
+import { Toolbar, SxProps, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { OpenProps } from "../common/CommonPorps";
 
 export const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
   [theme.breakpoints.down("lg")]: {
@@ -7,14 +8,24 @@ export const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
   },
 }));
 
-export const IconButtonStyled = styled(IconButton)(({ theme }) => ({
-  [theme.breakpoints.up("lg")]: {
-    marginLeft: "65px",
-  },
-  [theme.breakpoints.down("lg")]: {
-    marginLeft: 0,
-  },
-}));
+export const IconButtonStyled = styled(IconButton)<OpenProps>(
+  ({ theme, open }) => ({
+    ...(!open && {
+      [theme.breakpoints.up("lg")]: {
+        marginLeft: "65px",
+      },
+    }),
+    ...(open && {
+      [theme.breakpoints.up("lg")]: {
+        marginLeft: 0,
+      },
+    }),
+
+    [theme.breakpoints.down("lg")]: {
+      marginLeft: 0,
+    },
+  })
+);
 
 const headerStyle: SxProps = {
   position: "fixed",
@@ -26,7 +37,9 @@ const headerStyle: SxProps = {
     display: "flex",
     alignItems: "center",
     gap: "30px",
-
+    ".gridSearchBoxStyle": {
+      marginLeft: -1,
+    },
     ".boxHeaderMenuIconStyle": {
       display: "flex",
       justifyContent: "center",
