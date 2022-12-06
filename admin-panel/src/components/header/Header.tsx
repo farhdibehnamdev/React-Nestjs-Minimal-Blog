@@ -19,8 +19,12 @@ import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import headerStyle, { IconButtonStyled, ToolbarStyled } from "./Header.style";
 import { useDispatch } from "react-redux";
-import { toggleSidebar } from "../../features/toggle/toggleSlice";
+import {
+  toggleMessage,
+  toggleSidebar,
+} from "../../features/toggle/toggleSlice";
 import { useSelector } from "react-redux";
+import Message from "../messages/Messages";
 
 const drawerWidth = 240;
 
@@ -51,12 +55,16 @@ const AppBar = styled(MuiAppBar, {
 const Header = function () {
   const theme = useTheme();
   const dispatch = useDispatch();
-  const { toggle } = useSelector((state: any) => state.toggle);
+  const { toggle, toggleCardMessage } = useSelector(
+    (state: any) => state.toggle
+  );
   const mediaQ = useMediaQuery(theme.breakpoints.down("lg"));
-  // const [open, setOpen] = React.useState(true);
 
   const handleDrawerOpen = () => {
     dispatch(toggleSidebar(!toggle));
+  };
+  const handleMessageToggle = () => {
+    dispatch(toggleMessage(!toggleCardMessage));
   };
   React.useEffect(() => {
     mediaQ ? dispatch(toggleSidebar(false)) : dispatch(toggleSidebar(true));
@@ -106,7 +114,7 @@ const Header = function () {
             <IconButton>
               <FullscreenOutlinedIcon className="headerIconButtonSizeStyle" />
             </IconButton>
-            <IconButton>
+            <IconButton onClick={handleMessageToggle}>
               <ChatBubbleOutlineOutlinedIcon className="headerIconButtonSizeStyle" />
             </IconButton>
             <IconButton>
@@ -114,9 +122,7 @@ const Header = function () {
             </IconButton>
           </Box>
         </Box>
-        {/* <Button onClick={handleDrawerClose} variant="contained">
-          Close
-        </Button> */}
+        <Message toggleMessage={toggleCardMessage} />
       </ToolbarStyled>
     </AppBar>
   );
