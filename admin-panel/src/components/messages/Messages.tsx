@@ -14,15 +14,23 @@ const Message = function ({ toggleMessage }: any) {
   return (
     <Box sx={{ display: toggleMessage ? "block" : "none" }}>
       <Card sx={CardMessageStyle}>
-        <Box className="gooz">
-          <CardMedia
-            component="img"
-            height="100"
-            image="/assets/images/image-message.png"
-            alt="header message"
-            title="پیام ها"
-          />
-        </Box>
+        <CardMedia
+          component="div"
+          className="boxImageHeaderMessageStyle"
+          children={
+            <Box className="boxMessageInCardMediaStyle">
+              <Typography
+                component="h6"
+                className="typoH6MessageCardMediaStyle"
+              >
+                پیام ها
+              </Typography>
+              <Typography component="small" className="typoSmallCardMediaStyle">
+                2 پیام خوانده نشده
+              </Typography>
+            </Box>
+          }
+        />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             Lizard

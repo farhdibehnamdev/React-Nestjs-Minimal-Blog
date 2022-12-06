@@ -5,12 +5,34 @@ export const CardMessageStyle: SxProps = {
   position: "absolute",
   willChange: "transform",
   top: 0,
-  right: "100px",
+  right: "80px",
   transform: " translate3d(0px, 55px, 0px)",
-  ".gooz": {
+  ".boxImageHeaderMessageStyle": {
     position: "relative",
+    width: "100%",
+    height: "100px",
+    background: "url(/assets/images/image-message.png)",
+    backgroundPosition: "center",
+    backgroundSize: "cover",
+    ".boxMessageInCardMediaStyle": {
+      position: "relative",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      flexDirection: "column",
+      width: "100%",
+      zIndex: 99999,
+      height: "100%",
+      ".typoH6MessageCardMediaStyle": {
+        marginBottom: "5px",
+      },
+      ".typoSmallCardMediaStyle": {
+        opacity: 0.7,
+        fontSize: "11px",
+      },
+    },
   },
-  ".gooz::after": {
+  ".boxImageHeaderMessageStyle::after": {
     content: "''",
     background: "rgba(255, 255, 255, 0.8)",
     position: "absolute",
