@@ -3,11 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 interface ToggleState {
   toggle: boolean;
   toggleCardMessage: boolean;
+  toggleCardNotification: boolean;
 }
 
 const initialState: ToggleState = {
   toggle: true,
   toggleCardMessage: false,
+  toggleCardNotification: false,
 };
 export const toggleSlice = createSlice({
   name: "toggle",
@@ -19,8 +21,12 @@ export const toggleSlice = createSlice({
     toggleMessage: (state, action) => {
       state.toggleCardMessage = action.payload;
     },
+    toggleNotification: (state, action) => {
+      state.toggleCardNotification = action.payload;
+    },
   },
 });
 
-export const { toggleSidebar, toggleMessage } = toggleSlice.actions;
+export const { toggleSidebar, toggleMessage, toggleNotification } =
+  toggleSlice.actions;
 export default toggleSlice.reducer;
