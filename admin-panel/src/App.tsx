@@ -6,8 +6,11 @@ import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
 import { CssBaseline, Grid, ThemeProvider } from "@mui/material";
 import theme from "./styles/theme";
-import { Provider } from "react-redux";
-import store from "./app/store";
+import { Provider, useDispatch, useSelector } from "react-redux";
+import {
+  toggleMessage,
+  toggleNotification,
+} from "./features/toggle/toggleSlice";
 const cacheRTL = createCache({
   key: "muirtl",
   stylisPlugins: [prefixer, rtlPlugin],
@@ -19,9 +22,7 @@ function App() {
       <CacheProvider value={cacheRTL}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <Provider store={store}>
-            <Layout />
-          </Provider>
+          <Layout />
         </ThemeProvider>
       </CacheProvider>
     </div>
