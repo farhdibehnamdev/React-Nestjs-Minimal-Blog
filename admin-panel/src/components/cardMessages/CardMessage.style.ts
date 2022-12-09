@@ -13,7 +13,7 @@ const CardMessageStyled = styled(Card)(
     willChange: "transform",
     width: "100vw",
     top: 0,
-    right: cardType === CardType.Notification ? "0px" : "0px",
+    right: 0,
     transform: " translate3d(0px, 50px, 0px)",
     ".boxImageHeaderMessageStyle": {
       position: "relative",
