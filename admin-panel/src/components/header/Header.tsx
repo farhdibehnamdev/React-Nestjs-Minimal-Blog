@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Grid,
   Box,
@@ -6,25 +6,19 @@ import {
   InputAdornment,
   useMediaQuery,
   useTheme,
-  Button,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import FullscreenOutlinedIcon from "@mui/icons-material/FullscreenOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
-import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import headerStyle, { IconButtonStyled, ToolbarStyled } from "./Header.style";
 import { useDispatch } from "react-redux";
-import {
-  toggleMessage,
-  toggleSidebar,
-} from "../../features/toggle/toggleSlice";
+import { toggleSidebar } from "../../features/toggle/toggleSlice";
 import { useSelector } from "react-redux";
-import Message from "../messages/Messages";
+import HeaderMenuMessage from "./headerMenuMessage/HeaderMenuMessage";
+import HeaderMenuNotification from "./headerMenuNotification/HeaderMenuNotification";
 
 const drawerWidth = 240;
 
@@ -54,25 +48,18 @@ const AppBar = styled(MuiAppBar, {
 }));
 const Header = function () {
   const theme = useTheme();
+
   const dispatch = useDispatch();
-  const { toggle, toggleCardMessage } = useSelector(
-    (state: any) => state.toggle
-  );
+  const { toggle } = useSelector((state: any) => state.toggle);
   const mediaQ = useMediaQuery(theme.breakpoints.down("lg"));
 
   const handleDrawerOpen = () => {
     dispatch(toggleSidebar(!toggle));
   };
-  const handleMessageToggle = () => {
-    dispatch(toggleMessage(!toggleCardMessage));
-  };
-  React.useEffect(() => {
+
+  useEffect(() => {
     mediaQ ? dispatch(toggleSidebar(false)) : dispatch(toggleSidebar(true));
   }, [mediaQ]);
-
-  const handleDrawerClose = () => {
-    dispatch(toggleSidebar(false));
-  };
 
   return (
     <AppBar sx={headerStyle} open={toggle}>
@@ -82,12 +69,13 @@ const Header = function () {
           aria-label="open drawer"
           onClick={handleDrawerOpen}
           edge="end"
+          open={toggle}
         >
           <Box className="boxHeaderMenuIconStyle">
             <MenuIcon className="menuIconHeaderColorStyle" />
           </Box>
         </IconButtonStyled>
-        <Grid item sx={{ marginLeft: "-10px" }}>
+        <Grid item className="gridSearchBoxStyle">
           <TextField
             variant="filled"
             hiddenLabel
@@ -114,15 +102,10 @@ const Header = function () {
             <IconButton>
               <FullscreenOutlinedIcon className="headerIconButtonSizeStyle" />
             </IconButton>
-            <IconButton onClick={handleMessageToggle}>
-              <ChatBubbleOutlineOutlinedIcon className="headerIconButtonSizeStyle" />
-            </IconButton>
-            <IconButton>
-              <NotificationsOutlinedIcon className="headerIconButtonSizeStyle" />
-            </IconButton>
+            <HeaderMenuMessage />
+            <HeaderMenuNotification />
           </Box>
         </Box>
-        <Message toggleMessage={toggleCardMessage} />
       </ToolbarStyled>
     </AppBar>
   );
