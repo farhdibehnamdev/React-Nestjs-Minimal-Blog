@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Grid,
   Box,
@@ -17,8 +17,8 @@ import headerStyle, { IconButtonStyled, ToolbarStyled } from "./Header.style";
 import { useDispatch } from "react-redux";
 import { toggleSidebar } from "../../features/toggle/toggleSlice";
 import { useSelector } from "react-redux";
-import HeaderMenuMessage from "./headerMenuMessage/HeaderMenuMessage";
-import HeaderMenuNotification from "./headerMenuNotification/HeaderMenuNotification";
+import Notification from "../notification/Notification";
+import Message from "../messages/Message";
 
 const drawerWidth = 240;
 
@@ -102,8 +102,8 @@ const Header = function () {
             <IconButton>
               <FullscreenOutlinedIcon className="headerIconButtonSizeStyle" />
             </IconButton>
-            <HeaderMenuMessage />
-            <HeaderMenuNotification />
+            <Message />
+            <Notification />
           </Box>
         </Box>
       </ToolbarStyled>
