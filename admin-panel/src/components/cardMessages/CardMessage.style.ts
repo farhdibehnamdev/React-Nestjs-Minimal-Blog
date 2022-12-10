@@ -8,12 +8,15 @@ interface CardMessageProps {
 const CardMessageStyled = styled(Card)(
   ({ isOpen, cardType }: CardMessageProps) => ({
     visibility: isOpen ? "visible" : "hidden",
+    opacity: isOpen ? 1 : 0,
     maxWidth: "300px",
     position: "absolute",
     willChange: "transform",
     width: "100vw",
     top: 0,
     right: 0,
+    marginTop: "0px",
+    transition: "margin-top .3s, opacity .3s",
     transform: " translate3d(0px, 50px, 0px)",
     ".boxImageHeaderMessageStyle": {
       position: "relative",
