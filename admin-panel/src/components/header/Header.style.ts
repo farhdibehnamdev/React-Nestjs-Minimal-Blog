@@ -1,6 +1,34 @@
-import { Toolbar, SxProps, IconButton } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { styled, Toolbar, SxProps, IconButton } from "@mui/material";
 import { OpenProps } from "../common/CommonPorps";
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
+import FullscreenOutlinedIcon from "@mui/icons-material/FullscreenOutlined";
+
+const drawerWidth = 240;
+
+interface AppBarProps extends MuiAppBarProps {
+  open?: boolean;
+}
+
+export const AppBar = styled(MuiAppBar, {
+  shouldForwardProp: (prop) => prop !== "open",
+})<AppBarProps>(({ theme, open }) => ({
+  zIndex: theme.zIndex.drawer + 1,
+  transition: theme.transitions.create(["width", "margin"], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  ...(open && {
+    marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
+    [theme.breakpoints.down("lg")]: {
+      width: "100%",
+    },
+    transition: theme.transitions.create(["width", "margin"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  }),
+}));
 
 export const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
   [theme.breakpoints.down("lg")]: {
@@ -24,6 +52,14 @@ export const IconButtonStyled = styled(IconButton)<OpenProps>(
     [theme.breakpoints.down("lg")]: {
       marginLeft: 0,
     },
+  })
+);
+
+export const FullscreenOutlinedIconStyled = styled(FullscreenOutlinedIcon)<any>(
+  ({ colorIcon }: any) => ({
+    width: "24px",
+    height: "24px",
+    color: colorIcon ? "#004deb" : "#000",
   })
 );
 
@@ -76,11 +112,7 @@ const headerStyle: SxProps = {
         justifyContent: "center",
         alignItems: "center",
         gap: "20px",
-        ".headerIconButtonSizeStyle": {
-          color: "#000",
-          width: "24px",
-          height: "24px",
-        },
+
         ".headerIconButtonSizeStyle:hover": {
           color: "#004deb",
         },

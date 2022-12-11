@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Grid,
   Box,
@@ -6,57 +7,43 @@ import {
   InputAdornment,
   useMediaQuery,
   useTheme,
+  ClickAwayListener,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import FullscreenOutlinedIcon from "@mui/icons-material/FullscreenOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import headerStyle, { IconButtonStyled, ToolbarStyled } from "./Header.style";
-import { useDispatch } from "react-redux";
-import { toggleSidebar } from "../../features/toggle/toggleSlice";
-import { useSelector } from "react-redux";
+import headerStyle, {
+  FullscreenOutlinedIconStyled,
+  IconButtonStyled,
+  ToolbarStyled,
+} from "./Header.style";
+import { AppBar } from "./Header.style";
+import {
+  toggleFullScreenMode,
+  toggleSidebar,
+} from "../../features/toggle/toggleSlice";
 import Notification from "../notification/Notification";
 import Message from "../messages/Message";
 
-const drawerWidth = 240;
-
-interface AppBarProps extends MuiAppBarProps {
-  open?: boolean;
-}
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})<AppBarProps>(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    [theme.breakpoints.down("lg")]: {
-      width: "100%",
-    },
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
 const Header = function () {
   const theme = useTheme();
-
+  const [colorIcon, setColorIcon] = useState(false);
   const dispatch = useDispatch();
-  const { toggle } = useSelector((state: any) => state.toggle);
+  const { toggle, toggleFullScreen } = useSelector(
+    (state: any) => state.toggle
+  );
   const mediaQ = useMediaQuery(theme.breakpoints.down("lg"));
 
   const handleDrawerOpen = () => {
     dispatch(toggleSidebar(!toggle));
   };
-
+  const handleFullScreen = () => {
+    setColorIcon(!colorIcon);
+    dispatch(toggleFullScreenMode(!toggleFullScreen));
+  };
+  const handleClickAway = function () {
+    // dispatch(toggleMessage(false));
+  };
   useEffect(() => {
     mediaQ ? dispatch(toggleSidebar(false)) : dispatch(toggleSidebar(true));
   }, [mediaQ]);
@@ -99,9 +86,15 @@ const Header = function () {
         </Grid>
         <Box className="boxContainerMenuIconsStyle">
           <Box className="headerIconButtonStyle">
-            <IconButton>
-              <FullscreenOutlinedIcon className="headerIconButtonSizeStyle" />
-            </IconButton>
+            <ClickAwayListener onClickAway={handleClickAway}>
+              <IconButton onClick={handleFullScreen}>
+                <FullscreenOutlinedIconStyled
+                  colorIcon={colorIcon}
+                  className="headerIconButtonSizeStyle"
+                />
+              </IconButton>
+            </ClickAwayListener>
+
             <Message />
             <Notification />
           </Box>
