@@ -1,19 +1,23 @@
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleMessage } from "../../features/toggle/toggleSlice";
 import { Box, ClickAwayListener } from "@mui/material";
-import IconButton from "@mui/material/IconButton";
 import CardMessage from "../cardMessages/CardMessage";
 import { CardType } from "../common/CardTypeEnum";
+import IconButtonStyled from "../common/styles/IconButton.style";
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 
 const Message = function () {
+  const [colorIcon, setColorIcon] = useState(false);
   const dispatch = useDispatch();
   const { toggleCardMessage } = useSelector((state: any) => state.toggle);
   const handleClick = function () {
     dispatch(toggleMessage(!toggleCardMessage));
+    setColorIcon(!colorIcon);
   };
   const handleClickAway = function () {
     dispatch(toggleMessage(false));
+    setColorIcon(false);
   };
   const cardHeaderText = {
     title: "پیام ها",
@@ -32,9 +36,9 @@ const Message = function () {
           position: "relative",
         }}
       >
-        <IconButton onClick={handleClick}>
-          <ChatBubbleOutlineOutlinedIcon className="headerIconButtonSizeStyle" />
-        </IconButton>
+        <IconButtonStyled colorIcon={colorIcon} onClick={handleClick}>
+          <ChatBubbleOutlineOutlinedIcon />
+        </IconButtonStyled>
         <CardMessage toggleMessage={toggleCardMessage} settings={settings} />
       </Box>
     </ClickAwayListener>
