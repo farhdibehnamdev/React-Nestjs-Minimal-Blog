@@ -36,8 +36,11 @@ export const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
   },
 }));
 
-export const IconButtonStyled = styled(IconButton)<OpenProps>(
+export const HamburgerMenuStyled = styled(IconButton)<OpenProps>(
   ({ theme, open }) => ({
+    ".menuIconHeaderColorStyle": {
+      color: open ? "#000" : "#004deb",
+    },
     ...(!open && {
       [theme.breakpoints.up("lg")]: {
         marginLeft: "65px",
@@ -52,14 +55,6 @@ export const IconButtonStyled = styled(IconButton)<OpenProps>(
     [theme.breakpoints.down("lg")]: {
       marginLeft: 0,
     },
-  })
-);
-
-export const FullscreenOutlinedIconStyled = styled(FullscreenOutlinedIcon)<any>(
-  ({ colorIcon }: any) => ({
-    width: "24px",
-    height: "24px",
-    color: colorIcon ? "#004deb" : "#000",
   })
 );
 
@@ -83,9 +78,6 @@ const headerStyle: SxProps = {
       padding: "8px",
       background: "#fff",
       borderRadius: "4px",
-      ".menuIconHeaderColorStyle": {
-        color: "#000",
-      },
     },
     ".textFieldHeaderInputPropsStyle": {
       background: "#fff",
@@ -112,7 +104,6 @@ const headerStyle: SxProps = {
         justifyContent: "center",
         alignItems: "center",
         gap: "20px",
-
         ".headerIconButtonSizeStyle:hover": {
           color: "#004deb",
         },
