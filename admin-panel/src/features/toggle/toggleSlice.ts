@@ -4,12 +4,14 @@ interface ToggleState {
   toggle: boolean;
   toggleCardMessage: boolean;
   toggleCardNotification: boolean;
+  toggleBottomToolbar: boolean;
 }
 
 const initialState: ToggleState = {
   toggle: true,
   toggleCardMessage: false,
   toggleCardNotification: false,
+  toggleBottomToolbar: false,
 };
 export const toggleSlice = createSlice({
   name: "toggle",
@@ -24,9 +26,16 @@ export const toggleSlice = createSlice({
     toggleNotification: (state, action) => {
       state.toggleCardNotification = action.payload;
     },
+    toggleToolbar: (state, action) => {
+      state.toggleBottomToolbar = action.payload;
+    },
   },
 });
 
-export const { toggleSidebar, toggleMessage, toggleNotification } =
-  toggleSlice.actions;
+export const {
+  toggleSidebar,
+  toggleMessage,
+  toggleNotification,
+  toggleToolbar,
+} = toggleSlice.actions;
 export default toggleSlice.reducer;
