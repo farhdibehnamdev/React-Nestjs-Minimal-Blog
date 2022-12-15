@@ -17,6 +17,7 @@ export const AppBar = styled(MuiAppBar, {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
+
   ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
@@ -28,11 +29,28 @@ export const AppBar = styled(MuiAppBar, {
       duration: theme.transitions.duration.enteringScreen,
     }),
   }),
+  ...(!open && {
+    [theme.breakpoints.down("lg")]: {
+      marginTop: 0,
+      background: "#fff",
+      padding: "10px 0px 10px 0px",
+      boxShadow: "1px 2px 10px 0px rgba(0,0,0,0.1)",
+      ".gridSearchBoxStyle": {
+        display: "none",
+      },
+    },
+  }),
 }));
 
 export const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
+  ".arrowDownIconStyle": {
+    display: "none",
+  },
   [theme.breakpoints.down("lg")]: {
     width: "100%",
+    ".boxContainerMenuIconsStyle": {
+      display: "none !important",
+    },
   },
 }));
 
