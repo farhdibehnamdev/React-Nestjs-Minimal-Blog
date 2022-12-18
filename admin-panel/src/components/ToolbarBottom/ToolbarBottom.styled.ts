@@ -2,7 +2,10 @@ import { Box, styled, Toolbar } from "@mui/material";
 
 const ToolbarBottomStyled = styled(Toolbar)(({ theme }) => ({
   [theme.breakpoints.up("lg")]: {
-    ".gridSearchBoxStyle": {
+    ".gridSearchBoxToolbarBottomStyle": {
+      display: "none",
+    },
+    ".boxContainerMenuIconsStyle": {
       display: "none",
     },
   },
@@ -10,9 +13,16 @@ const ToolbarBottomStyled = styled(Toolbar)(({ theme }) => ({
     display: "flex",
     paddingLeft: 25,
     paddingRight: 25,
-    borderBottom: "1px solid #000",
-    borderTop: "1px solid #000",
-    margin: 0,
+    borderBottom: "1px solid #c3c3c3",
+    borderTop: "1px solid #ebebeb",
+    ".boxHeaderMenuIconStyle": {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      padding: "8px",
+      background: "#fff",
+      borderRadius: "4px",
+    },
     ".boxContainerMenuIconsStyle": {
       marginLeft: "auto",
     },
@@ -21,8 +31,23 @@ const ToolbarBottomStyled = styled(Toolbar)(({ theme }) => ({
       justifyContent: "space-between",
       gap: "20px",
     },
-    ".gridSearchBoxStyle": {
+    ".gridSearchBoxToolbarBottomStyle": {
       display: "block",
+      ".textFieldHeaderInputPropsStyle": {
+        background: "#fafafa",
+        borderRadius: "5px",
+        height: 40,
+        width: "30vw",
+      },
+      ".textFieldHeaderStyle": {
+        background: "#fff",
+        outline: 0,
+        margin: 0,
+        borderRadius: "5px",
+        display: "flex",
+        alignItems: "flex-start",
+        justifyContent: "center",
+      },
     },
   },
 }));
