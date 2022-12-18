@@ -7,7 +7,7 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 const ToolbarBottom = function () {
   return (
     <ToolbarBottomStyled>
-      <Grid item className="gridSearchBoxStyle">
+      <Grid item className="gridSearchBoxToolbarBottomStyle">
         <TextField
           variant="filled"
           hiddenLabel
