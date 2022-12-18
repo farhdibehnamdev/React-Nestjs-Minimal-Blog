@@ -7,6 +7,7 @@ import {
   InputAdornment,
   useMediaQuery,
   useTheme,
+  Divider,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
@@ -19,7 +20,8 @@ import { toggleSidebar } from "../../features/toggle/toggleSlice";
 import Notification from "../notification/Notification";
 import Message from "../messages/Message";
 import FullScreen from "../fullScreen/FullScreen";
-
+import ArrowDownToggleToolbar from "../arrowDownToggleToolbar/ArrowDownToggleToolbar";
+import ToolbarBottom from "../ToolbarBottom/ToolbarBottom";
 const Header = function () {
   const theme = useTheme();
   const dispatch = useDispatch();
@@ -77,7 +79,9 @@ const Header = function () {
               <Notification />
             </Box>
           </Box>
+          <ArrowDownToggleToolbar />
         </ToolbarStyled>
+        <ToolbarBottom />
       </AppBar>
     </Box>
   );

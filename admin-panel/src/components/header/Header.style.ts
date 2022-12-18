@@ -33,7 +33,7 @@ export const AppBar = styled(MuiAppBar, {
     [theme.breakpoints.down("lg")]: {
       marginTop: 0,
       background: "#fff",
-      padding: "10px 0px 10px 0px",
+      padding: "10px 0px 0px 0px",
       boxShadow: "1px 2px 10px 0px rgba(0,0,0,0.1)",
       ".gridSearchBoxStyle": {
         display: "none",
@@ -88,6 +88,15 @@ const headerStyle: SxProps = {
     gap: "30px",
     ".gridSearchBoxStyle": {
       marginLeft: -1,
+      ".textFieldHeaderStyle": {
+        background: "#fff",
+        outline: 0,
+        margin: 0,
+        borderRadius: "5px",
+        display: "flex",
+        alignItems: "flex-start",
+        justifyContent: "center",
+      },
     },
     ".boxHeaderMenuIconStyle": {
       display: "flex",
@@ -103,15 +112,7 @@ const headerStyle: SxProps = {
       height: 40,
       width: "30vw",
     },
-    ".textFieldHeaderStyle": {
-      background: "#fff",
-      outline: 0,
-      margin: 0,
-      borderRadius: "5px",
-      display: "flex",
-      alignItems: "flex-start",
-      justifyContent: "center",
-    },
+
     ".boxContainerMenuIconsStyle": {
       display: "flex",
       justifyContent: "center",
