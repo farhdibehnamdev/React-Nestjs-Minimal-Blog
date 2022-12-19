@@ -1,16 +1,19 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toggleToolbar } from "../../features/toggle/toggleSlice";
-import BottomToolbarStyled from "./ArrowDownToggleToolbar.styled";
 import ArrowDownwardOutlinedIcon from "@mui/icons-material/ArrowDownwardOutlined";
+import ArrowDownToggleToolbarStyled from "./ArrowDownToggleToolbar.styled";
 
-const BottomToolbar = function () {
+const ArrowDownToggleToolbar = function () {
   const dispatch = useDispatch();
   const { toggleBottomToolbar } = useSelector((state: any) => state.toggle);
+  const handleToggleBottomToolbar = function () {
+    dispatch(toggleToolbar(!toggleBottomToolbar));
+  };
   return (
-    <BottomToolbarStyled>
+    <ArrowDownToggleToolbarStyled onClick={handleToggleBottomToolbar}>
       <ArrowDownwardOutlinedIcon />
-    </BottomToolbarStyled>
+    </ArrowDownToggleToolbarStyled>
   );
 };
 
-export default BottomToolbar;
+export default ArrowDownToggleToolbar;

@@ -1,7 +1,6 @@
 import { IconButton, styled } from "@mui/material";
-import theme from "../../globalStyles/theme";
 
-const BottomToolbarStyled = styled(IconButton)(() => ({
+const ArrowDownToggleToolbarStyled = styled(IconButton)(({ theme }) => ({
   [theme.breakpoints.up("lg")]: {
     display: "none",
   },
@@ -11,4 +10,4 @@ const BottomToolbarStyled = styled(IconButton)(() => ({
     display: "block",
   },
 }));
-export default BottomToolbarStyled;
+export default ArrowDownToggleToolbarStyled;
