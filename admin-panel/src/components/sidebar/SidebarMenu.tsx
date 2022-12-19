@@ -45,9 +45,9 @@ export const MenuList = function ({ toggle }: MenuListProps): JSX.Element {
           <Tooltip
             title={!toggle && mediaQ ? item.menuTitle : ""}
             placement="right-start"
+            key={item.id}
           >
             <ListItemButton
-              key={item.id}
               className={`listStyleItemButton ${
                 activeMenu[item.id] ? "menuSelected" : ""
               }`}
