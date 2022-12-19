@@ -4,9 +4,11 @@ import Message from "../messages/Message";
 import Notification from "../notification/Notification";
 import ToolbarBottomStyled from "./ToolbarBottom.styled";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import { useSelector } from "react-redux";
 const ToolbarBottom = function () {
+  const { toggleBottomToolbar } = useSelector((state: any) => state.toggle);
   return (
-    <ToolbarBottomStyled>
+    <ToolbarBottomStyled open={toggleBottomToolbar}>
       <Grid item className="gridSearchBoxToolbarBottomStyle">
         <TextField
           variant="filled"
