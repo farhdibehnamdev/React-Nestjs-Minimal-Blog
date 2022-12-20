@@ -1,5 +1,4 @@
 import { Card, styled } from "@mui/material";
-import { CardType } from "../common/CardTypeEnum";
 interface CardMessageProps {
   isOpen: boolean;
 }
