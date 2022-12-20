@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Grid,
@@ -7,7 +7,6 @@ import {
   InputAdornment,
   useMediaQuery,
   useTheme,
-  Divider,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
@@ -22,8 +21,10 @@ import Message from "../messages/Message";
 import FullScreen from "../fullScreen/FullScreen";
 import ArrowDownToggleToolbar from "../arrowDownToggleToolbar/ArrowDownToggleToolbar";
 import ToolbarBottom from "../ToolbarBottom/ToolbarBottom";
+
 const Header = function () {
   const theme = useTheme();
+  const [toolbarShow, setToolbarShow] = useState(false);
   const dispatch = useDispatch();
   const { toggle } = useSelector((state: any) => state.toggle);
   const mediaQ = useMediaQuery(theme.breakpoints.down("lg"));
@@ -34,6 +35,7 @@ const Header = function () {
 
   useEffect(() => {
     mediaQ ? dispatch(toggleSidebar(false)) : dispatch(toggleSidebar(true));
+    mediaQ ? setToolbarShow(true) : setToolbarShow(false);
   }, [mediaQ]);
 
   return (
@@ -72,16 +74,18 @@ const Header = function () {
               placeholder="جستجو"
             />
           </Grid>
-          <Box className="boxContainerMenuIconsStyle">
-            <Box className="headerIconButtonStyle">
-              <FullScreen />
-              <Message />
-              <Notification />
+          {!toolbarShow && (
+            <Box className="boxContainerMenuIconsStyle">
+              <Box className="headerIconButtonStyle">
+                <FullScreen />
+                <Message />
+                <Notification />
+              </Box>
             </Box>
-          </Box>
+          )}
           <ArrowDownToggleToolbar />
         </ToolbarStyled>
-        <ToolbarBottom />
+        {toolbarShow && <ToolbarBottom />}
       </AppBar>
     </Box>
   );
