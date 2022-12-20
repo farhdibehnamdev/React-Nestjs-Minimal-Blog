@@ -83,7 +83,7 @@ function BpCheckbox(props: CheckboxProps) {
   );
 }
 
-const CardMessage = function ({ toggleMessage, settings }: any) {
+const CardMessage = function ({ toggleMessageOpen, settings }: any) {
   const [checked, setChecked] = React.useState([2]);
   const handleToggle = (value: number) => () => {
     const currentIndex = checked.indexOf(value);
@@ -97,7 +97,7 @@ const CardMessage = function ({ toggleMessage, settings }: any) {
     setChecked(newChecked);
   };
   return (
-    <CardMessageStyled isOpen={toggleMessage} cardType={settings.cardType}>
+    <CardMessageStyled isOpen={toggleMessageOpen}>
       <CardMedia
         component="div"
         className="boxImageHeaderMessageStyle"
