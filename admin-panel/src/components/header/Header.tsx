@@ -10,10 +10,7 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import headerStyle, {
-  ToolbarStyled,
-  HamburgerMenuStyled,
-} from "./Header.style";
+import { ToolbarStyled, HamburgerMenuStyled } from "./Header.style";
 import { AppBar } from "./Header.style";
 import { toggleSidebar } from "../../features/toggle/toggleSlice";
 import Notification from "../notification/Notification";
@@ -39,55 +36,53 @@ const Header = function () {
   }, [mediaQ]);
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={headerStyle} open={toggle}>
-        <ToolbarStyled variant="dense" className="toolbarStyle">
-          <HamburgerMenuStyled
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="end"
-            open={toggle}
-          >
-            <Box className="boxHeaderMenuIconStyle">
-              <MenuIcon className="menuIconHeaderColorStyle" />
+    <AppBar position="static" open={toggle}>
+      <ToolbarStyled variant="dense" className="toolbarStyle">
+        <HamburgerMenuStyled
+          aria-label="open drawer"
+          onClick={handleDrawerOpen}
+          edge="end"
+          open={toggle}
+        >
+          <Box className="boxHeaderMenuIconStyle">
+            <MenuIcon className="menuIconHeaderColorStyle" />
+          </Box>
+        </HamburgerMenuStyled>
+        <Grid item className="gridSearchBoxStyle">
+          <TextField
+            variant="filled"
+            hiddenLabel
+            InputLabelProps={{
+              disableAnimation: true,
+              shrink: false,
+            }}
+            InputProps={{
+              disableUnderline: true,
+              endAdornment: (
+                <InputAdornment position="end">
+                  <SearchOutlinedIcon />
+                </InputAdornment>
+              ),
+              className: "textFieldHeaderInputPropsStyle",
+            }}
+            className="textFieldHeaderStyle"
+            id="search"
+            placeholder="جستجو"
+          />
+        </Grid>
+        {!toolbarShow && (
+          <Box className="boxContainerMenuIconsStyle">
+            <Box className="headerIconButtonStyle">
+              <FullScreen />
+              <Message />
+              <Notification />
             </Box>
-          </HamburgerMenuStyled>
-          <Grid item className="gridSearchBoxStyle">
-            <TextField
-              variant="filled"
-              hiddenLabel
-              InputLabelProps={{
-                disableAnimation: true,
-                shrink: false,
-              }}
-              InputProps={{
-                disableUnderline: true,
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <SearchOutlinedIcon />
-                  </InputAdornment>
-                ),
-                className: "textFieldHeaderInputPropsStyle",
-              }}
-              className="textFieldHeaderStyle"
-              id="search"
-              placeholder="جستجو"
-            />
-          </Grid>
-          {!toolbarShow && (
-            <Box className="boxContainerMenuIconsStyle">
-              <Box className="headerIconButtonStyle">
-                <FullScreen />
-                <Message />
-                <Notification />
-              </Box>
-            </Box>
-          )}
-          <ArrowDownToggleToolbar />
-        </ToolbarStyled>
-        {toolbarShow && <ToolbarBottom />}
-      </AppBar>
-    </Box>
+          </Box>
+        )}
+        <ArrowDownToggleToolbar />
+      </ToolbarStyled>
+      {toolbarShow && <ToolbarBottom />}
+    </AppBar>
   );
 };
 

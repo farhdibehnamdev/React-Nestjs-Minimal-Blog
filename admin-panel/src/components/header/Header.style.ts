@@ -1,7 +1,6 @@
-import { styled, Toolbar, SxProps, IconButton } from "@mui/material";
+import { styled, Toolbar, IconButton, Box } from "@mui/material";
 import { OpenProps } from "../common/CommonPorps";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
-import FullscreenOutlinedIcon from "@mui/icons-material/FullscreenOutlined";
 
 const drawerWidth = 240;
 
@@ -17,71 +16,12 @@ export const AppBar = styled(MuiAppBar, {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    [theme.breakpoints.down("lg")]: {
-      width: "100%",
-    },
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-  ...(!open && {
-    [theme.breakpoints.down("lg")]: {
-      marginTop: 0,
-      background: "#fff",
-      padding: "10px 0px 0px 0px",
-      boxShadow: "1px 2px 10px 0px rgba(0,0,0,0.1)",
-      ".gridSearchBoxStyle": {
-        display: "none",
-      },
-    },
-  }),
-}));
-
-export const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
-  ".arrowDownIconStyle": {
-    display: "none",
-  },
-  [theme.breakpoints.down("lg")]: {
-    width: "100%",
-    ".boxContainerMenuIconsStyle": {
-      display: "none !important",
-    },
-  },
-}));
-
-export const HamburgerMenuStyled = styled(IconButton)<OpenProps>(
-  ({ theme, open }) => ({
-    ".menuIconHeaderColorStyle": {
-      color: open ? "#000" : "#004deb",
-    },
-    ...(!open && {
-      [theme.breakpoints.up("lg")]: {
-        marginLeft: "65px",
-      },
-    }),
-    ...(open && {
-      [theme.breakpoints.up("lg")]: {
-        marginLeft: 0,
-      },
-    }),
-
-    [theme.breakpoints.down("lg")]: {
-      marginLeft: 0,
-    },
-  })
-);
-
-const headerStyle: SxProps = {
   position: "fixed",
   textAlign: "right",
   background: "none",
   boxShadow: "none",
   marginTop: "10px",
+  WebkitTransition: "right .2s",
   ".toolbarStyle": {
     display: "flex",
     alignItems: "center",
@@ -129,6 +69,65 @@ const headerStyle: SxProps = {
       },
     },
   },
-};
+  ...(open && {
+    marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(["width", "margin"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    [theme.breakpoints.down("lg")]: {
+      marginLeft: 0,
+      width: "100% !important",
+      background: "#fff",
+      marginTop: 0,
+      padding: "10px",
+      opacity: 1,
+    },
+  }),
+  ...(!open && {
+    [theme.breakpoints.down("lg")]: {
+      marginTop: 0,
+      background: "#fff",
+      padding: "10px 0px 0px 0px",
+      boxShadow: "1px 2px 10px 0px rgba(0,0,0,0.1)",
+      ".gridSearchBoxStyle": {
+        display: "none",
+      },
+    },
+  }),
+}));
 
-export default headerStyle;
+export const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
+  ".arrowDownIconStyle": {
+    display: "none",
+  },
+  [theme.breakpoints.down("lg")]: {
+    width: "100%",
+    ".boxContainerMenuIconsStyle": {
+      display: "none !important",
+    },
+  },
+}));
+
+export const HamburgerMenuStyled = styled(IconButton)<OpenProps>(
+  ({ theme, open }) => ({
+    ".menuIconHeaderColorStyle": {
+      color: open ? "#000" : "#004deb",
+    },
+    ...(!open && {
+      [theme.breakpoints.up("lg")]: {
+        marginLeft: "65px",
+      },
+    }),
+    ...(open && {
+      [theme.breakpoints.up("lg")]: {
+        marginLeft: 0,
+      },
+    }),
+
+    [theme.breakpoints.down("lg")]: {
+      marginLeft: 0,
+    },
+  })
+);
