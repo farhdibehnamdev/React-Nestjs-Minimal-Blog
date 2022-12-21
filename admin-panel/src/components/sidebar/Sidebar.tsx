@@ -28,7 +28,7 @@ export default function Sidebar() {
         open={toggle}
         sx={sidebarStyle}
       >
-        <DrawerHeader open={toggle}>
+        <DrawerHeader open={toggle} className="logoHide">
           <img src="/assets/images/logo.png" alt="logo" />
         </DrawerHeader>
         <Box className="boxProfileSidebar">
