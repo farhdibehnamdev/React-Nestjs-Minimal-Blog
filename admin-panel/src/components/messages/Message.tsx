@@ -36,10 +36,15 @@ const Message = function () {
           position: "relative",
         }}
       >
-        <IconButtonStyled colorIcon={colorIcon} onClick={handleClick}>
-          <ChatBubbleOutlineOutlinedIcon />
-        </IconButtonStyled>
-        <CardMessage toggleMessage={toggleCardMessage} settings={settings} />
+        <Box>
+          <IconButtonStyled colorIcon={colorIcon} onClick={handleClick}>
+            <ChatBubbleOutlineOutlinedIcon />
+          </IconButtonStyled>
+          <CardMessage
+            toggleMessageOpen={toggleCardMessage}
+            settings={settings}
+          />
+        </Box>
       </Box>
     </ClickAwayListener>
   );
