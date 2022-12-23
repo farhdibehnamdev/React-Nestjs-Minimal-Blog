@@ -21,7 +21,11 @@ import Posts from "./components/posts/Posts";
 import Tags from "./components/tags/Tags";
 import SendMessage from "./components/sendMessage/SendMessage";
 import UserManagement from "./components/userManagement/UserManagement";
-import Exit from "./components/exit/Exit";
+import SignOut from "./components/signout/SignOut";
+import AuthLayout from "./components/authLayout/AuthLayout";
+import SignIn from "./components/signin/SignIn";
+import SignUp from "./components/signup/SignUp";
+import Home from "./components/home/Home";
 const cacheRTL = createCache({
   key: "muirtl",
   stylisPlugins: [prefixer, rtlPlugin],
@@ -40,21 +44,24 @@ function App() {
       <CacheProvider value={cacheRTL}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <Router>
-            <Routes>
-              <Route element={<DashboardLayout />}>
-                <Route path="/" element={<Dashboard />}>
-                  <Route path="/settings" element={<Settings />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/posts" element={<Posts />} />
-                  <Route path="/tags" element={<Tags />} />
-                  <Route path="/send-message" element={<SendMessage />} />
-                  <Route path="/user-management" element={<UserManagement />} />
-                  <Route path="/exit" element={<Exit />} />
-                </Route>
+          <Routes>
+            <Route element={<DashboardLayout />}>
+              <Route path="/" element={<Dashboard />}>
+                <Route index element={<Home />} />
+                <Route path="settings" element={<Settings />} />
+                <Route path="profile" element={<Profile />} />
+                <Route path="posts" element={<Posts />} />
+                <Route path="tags" element={<Tags />} />
+                <Route path="send-message" element={<SendMessage />} />
+                <Route path="user-management" element={<UserManagement />} />
+                <Route path="sign-out" element={<SignOut />} />
               </Route>
-            </Routes>
-          </Router>
+            </Route>
+            <Route element={<AuthLayout />}>
+              <Route path="/signin" element={<SignIn />} />
+              <Route path="/signup" element={<SignUp />} />
+            </Route>
+          </Routes>
           {mediaQ && (
             <Backdrop
               sx={{
