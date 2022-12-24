@@ -102,10 +102,13 @@ export const Drawer = styled(MuiDrawer, {
   },
   [theme.breakpoints.up("lg")]: {
     ...(open && {
-      ".listStyleItemButton:hover": {
+      ".listStyleItemButton": {
         span: {
-          color: "black",
+          background: "none",
         },
+      },
+      ".listStyleItemButton:hover": {
+        backgroundColor: "#e6e4e4",
       },
     }),
     ...(!open && {
@@ -149,6 +152,12 @@ export const BoxRootSidebarStyled = styled(Box)<OpenProps>(
   ({ theme, open }) => ({
     [theme.breakpoints.down("lg")]: {
       ...(open && {
+        ".logoHide": {
+          display: "none",
+        },
+        ".boxProfileSidebar": {
+          marginTop: "25px",
+        },
         ...openedMixin(theme),
         "& .MuiDrawer-root": {
           display: "block !important",
@@ -212,13 +221,18 @@ const sidebarStyle: SxProps = {
       marginRight: "10px",
       paddingLeft: "33px",
       width: "100%",
+      ".navText": {
+        textDecoration: "none",
+        color: "#828282",
+      },
+
       ".listStyleItemIcon": {
         minWidth: 0,
         justifyContent: "center",
       },
     },
     ".listStyleItemButton.menuSelected": {
-      ".menuName span": {
+      ".menuName .navText": {
         color: "#004deb",
       },
     },
