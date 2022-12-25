@@ -21,7 +21,7 @@ export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Version('1')
-  @Get()
+  @Get('categories')
   findAll() {
     return this.categoryService.findAll();
   }
