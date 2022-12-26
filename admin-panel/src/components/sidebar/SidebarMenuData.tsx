@@ -3,6 +3,7 @@ import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
 import FormatListBulletedOutlinedIcon from "@mui/icons-material/FormatListBulletedOutlined";
+import FeaturedPlayListOutlinedIcon from "@mui/icons-material/FeaturedPlayListOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { SidebarProps } from "./SidebarProps";
 
@@ -21,23 +22,29 @@ const menuData: SidebarProps[] = [
   },
   {
     id: 3,
+    path: "/categories",
+    menuTitle: "فهرست ها",
+    menuIconMUI: <FeaturedPlayListOutlinedIcon />,
+  },
+  {
+    id: 4,
     path: "/tags",
     menuTitle: "تگ ها",
     menuIconMUI: <LocalOfferOutlinedIcon />,
   },
   {
-    id: 4,
+    id: 5,
     path: "/send-message",
     menuTitle: "ارسال پیام",
     menuIconMUI: <EmailOutlinedIcon />,
   },
   {
-    id: 5,
+    id: 6,
     path: "/user-management",
     menuTitle: "مدیریت کاربران",
     menuIconMUI: <ManageAccountsOutlinedIcon />,
   },
-  { id: 6, path: "/sign-out", menuTitle: "خروج", menuIconMUI: <LogoutIcon /> },
+  { id: 7, path: "/sign-out", menuTitle: "خروج", menuIconMUI: <LogoutIcon /> },
 ];
 
 export default menuData;
