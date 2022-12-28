@@ -27,6 +27,7 @@ import SignIn from "./components/signin/SignIn";
 import SignUp from "./components/signup/SignUp";
 import Home from "./components/home/Home";
 import Categories from "./components/categories/Categories";
+import AddPost from "./components/posts/AddPost";
 const cacheRTL = createCache({
   key: "muirtl",
   stylisPlugins: [prefixer, rtlPlugin],
@@ -51,7 +52,9 @@ function App() {
                 <Route index element={<Home />} />
                 <Route path="settings" element={<Settings />} />
                 <Route path="profile" element={<Profile />} />
-                <Route path="posts" element={<Posts />} />
+                <Route path="posts" element={<Posts />}>
+                  <Route path="add" element={<AddPost />} />
+                </Route>
                 <Route path="categories" element={<Categories />} />
                 <Route path="tags" element={<Tags />} />
                 <Route path="send-message" element={<SendMessage />} />
