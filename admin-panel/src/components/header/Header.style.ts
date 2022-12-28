@@ -3,7 +3,15 @@ import { OpenProps } from "../common/CommonPorps";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 
 const drawerWidth = 240;
-
+const headerStyleStatus = {
+  marginTop: 0,
+  background: "#fff",
+  padding: "10px 0px 0px 0px",
+  boxShadow: "1px 2px 10px 0px rgba(0,0,0,0.1)",
+  ".gridSearchBoxStyle": {
+    display: "none",
+  },
+};
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
@@ -15,6 +23,25 @@ export const AppBar = styled(MuiAppBar, {
   transition: theme.transitions.create(["width", "margin"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
+  }),
+
+  ...(open && {
+    marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(["width", "margin"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    [theme.breakpoints.down("lg")]: {
+      ...headerStyleStatus,
+      width: "100% !important",
+      marginLeft: 0,
+    },
+  }),
+  ...(!open && {
+    [theme.breakpoints.down("lg")]: {
+      ...headerStyleStatus,
+    },
   }),
   position: "fixed",
   textAlign: "right",
@@ -69,33 +96,6 @@ export const AppBar = styled(MuiAppBar, {
       },
     },
   },
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    [theme.breakpoints.down("lg")]: {
-      marginLeft: 0,
-      width: "100% !important",
-      background: "#fff",
-      marginTop: 0,
-      padding: "10px",
-      opacity: 1,
-    },
-  }),
-  ...(!open && {
-    [theme.breakpoints.down("lg")]: {
-      marginTop: 0,
-      background: "#fff",
-      padding: "10px 0px 0px 0px",
-      boxShadow: "1px 2px 10px 0px rgba(0,0,0,0.1)",
-      ".gridSearchBoxStyle": {
-        display: "none",
-      },
-    },
-  }),
 }));
 
 export const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
