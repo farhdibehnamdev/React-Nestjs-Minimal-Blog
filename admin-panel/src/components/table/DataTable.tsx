@@ -50,9 +50,12 @@ const DataTable = function () {
   return (
     <>
       <Box sx={filterTable}>
-        <Button variant="contained" size="large">
-          <AddOutlinedIcon />
-          <Typography sx={{ color: "#fff" }}>افزودن</Typography>
+        <Button
+          variant="contained"
+          size="large"
+          startIcon={<AddOutlinedIcon />}
+        >
+          <Typography sx={{ color: "#fff" }}>افزودن فهرست</Typography>
         </Button>
 
         <Box>
