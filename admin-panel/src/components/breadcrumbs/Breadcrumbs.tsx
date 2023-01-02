@@ -1,6 +1,7 @@
 import { Breadcrumbs as BreadcrumbsMUI } from "@mui/material";
+import { BreadcrumbsType } from "../common/BreadcrumbsProps";
 import Link from "@mui/material/Link";
-const Breadcrumbs = function () {
+const Breadcrumbs = function ({ titles }: BreadcrumbsType) {
   function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     event.preventDefault();
     console.info("You clicked a breadcrumb.");
@@ -8,16 +9,13 @@ const Breadcrumbs = function () {
   return (
     <div role="presentation" onClick={handleClick}>
       <BreadcrumbsMUI sx={{ fontSize: "12px" }} aria-label="breadcrumb">
-        <Link underline="hover" color="inherit" href="/">
-          پست
-        </Link>
-        <Link
-          underline="hover"
-          color="inherit"
-          href="/material-ui/getting-started/installation/"
-        >
-          افزودن پست
-        </Link>
+        {titles.map((title: string) => {
+          return (
+            <Link underline="hover" color="inherit" href="/">
+              {title}
+            </Link>
+          );
+        })}
       </BreadcrumbsMUI>
     </div>
   );
