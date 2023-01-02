@@ -2,15 +2,15 @@ import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 import { BreadcrumbsType } from "../common/BreadcrumbsProps";
 import AddEditPost from "./AddEditPost";
 const breadcrumbTitles: BreadcrumbsType = {
-  titles: ["پست", "افزودن پست"],
+  titles: ["پست", "ویرایش پست"],
 };
-const AddPost = function () {
+const EditPost = function () {
   return (
     <>
       <Breadcrumbs {...breadcrumbTitles} />
-      <AddEditPost />
+      <AddEditPost />;
     </>
   );
 };
 
-export default AddPost;
+export default EditPost;
