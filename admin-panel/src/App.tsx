@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleSidebar } from "./features/toggle/toggleSlice";
 import theme from "./globalStyles/theme";
 import DashboardLayout from "./components/dashboardLayout/DashboardLayout";
-import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Dashboard from "./components/dashboard/Dashboard";
 import Settings from "./components/settings/Settings";
 import Profile from "./components/profile/Profile";
@@ -30,6 +30,12 @@ import Categories from "./components/categories/Categories";
 import AddPost from "./components/posts/AddPost";
 import PostsLayout from "./components/posts/PostsLayout";
 import EditPost from "./components/posts/EditPost";
+import AddCategory from "./components/categories/AddCategory";
+import EditCategory from "./components/categories/EditCategory";
+import CategoriesLayout from "./components/categories/CategoriesLayout";
+import TagsLayout from "./components/tags/TagsLayout";
+import AddTag from "./components/tags/AddTag";
+import EditTag from "./components/tags/EditTag";
 const cacheRTL = createCache({
   key: "muirtl",
   stylisPlugins: [prefixer, rtlPlugin],
@@ -59,8 +65,16 @@ function App() {
                   <Route path="add" element={<AddPost />} />
                   <Route path="edit" element={<EditPost />} />
                 </Route>
-                <Route path="categories" element={<Categories />} />
-                <Route path="tags" element={<Tags />} />
+                <Route path="categories" element={<CategoriesLayout />}>
+                  <Route index element={<Categories />} />
+                  <Route path="add" element={<AddCategory />} />
+                  <Route path="edit" element={<EditCategory />} />
+                </Route>
+                <Route path="tags" element={<TagsLayout />}>
+                  <Route index element={<Tags />} />
+                  <Route path="add" element={<AddTag />} />
+                  <Route path="edit" element={<EditTag />} />
+                </Route>
                 <Route path="send-message" element={<SendMessage />} />
                 <Route path="user-management" element={<UserManagement />} />
                 <Route path="sign-out" element={<SignOut />} />
