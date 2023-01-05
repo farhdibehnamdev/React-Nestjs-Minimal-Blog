@@ -32,14 +32,6 @@ const AddEditCategory = function () {
 
   return (
     <>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          marginBottom: "50px",
-        }}
-      ></Box>
       <Grid container sx={addEditFormStyle}>
         <form
           style={{ width: "100%", flexWrap: "wrap" }}
