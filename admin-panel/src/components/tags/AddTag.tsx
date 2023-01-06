@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 import { BreadcrumbsType } from "../common/BreadcrumbsProps";
 import AddEditTag from "./AddEditTag";
@@ -8,17 +9,10 @@ const breadcrumbTitles: BreadcrumbsType = {
 const AddTag = function () {
   return (
     <>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          marginBottom: "50px",
-        }}
-      >
+      <Grid item mb={5.2}>
         <h1>افزودن تگ</h1>
         <Breadcrumbs {...breadcrumbTitles} />
-      </Box>
+      </Grid>
       <AddEditTag />
     </>
   );
