@@ -24,7 +24,6 @@ const mainStyleGrid: SxProps<Theme> = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    minHeight: "100vh",
   },
 
   ".stackStyleWrapperCards": {
