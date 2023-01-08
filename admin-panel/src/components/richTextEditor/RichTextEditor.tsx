@@ -5,7 +5,6 @@ const RichTextEditor = function () {
     <>
       <Editor
         apiKey="gzzvye1m3v6mexm536ii0av310tb85vla0tkrun3m7c1y9l8"
-        initialValue="<p>This is the initial content of the editor.</p>"
         init={{
           height: 500,
           menubar: false,
@@ -30,7 +29,9 @@ const RichTextEditor = function () {
             "help",
             "wordcount",
             "quickbars",
+            "directionality",
           ],
+          directionality: "rtl",
           toolbar:
             "undo redo | blocks | " +
             "bold italic forecolor | alignleft aligncenter " +
