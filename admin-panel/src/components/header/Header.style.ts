@@ -43,11 +43,12 @@ export const AppBar = styled(MuiAppBar, {
       ...headerStyleStatus,
     },
   }),
-  position: "fixed",
+  position: "sticky",
   textAlign: "right",
   background: "none",
   boxShadow: "none",
   marginTop: "10px",
+  marginBottom: "50px",
   WebkitTransition: "right .2s",
   ".toolbarStyle": {
     display: "flex",
