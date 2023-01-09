@@ -2,7 +2,7 @@ import AddEditCategory from "./AddEditCategory";
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 import { BreadcrumbsType } from "../common/BreadcrumbsProps";
 const breadcrumbTitles: BreadcrumbsType = {
-  titles: ["پست", "ویرایش پست"],
+  titles: ["فهرست", "ویرایش فهرست"],
 };
 const EditCategory = function () {
   return (
