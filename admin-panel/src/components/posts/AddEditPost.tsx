@@ -38,133 +38,122 @@ const AddEditPost = function () {
 
   return (
     <>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          marginBottom: "50px",
-        }}
-      ></Box>
       <Grid container sx={addEditFormStyle}>
         <form
           style={{ width: "100%", flexWrap: "wrap" }}
           onSubmit={handleSubmit(onSumbit)}
         >
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "25px",
-            }}
-          >
-            <TextField
-              fullWidth
-              required
-              id="outlined-required"
-              label="عنوان پست"
-              hiddenLabel={true}
-              placeholder="عنوان پست"
-              sx={{ marginRight: "10px" }}
-            />
-            <FormControl fullWidth sx={{ m: 1.2, minWidth: 120 }}>
-              <InputLabel id="demo-simple-select-helper-label">
-                فهرست
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-helper-label"
-                id="demo-simple-select-helper"
-                value={age}
-                label="Age"
-                onChange={handleChange}
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "25px",
-            }}
-          >
-            <Autocomplete
-              multiple
-              limitTags={2}
-              fullWidth
-              sx={{ marginRight: "10px" }}
-              id="multiple-limit-tags"
-              options={top100Films}
-              getOptionLabel={(option) => option.title}
-              defaultValue={[top100Films[13], top100Films[12], top100Films[11]]}
-              renderInput={(params) => (
-                <TextField {...params} label="تگ ها" placeholder="Favorites" />
-              )}
-            />
-
-            <FormControl
-              fullWidth
-              sx={{
-                m: 1.2,
-                minWidth: 120,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: "5px",
-                border: "1px solid #c6c6ce",
-                padding: "6px",
-              }}
-            >
-              <FormControlLabel
-                control={<Switch defaultChecked />}
-                label="منتشر شود"
+          <Grid container mb={3} spacing={2}>
+            <Grid item xl={6}>
+              <TextField
+                fullWidth
+                required
+                id="outlined-required"
+                label="عنوان پست"
+                hiddenLabel={true}
+                placeholder="عنوان پست"
+                sx={{ marginRight: "10px" }}
               />
-            </FormControl>
-          </Box>
+            </Grid>
+            <Grid item xl={6}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-helper-label">
+                  فهرست
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-helper-label"
+                  id="demo-simple-select-helper"
+                  value={age}
+                  label="Age"
+                  onChange={handleChange}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value={10}>Ten</MenuItem>
+                  <MenuItem value={20}>Twenty</MenuItem>
+                  <MenuItem value={30}>Thirty</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+          <Grid container mb={3} spacing={2}>
+            <Grid item xl={6}>
+              <Autocomplete
+                multiple
+                limitTags={2}
+                fullWidth
+                sx={{ marginRight: "10px" }}
+                id="multiple-limit-tags"
+                options={top100Films}
+                getOptionLabel={(option) => option.title}
+                defaultValue={[
+                  top100Films[13],
+                  top100Films[12],
+                  top100Films[11],
+                ]}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="تگ ها"
+                    placeholder="Favorites"
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xl={6}>
+              <FormControl
+                fullWidth
+                sx={{
+                  minWidth: 120,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: "5px",
+                  border: "1px solid #c6c6ce",
+                  padding: "8px",
+                }}
+              >
+                <FormControlLabel
+                  control={<Switch defaultChecked />}
+                  label="منتشر شود"
+                />
+              </FormControl>
+            </Grid>
+          </Grid>
           <Uploader />
           <br />
           <br />
           <RichTextEditor />
           <br />
           <br />
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Button
-              fullWidth
-              variant="contained"
-              size="large"
-              startIcon={<SaveOutlinedIcon />}
-              sx={{ m: 1.2 }}
-            >
-              <Typography sx={{ color: "#fff", fontSize: "20px" }}>
-                ذخیره
-              </Typography>
-            </Button>
-            <Button
-              color="error"
-              fullWidth
-              variant="contained"
-              size="large"
-              startIcon={<DoDisturbAltOutlinedIcon />}
-            >
-              <Typography sx={{ color: "#fff", fontSize: "20px" }}>
-                بازگشت
-              </Typography>
-            </Button>
-          </Box>
+          <Grid container spacing={2} justifyContent="center">
+            <Grid item xl={6}>
+              <Button
+                fullWidth
+                variant="contained"
+                size="large"
+                startIcon={<SaveOutlinedIcon />}
+              >
+                <Typography sx={{ color: "#fff", fontSize: "20px" }}>
+                  ذخیره
+                </Typography>
+              </Button>
+            </Grid>
+            <Grid item xl={6}>
+              <Button
+                color="error"
+                fullWidth
+                variant="contained"
+                size="large"
+                startIcon={<DoDisturbAltOutlinedIcon />}
+              >
+                <Typography sx={{ color: "#fff", fontSize: "20px" }}>
+                  بازگشت
+                </Typography>
+              </Button>
+            </Grid>
+          </Grid>
         </form>
       </Grid>
     </>

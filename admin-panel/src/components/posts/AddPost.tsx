@@ -1,3 +1,5 @@
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 import { BreadcrumbsType } from "../common/BreadcrumbsProps";
 import AddEditPost from "./AddEditPost";
@@ -7,7 +9,10 @@ const breadcrumbTitles: BreadcrumbsType = {
 const AddPost = function () {
   return (
     <>
-      <Breadcrumbs {...breadcrumbTitles} />
+      <Grid item mb={5.2}>
+        <h1>افزودن پست</h1>
+        <Breadcrumbs {...breadcrumbTitles} />
+      </Grid>
       <AddEditPost />
     </>
   );
