@@ -1,4 +1,5 @@
 import { Card, styled } from "@mui/material";
+import theme from "../../globalStyles/theme";
 interface CardMessageProps {
   isOpen: boolean;
 }
@@ -8,15 +9,20 @@ const CardMessageStyled = styled(Card, {
 })<CardMessageProps>((p: CardMessageProps) => ({
   visibility: p.isOpen ? "visible" : "hidden",
   opacity: p.isOpen ? 1 : 0,
-  maxWidth: "300px",
   position: "absolute",
   willChange: "transform",
-  width: "100vw",
   top: 0,
   right: 0,
   marginTop: "0px",
   transition: "margin-top .3s, opacity .3s",
   transform: " translate3d(0px, 50px, 0px)",
+  whiteSpace: "nowrap",
+  [theme.breakpoints.down("lg")]: {
+    right: "0 !important",
+    marginRight: "auto",
+    marginLeft: "auto",
+    marginTop: "-10px !important",
+  },
   ".boxImageHeaderMessageStyle": {
     position: "relative",
     width: "100%",
