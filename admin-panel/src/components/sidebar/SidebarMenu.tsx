@@ -11,7 +11,6 @@ export const MenuList = function ({ toggle }: MenuListProps): JSX.Element {
   const theme = useTheme();
   const [activeMenu, setActiveMenu] = React.useState<any>({});
   const mediaQ = useMediaQuery(theme.breakpoints.up("lg"));
-  // const activeMenu = activeClass ? "activeMenu" : "";
   const handleToggleMenu = function (id: any) {
     setActiveMenu((state: any) => ({
       [id]: !activeMenu[id],
