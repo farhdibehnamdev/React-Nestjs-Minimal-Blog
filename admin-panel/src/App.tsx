@@ -10,7 +10,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleSidebar } from "./features/toggle/toggleSlice";
+import { toggleSidebar } from "./store/slices/toggle/toggleSlice";
 import theme from "./globalStyles/theme";
 import DashboardLayout from "./components/dashboardLayout/DashboardLayout";
 import { Route, Routes } from "react-router-dom";
