@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleMessage } from "../../features/toggle/toggleSlice";
+import { toggleMessage } from "../../store/slices/toggle/toggleSlice";
 import { Box, ClickAwayListener } from "@mui/material";
 import CardMessage from "../cardMessages/CardMessage";
 import { CardType } from "../common/CardTypeEnum";

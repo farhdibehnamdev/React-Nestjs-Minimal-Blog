@@ -12,7 +12,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { ToolbarStyled, HamburgerMenuStyled } from "./Header.style";
 import { AppBar } from "./Header.style";
-import { toggleSidebar } from "../../features/toggle/toggleSlice";
+import { toggleSidebar } from "../../store/slices/toggle/toggleSlice";
 import Notification from "../notification/Notification";
 import Message from "../messages/Message";
 import FullScreen from "../fullScreen/FullScreen";

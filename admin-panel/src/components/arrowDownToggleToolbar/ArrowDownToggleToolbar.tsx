@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { toggleToolbar } from "../../features/toggle/toggleSlice";
+import { toggleToolbar } from "../../store/slices/toggle/toggleSlice";
 import ArrowDownwardOutlinedIcon from "@mui/icons-material/ArrowDownwardOutlined";
 import ArrowDownToggleToolbarStyled from "./ArrowDownToggleToolbar.styled";
 

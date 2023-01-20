@@ -1,11 +1,11 @@
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleNotification } from "../../features/toggle/toggleSlice";
+import { toggleNotification } from "../../store/slices/toggle/toggleSlice";
 import { Box, ClickAwayListener } from "@mui/material";
 import CardMessage from "../cardMessages/CardMessage";
 import { CardType } from "../common/CardTypeEnum";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import IconButtonStyled from "../common/styles/IconButton.style";
-import { useState } from "react";
 
 const Notification = function () {
   const [colorIcon, setColorIcon] = useState(false);
@@ -16,7 +16,9 @@ const Notification = function () {
     setColorIcon(!colorIcon);
   };
   const handleClickAwady = function () {
-    dispatch(toggleNotification(false));
+    if (toggleCardNotification) {
+      dispatch(toggleNotification(false));
+    }
     setColorIcon(false);
   };
   const cardHeaderText = {
@@ -30,17 +32,20 @@ const Notification = function () {
     data: [],
   };
   return (
-    <ClickAwayListener onClickAway={handleClickAwady}>
-      <Box sx={{ position: "relative" }}>
-        <IconButtonStyled colorIcon={colorIcon} onClick={handleClick}>
-          <NotificationsOutlinedIcon />
-        </IconButtonStyled>
-        <CardMessage
-          toggleMessage={toggleCardNotification}
-          settings={settings}
-        />
-      </Box>
-    </ClickAwayListener>
+    <Box sx={{ position: "relative" }}>
+      <ClickAwayListener onClickAway={handleClickAwady}>
+        <Box>
+          <IconButtonStyled colorIcon={colorIcon} onClick={handleClick}>
+            <NotificationsOutlinedIcon />
+          </IconButtonStyled>
+
+          <CardMessage
+            toggleMessageOpen={toggleCardNotification}
+            settings={settings}
+          />
+        </Box>
+      </ClickAwayListener>
+    </Box>
   );
 };
 
