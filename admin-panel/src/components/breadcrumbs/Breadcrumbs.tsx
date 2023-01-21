@@ -9,9 +9,9 @@ const Breadcrumbs = function ({ titles }: BreadcrumbsType) {
   return (
     <div role="presentation" onClick={handleClick}>
       <BreadcrumbsMUI sx={{ fontSize: "12px" }} aria-label="breadcrumb">
-        {titles.map((title: string) => {
+        {titles.map((title: string, index: number) => {
           return (
-            <Link underline="hover" color="inherit" href="/">
+            <Link key={index} underline="hover" color="inherit" href="/">
               {title}
             </Link>
           );
