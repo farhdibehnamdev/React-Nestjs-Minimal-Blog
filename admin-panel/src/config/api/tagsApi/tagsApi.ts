@@ -1,22 +1,21 @@
+import { URLS } from "src/config/constants";
 import api from "../api";
 
-const URLS = {
-  fetchTagUrl: "api/tag",
-  postTagUrl: "api/tag",
-};
-
-type tagsData = {
+type tagsDataType = {
   id: number;
   title: string;
+  isPublished: boolean;
   description: string;
 };
 
-type postTagsType = {
+export type postTagsType = {
   title: string;
+  isPublished: boolean;
   description: string;
 };
+
 export const fetchTagsData = async () => {
-  return await api.get<tagsData[]>(URLS.fetchTagUrl);
+  return await api.get<tagsDataType[]>(URLS.fetchTagUrl);
 };
 
 export const postTagData = async (body: any) => {
