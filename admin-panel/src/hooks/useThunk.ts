@@ -11,12 +11,15 @@ const useThunk = function (
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const dispatch = useDispatch();
-  const runThunk = useCallback((): Function | void => {
-    setIsLoading(true);
-    dispatch(thunk())
-      .unwrap()
-      .catch((err: string | null) => setError(err));
-  }, [dispatch, thunk]);
+  const runThunk = useCallback(
+    (arg: any): Function | void => {
+      setIsLoading(true);
+      dispatch(thunk(arg))
+        .unwrap()
+        .catch((err: string | null) => setError(err));
+    },
+    [dispatch, thunk]
+  );
   return [runThunk, isLoading, error];
 };
 
