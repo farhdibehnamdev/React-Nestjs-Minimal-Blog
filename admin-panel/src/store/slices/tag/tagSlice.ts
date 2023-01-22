@@ -45,7 +45,10 @@ const tagSlice = createSlice({
       state.isLoading = false;
       state.data.push(action.payload);
     });
-    builder.addCase(addTag.rejected, (state, action) => {});
+    builder.addCase(addTag.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message as string;
+    });
 
     //============ Edit Tag =================
     //============ Remove Tag =================
