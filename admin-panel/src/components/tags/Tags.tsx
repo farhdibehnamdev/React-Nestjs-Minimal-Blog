@@ -7,8 +7,26 @@ import useThunk from "../../hooks/useThunk";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 const breadcrumbTitles: BreadcrumbsType = {
-  titles: ["تگ"],
+  titles: ["داشبورد", "تگ"],
 };
+const columns = [
+  {
+    id: 1,
+    title: "ردیف",
+  },
+  {
+    id: 2,
+    title: "عنوان",
+  },
+  {
+    id: 3,
+    title: "توضیحات",
+  },
+  {
+    id: 4,
+    title: "عملیات",
+  },
+];
 const Tags = function () {
   const [doFetchTags, isLoading, loadingTagsError] = useThunk(fetchTags);
   const { data } = useSelector((state: any) => state.tags);
@@ -23,7 +41,7 @@ const Tags = function () {
         <h1>تگ ها</h1>
         <Breadcrumbs {...breadcrumbTitles} />
       </Grid>
-      <DataTable data={data} />
+      <DataTable rows={data} columns={columns} typeOperation="تگ" />
     </>
   );
 };
