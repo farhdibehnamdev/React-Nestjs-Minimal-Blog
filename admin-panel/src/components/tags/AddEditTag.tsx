@@ -1,34 +1,47 @@
 import React, { useState } from "react";
 import {
-  Box,
   TextField,
   Grid,
   FormControl,
-  SelectChangeEvent,
   Switch,
   Typography,
   Button,
 } from "@mui/material";
-import { useForm } from "react-hook-form";
 import addEditFormStyle from "../common/styles/addEditForm.style";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import DoDisturbAltOutlinedIcon from "@mui/icons-material/DoDisturbAltOutlined";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import RichTextEditor from "../richTextEditor/RichTextEditor";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { FormTagValidationType } from "./tags.types";
+const schema = yup.object({
+  title: yup.string().required(),
+  isPublished: yup.boolean().notRequired(),
+  description: yup.string().notRequired(),
+});
 
 const AddEditTag = function ({ typeOperation, onAdd }: any) {
-  const initialState = {};
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
+  const initialState = { isPublished: true };
 
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<FormTagValidationType>({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      title: "",
+      isPublished: true,
+      description: "",
+    },
+  });
   const [form, setForm] = useState(initialState);
   const onSumbit = function () {
-    console.log("form::", form);
     onAdd(form);
+    reset({});
   };
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm((state) => ({
@@ -54,14 +67,26 @@ const AddEditTag = function ({ typeOperation, onAdd }: any) {
             justifyContent="space-between"
             mb={3.1}
           >
-            <TextField
-              fullWidth
-              required
-              label="عنوان تگ"
-              hiddenLabel={true}
-              placeholder="عنوان تگ"
-              onChange={handleChange}
+            <Controller
               name="title"
+              control={control}
+              render={({ field: { onChange, ...field } }) => (
+                <TextField
+                  {...field}
+                  ref={null}
+                  id="title"
+                  fullWidth
+                  label="عنوان تگ"
+                  hiddenLabel={true}
+                  placeholder="عنوان تگ"
+                  error={!!errors.title}
+                  helperText={errors.title ? "فیلد عنوان اجباری است" : null}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    onChange(e);
+                    handleChange(e);
+                  }}
+                />
+              )}
             />
           </Grid>
           <Grid
@@ -90,13 +115,19 @@ const AddEditTag = function ({ typeOperation, onAdd }: any) {
                     name="isPublished"
                   />
                 }
+                labelPlacement="end"
                 label="منتشر شود"
               />
             </FormControl>
           </Grid>
         </Grid>
         <Grid item mb={3.1}>
-          <RichTextEditor handleChange={handleChange} desc="description" />
+          <RichTextEditor
+            handleChange={handleChange}
+            desc="description"
+            Controller={Controller}
+            control={control}
+          />
         </Grid>
         <Grid container spacing={2} justifyContent="center">
           <Grid item xl={6}>
