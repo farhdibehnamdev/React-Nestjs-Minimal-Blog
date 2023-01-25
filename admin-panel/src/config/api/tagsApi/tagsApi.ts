@@ -8,14 +8,25 @@ type tagsDataType = {
   description: string;
 };
 
+type tagsCollectionType = {
+  data: tagsDataType[];
+  count: number;
+};
+
 export type postTagsType = {
   title: string;
   isPublished: boolean;
   description: string;
 };
+type paginationOptionType = {
+  offset: number;
+  limit: number;
+};
 
-export const fetchTagsData = async () => {
-  return await api.get<tagsDataType[]>(URLS.fetchTagUrl);
+export const fetchTagsData = async (pagination?: paginationOptionType) => {
+  return await api.get<tagsCollectionType>(URLS.fetchTagUrl, {
+    params: pagination,
+  });
 };
 
 export const postTagData = async (body: any) => {
