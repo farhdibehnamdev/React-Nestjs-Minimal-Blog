@@ -1,4 +1,5 @@
 import { createSlice, SerializedError } from "@reduxjs/toolkit";
+import { number } from "yup";
 import { addTag } from "../../thunks/tagThunks/addTag";
 import { fetchTags } from "../../thunks/tagThunks/fetchTags";
 type tagsData = {
@@ -9,12 +10,14 @@ type tagsData = {
 interface tagState {
   isLoading: boolean;
   data: tagsData[];
+  count: number;
   error: string | null;
 }
 
 const initialState: tagState = {
   isLoading: false,
   data: [],
+  count: 0,
   error: null,
 };
 
@@ -30,7 +33,8 @@ const tagSlice = createSlice({
     });
     builder.addCase(fetchTags.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.data = action.payload;
+      state.data = action.payload.data;
+      state.count = action.payload.count;
     });
     builder.addCase(fetchTags.rejected, (state, action) => {
       state.isLoading = false;
