@@ -11,4 +11,6 @@ export interface IDataTableHeadProps {
 export interface IDataTableProps {
   rows: [];
   columnData?: IDataTableColumn[];
+  perPage: number;
+  offset: number;
 }
