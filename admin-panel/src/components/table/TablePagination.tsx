@@ -6,19 +6,31 @@ import { Select } from "@mui/material";
 import { FormControl } from "@mui/material";
 import { Pagination } from "@mui/material";
 import { Grid } from "@mui/material";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import useThunk from "src/hooks/useThunk";
+import { fetchTags } from "src/store/thunks/tagThunks/fetchTags";
 
-const TablePagination = function () {
-  const [pageCount, setPageCount] = useState<string>("5");
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setPageCount(event.target.value);
+const TablePagination = function ({
+  count,
+  handleChange,
+  page,
+  perPage,
+  handleChangeRowCount,
+}: any) {
+  const handleSelectPage = function (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) {
+    handleChange(value);
   };
+
   return (
     <Grid container justifyContent="space-between">
       <Grid item xl={6} justifyContent="center">
         <Pagination
-          count={10}
+          count={count}
+          page={page}
+          onChange={handleSelectPage}
           variant="outlined"
           color="primary"
           shape="rounded"
@@ -44,9 +56,11 @@ const TablePagination = function () {
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={pageCount}
                 label="page"
-                onChange={handleChange}
+                onChange={(e: any) => {
+                  handleChangeRowCount(parseInt(e.target.value));
+                }}
+                value={perPage}
               >
                 <MenuItem defaultValue={5} value={5}>
                   5
