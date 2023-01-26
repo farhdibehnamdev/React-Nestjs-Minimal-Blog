@@ -60,7 +60,7 @@ const DataTable = function ({ columns, rows, count, typeOperation }: any) {
         <Box>
           <TextField
             id="standard-search"
-            label="جستجو"
+            placeholder="جستجو"
             type="search"
             variant="outlined"
             hiddenLabel
