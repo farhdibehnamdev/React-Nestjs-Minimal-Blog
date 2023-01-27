@@ -7,7 +7,15 @@ const DataTableHead: React.FC<IDataTableHeadProps> = function ({
   columns,
 }): JSX.Element {
   return (
-    <TableHead sx={{ background: "rgba(34, 185, 255, 0.3)" }}>
+    <TableHead
+      sx={{
+        display: "table-header-group",
+        background: "#f7f7f7",
+        zIndex: 3,
+        position: "sticky",
+        top: "0px",
+      }}
+    >
       <TableRow>
         {columns.map((column) => {
           return (
