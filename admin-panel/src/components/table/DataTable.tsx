@@ -1,14 +1,18 @@
 import {
   Paper,
   TableContainer,
-  Table as TableMui,
+  Table,
   Box,
   Button,
   Typography,
   TextField,
+  Grid,
 } from "@mui/material";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import dataTableMUI, { filterTable } from "./DataTable.style";
+import dataTableMUI, {
+  filterTable,
+  tableContainerStyle,
+} from "./DataTable.style";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import DataTableHead from "./DataTableHead";
@@ -16,7 +20,7 @@ import DataTableBody from "./DataTableBody";
 import { Link } from "react-router-dom";
 import TablePagination from "./TablePagination";
 import usePagination from "src/hooks/usePagination";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useThunk from "src/hooks/useThunk";
 import { fetchTags } from "src/store/thunks/tagThunks/fetchTags";
 const DataTable = function ({ columns, rows, count, typeOperation }: any) {
@@ -80,23 +84,18 @@ const DataTable = function ({ columns, rows, count, typeOperation }: any) {
           />
         </Box>
       </Box>
-      <TableContainer component={Paper} sx={dataTableMUI}>
-        <TableMui
-          sx={{
-            minWidth: 650,
-            border: "2px solid rgba(34, 185, 255, 0.3)",
-          }}
-          size="medium"
-          aria-label="simple table"
-        >
-          <DataTableHead columns={columns} />
-          <DataTableBody
-            rows={_DATA.currentData()}
-            offset={offset}
-            perPage={perPage}
-          />
-        </TableMui>
-      </TableContainer>
+      <Grid sx={dataTableMUI}>
+        <TableContainer sx={tableContainerStyle}>
+          <Table stickyHeader aria-label="sticky table">
+            <DataTableHead columns={columns} />
+            <DataTableBody
+              rows={_DATA.currentData()}
+              offset={offset}
+              perPage={perPage}
+            />
+          </Table>
+        </TableContainer>
+      </Grid>
       <TablePagination
         count={pageCount}
         handleChange={handleChange}
