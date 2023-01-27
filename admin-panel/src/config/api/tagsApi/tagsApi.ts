@@ -14,10 +14,19 @@ type tagsCollectionType = {
 };
 
 export type postTagsType = {
+  id: number | null;
   title: string;
   isPublished: boolean;
   description: string;
 };
+
+export type removeTagType = {
+  id: number;
+  title: string;
+  isPublished: boolean;
+  description: string;
+};
+
 type paginationOptionType = {
   offset: number;
   limit: number;
@@ -31,4 +40,8 @@ export const fetchTagsData = async (pagination?: paginationOptionType) => {
 
 export const postTagData = async (body: any) => {
   return await api.post<postTagsType>(URLS.postTagUrl, body);
+};
+
+export const removeTagData = async (id: number) => {
+  return await api.delete<removeTagType>(`${URLS.removeTagUrl}${id}`);
 };
