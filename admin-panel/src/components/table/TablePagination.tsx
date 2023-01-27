@@ -25,7 +25,7 @@ const TablePagination = function ({
   };
 
   return (
-    <Grid container justifyContent="space-between">
+    <Grid container justifyContent="space-between" alignItems="center">
       <Grid item xl={6} justifyContent="center">
         <Pagination
           count={count}
