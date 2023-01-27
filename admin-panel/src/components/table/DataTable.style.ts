@@ -27,6 +27,32 @@ const dataTableMUI: SxProps = {
   boxShadow: "none",
   borderRadius: "10px",
   marginBottom: "30px",
+  background: "white",
 };
 
+export const tableContainerStyle: SxProps = {
+  height: "400px",
+  border: "1px solid #e9e5e5",
+
+  "::-webkit-scrollbar": {
+    width: "10px",
+  },
+
+  /* Track */
+  "::-webkit-scrollbar-track": {
+    boxShadow: "inset 2px 2px 10px #f7f7f7",
+    borderRadius: "2px",
+  },
+
+  /* Handle */
+  "::-webkit-scrollbar-thumb": {
+    background: "#cfd6d9",
+    borderRadius: "2px",
+  },
+
+  /* Handle on hover */
+  "::-webkit-scrollbar-thumb:hover": {
+    background: "#869094",
+  },
+};
 export default dataTableMUI;

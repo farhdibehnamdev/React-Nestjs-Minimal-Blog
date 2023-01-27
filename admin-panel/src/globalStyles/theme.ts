@@ -81,6 +81,21 @@ const theme = createTheme({
           fontFamily: "IRANYekan,tahoma",
           fontSize: 14,
           fontWeight: "bold",
+          "::-webkit-scrollbar": {
+            width: "10px",
+          },
+
+          /* Track */
+          "::-webkit-scrollbar-track": {
+            boxShadow: "inset 2px 2px 10px #f7f7f7",
+            borderRadius: "10px",
+          },
+
+          /* Handle */
+          "::-webkit-scrollbar-thumb": {
+            background: "#cfd6d9",
+            borderRadius: "10px",
+          },
         },
       },
     },
