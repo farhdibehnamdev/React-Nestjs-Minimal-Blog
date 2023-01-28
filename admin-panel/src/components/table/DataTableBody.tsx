@@ -9,15 +9,10 @@ import {
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { IDataTableProps } from "./DataTable.type";
-import DeleteConfirmation from "./DeleteConfirmation";
-import { useEffect, useState } from "react";
+import DeleteModalConfirm from "src/components/modal/DeleteModalConfirm";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  deleteItemConfirm,
-  openModal,
-} from "src/store/slices/modal/modalSlice";
-import useThunk from "src/hooks/useThunk";
-import { removeTag } from "src/store/thunks/tagThunks/removeTag";
+import { openModal } from "src/store/slices/modal/modalSlice";
 const DataTableBody: React.FC<IDataTableProps> = function ({
   rows,
   perPage,
@@ -32,31 +27,22 @@ const DataTableBody: React.FC<IDataTableProps> = function ({
     result += index;
     return result;
   };
-  const { isOpen, isDeleted } = useSelector((state: any) => state.modal);
+  const { isOpen } = useSelector((state: any) => state.modal);
   const [state, setState] = useState<any>();
-  const [doDeleteTag] = useThunk(removeTag);
   const dispatch = useDispatch();
   const handleDelete = function (row: any) {
     dispatch(openModal(true));
-    if (typeof doDeleteTag === "function") {
-      setState(row);
-    }
-  };
 
-  useEffect(() => {
-    if (isDeleted && typeof doDeleteTag === "function") {
-      doDeleteTag(state);
-      dispatch(deleteItemConfirm(false));
-    }
-  }, [isDeleted, state]);
+    setState(row);
+  };
 
   return (
     <>
-      {isOpen && <DeleteConfirmation />}
+      {isOpen && <DeleteModalConfirm state={state} />}
       <TableBody>
         {rows.map((row: any, i: number) => (
           <TableRow
-            key={i}
+            key={row.id}
             sx={{
               "&:last-child td, &:last-child th": { border: 0 },
             }}
@@ -93,7 +79,6 @@ const DataTableBody: React.FC<IDataTableProps> = function ({
                     </Button>
                   </ButtonGroup>
                 </Grid>
-                {/* <Grid item xl={3}></Grid> */}
               </Grid>
             </TableCell>
           </TableRow>
