@@ -19,7 +19,7 @@ const EditTag = function () {
         <h1>ویرایش تگ</h1>
         <Breadcrumbs {...breadcrumbTitles} />
       </Box>
-      <AddEditTag />
+      <AddEditTag typeOperation="Edit" />
     </>
   );
 };
