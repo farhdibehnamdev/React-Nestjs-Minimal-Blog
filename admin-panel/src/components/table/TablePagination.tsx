@@ -1,14 +1,13 @@
-import { Typography } from "@mui/material";
-import { InputLabel } from "@mui/material";
-import { MenuItem } from "@mui/material";
-import { SelectChangeEvent } from "@mui/material";
-import { Select } from "@mui/material";
-import { FormControl } from "@mui/material";
-import { Pagination } from "@mui/material";
-import { Grid } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import useThunk from "src/hooks/useThunk";
-import { fetchTags } from "src/store/thunks/tagThunks/fetchTags";
+import React from "react";
+import {
+  Typography,
+  InputLabel,
+  MenuItem,
+  Select,
+  FormControl,
+  Pagination,
+  Grid,
+} from "@mui/material";
 
 const TablePagination = function ({
   count,
