@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import {
   TableBody,
   TableRow,
@@ -10,13 +13,12 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { IDataTableProps } from "./DataTable.type";
 import DeleteModalConfirm from "src/components/modal/DeleteModalConfirm";
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { openModal } from "src/store/slices/modal/modalSlice";
 const DataTableBody: React.FC<IDataTableProps> = function ({
   rows,
   perPage,
   offset,
+  setPage,
 }: any): JSX.Element {
   const rowNumber = function (
     pageNum: any,
@@ -32,13 +34,19 @@ const DataTableBody: React.FC<IDataTableProps> = function ({
   const dispatch = useDispatch();
   const handleDelete = function (row: any) {
     dispatch(openModal(true));
-
     setState(row);
   };
 
   return (
     <>
-      {isOpen && <DeleteModalConfirm state={state} />}
+      {isOpen && (
+        <DeleteModalConfirm
+          state={state}
+          perPage={perPage}
+          offset={offset}
+          setPage={setPage}
+        />
+      )}
       <TableBody>
         {rows.map((row: any, i: number) => (
           <TableRow
