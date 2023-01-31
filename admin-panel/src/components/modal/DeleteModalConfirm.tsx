@@ -7,12 +7,12 @@ import DialogActions from "@mui/material/DialogActions";
 import { useTheme } from "@mui/system";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useDispatch, useSelector } from "react-redux";
-import { removeItem } from "src/store/slices/tag/tagSlice";
-
 import { closeModal } from "src/store/slices/modal/modalSlice";
 import useThunk from "src/hooks/useThunk";
 import { removeTag } from "src/store/thunks/tagThunks/removeTag";
 import { fetchTags } from "src/store/thunks/tagThunks/fetchTags";
+import Chip from "@mui/material/Chip";
+import { Typography, Grid } from "@mui/material";
 
 const DeleteModalConfirm = function ({ state, offset, perPage }: any) {
   const [doDeleteItem] = useThunk(removeTag);
@@ -22,13 +22,8 @@ const DeleteModalConfirm = function ({ state, offset, perPage }: any) {
   const dispatch = useDispatch();
   const handleClose = () => dispatch(closeModal(false));
   const handleDelete = async () => {
-    if (typeof doDeleteItem === "function") {
-      await doDeleteItem(state);
-    }
-    if (typeof doFetchTags === "function") {
-      await doFetchTags({ offset, limit: perPage });
-    }
-
+    await doDeleteItem(state);
+    await doFetchTags({ offset, limit: perPage });
     dispatch(closeModal(false));
   };
   const theme = useTheme();
@@ -39,11 +34,21 @@ const DeleteModalConfirm = function ({ state, offset, perPage }: any) {
       open={isOpen}
       onClose={handleClose}
       aria-labelledby="responsive-dialog-title"
+      aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="responsive-dialog-title">{"حذف اطلاعات ؟"}</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          آیا از حذف {state.title} اطمینان دارید؟
+          <Grid
+            container
+            alignItems="center"
+            justifyContent="center"
+            gap="10px"
+          >
+            <Typography>آیا از حذف</Typography>
+            <Chip label={state.title} color="error" variant="outlined" />
+            <Typography>اطمینان دارید؟</Typography>
+          </Grid>
         </DialogContentText>
       </DialogContent>
       <DialogActions>
