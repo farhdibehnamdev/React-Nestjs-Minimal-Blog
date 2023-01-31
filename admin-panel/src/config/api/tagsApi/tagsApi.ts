@@ -32,16 +32,27 @@ type paginationOptionType = {
   limit: number;
 };
 
+export type editTagType = {
+  id: number;
+  title: string;
+  isPublished: boolean;
+  description: string;
+};
+
 export const fetchTagsData = async (pagination?: paginationOptionType) => {
   return await api.get<tagsCollectionType>(URLS.fetchTagUrl, {
     params: pagination,
   });
 };
 
-export const postTagData = async (body: any) => {
+export const postTagData = async (body: postTagsType) => {
   return await api.post<postTagsType>(URLS.postTagUrl, body);
 };
 
 export const removeTagData = async (id: number) => {
   return await api.delete<removeTagType>(`${URLS.removeTagUrl}${id}`);
+};
+
+export const editTagData = async (body: editTagType) => {
+  return await api.patch<editTagType>(URLS.editTagUrl, body);
 };
