@@ -14,6 +14,7 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import { IDataTableProps } from "./DataTable.type";
 import DeleteModalConfirm from "src/components/modal/DeleteModalConfirm";
 import { openModal } from "src/store/slices/modal/modalSlice";
+import { useNavigate } from "react-router-dom";
 const DataTableBody: React.FC<IDataTableProps> = function ({
   rows,
   perPage,
@@ -31,11 +32,14 @@ const DataTableBody: React.FC<IDataTableProps> = function ({
   };
   const { isOpen } = useSelector((state: any) => state.modal);
   const [state, setState] = useState<any>();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleDelete = function (row: any) {
     dispatch(openModal(true));
     setState(row);
   };
+
+  const handleEdit = (id: number) => navigate(`edit/${id}`);
 
   return (
     <>
@@ -82,6 +86,7 @@ const DataTableBody: React.FC<IDataTableProps> = function ({
                       variant="contained"
                       color="success"
                       startIcon={<EditOutlinedIcon />}
+                      onClick={() => handleEdit(row.id)}
                     >
                       ویرایش
                     </Button>
