@@ -39,6 +39,10 @@ export type editTagType = {
   description: string;
 };
 
+export type fetchTagType = {
+  id: number;
+};
+
 export const fetchTagsData = async (pagination?: paginationOptionType) => {
   return await api.get<tagsCollectionType>(URLS.fetchTagUrl, {
     params: pagination,
@@ -55,4 +59,8 @@ export const removeTagData = async (id: number) => {
 
 export const editTagData = async (body: editTagType) => {
   return await api.patch<editTagType>(URLS.editTagUrl, body);
+};
+
+export const fetchTagData = async (id: fetchTagType) => {
+  return await api.get<fetchTagType>(`${URLS.fetchTagUrl}/${id}`);
 };
