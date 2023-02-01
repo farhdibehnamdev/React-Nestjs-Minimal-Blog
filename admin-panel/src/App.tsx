@@ -73,7 +73,7 @@ function App() {
                 <Route path="tags" element={<TagsLayout />}>
                   <Route index element={<Tags />} />
                   <Route path="add" element={<AddTag />} />
-                  <Route path="edit" element={<EditTag />} />
+                  <Route path="edit/:id" element={<EditTag />} />
                 </Route>
                 <Route path="send-message" element={<SendMessage />} />
                 <Route path="user-management" element={<UserManagement />} />
