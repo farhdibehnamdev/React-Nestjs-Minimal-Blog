@@ -14,10 +14,8 @@ const AddTag = function () {
   const [createTag, isCreatingTag, creatingTagError] = useThunk(addTag);
   const [open, setOpen] = useState<boolean>(false);
   const handleTagAdd = function (formData: postTagsType) {
-    if (typeof createTag === "function") {
-      createTag(formData);
-      setOpen(true);
-    }
+    createTag(formData);
+    setOpen(true);
   };
   const handleClose = (
     event: React.SyntheticEvent | Event,
@@ -29,11 +27,11 @@ const AddTag = function () {
 
   return (
     <>
-      {!!creatingTagError === true ? (
+      {!!creatingTagError ? (
         <Snackbar
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
           open={open}
-          autoHideDuration={6000}
+          autoHideDuration={3000}
           onClose={handleClose}
         >
           <Alert
