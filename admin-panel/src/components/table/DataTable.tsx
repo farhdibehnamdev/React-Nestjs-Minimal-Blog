@@ -1,10 +1,18 @@
-import { TableContainer, Table, Box, Grid } from "@mui/material";
+import {
+  TableContainer,
+  Table,
+  Box,
+  Grid,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@mui/material";
 import dataTableMUI, { tableContainerStyle } from "./DataTable.style";
 import DataTableHead from "./DataTableHead";
 import DataTableBody from "./DataTableBody";
 import TablePagination from "./TablePagination";
 import usePagination from "src/hooks/usePagination";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import useThunk from "src/hooks/useThunk";
 import { fetchTags } from "src/store/thunks/tagThunks/fetchTags";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -54,15 +62,19 @@ const DataTable = function ({
           <Table stickyHeader aria-label="sticky table">
             <DataTableHead columns={columns} />
             {isLoading ? (
-              <Box
+              <TableBody
                 style={{
                   position: "absolute",
                   left: "50%",
                   bottom: "40%",
                 }}
               >
-                <CircularProgress sx={{ color: "#8d8d91" }} />
-              </Box>
+                <TableRow>
+                  <TableCell>
+                    <CircularProgress sx={{ color: "#8d8d91" }} />
+                  </TableCell>
+                </TableRow>
+              </TableBody>
             ) : (
               <DataTableBody
                 rows={_DATA.currentData()}
