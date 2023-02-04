@@ -22,8 +22,19 @@ const schema = yup.object({
   description: yup.string().notRequired(),
 });
 
-const AddEditTag = function ({ typeOperation, onAdd }: any) {
-  const initialState = { isPublished: true };
+const AddEditTag = function ({
+  typeOperation,
+  onAdd,
+  onEdit,
+  editFormData,
+}: any) {
+  const initialState = { isPublished: true, title: "", description: "" };
+
+  const {
+    title: name,
+    isPublished: published,
+    description: desc,
+  } = editFormData;
 
   const {
     control,
@@ -32,15 +43,20 @@ const AddEditTag = function ({ typeOperation, onAdd }: any) {
     reset,
   } = useForm<FormTagValidationType>({
     resolver: yupResolver(schema),
-    defaultValues: {
-      title: "",
-      isPublished: true,
-      description: "",
-    },
+    defaultValues:
+      {
+        title: name,
+        isPublished: published,
+        description: desc,
+      } || initialState,
   });
   const [form, setForm] = useState(initialState);
   const onSumbit = function () {
-    onAdd(form);
+    if (typeOperation === "Add") {
+      onAdd(form);
+    } else {
+      onEdit(form);
+    }
     reset({});
   };
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
