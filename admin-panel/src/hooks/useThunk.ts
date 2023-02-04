@@ -1,13 +1,9 @@
 import { useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
 
-type ThunkType = {
-  runThunk: Function | void;
-};
-
 const useThunk = function (
   thunk: Function
-): [Function | void, boolean, object | null] {
+): [Function, boolean, object | null] {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<object | null>(null);
   const dispatch = useDispatch();
