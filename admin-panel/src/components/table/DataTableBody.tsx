@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-
+import { useAppDispatch, useAppSelector } from "src/store/hooks";
 import {
   TableBody,
   TableRow,
@@ -30,10 +29,10 @@ const DataTableBody: React.FC<IDataTableProps> = function ({
     result += index;
     return result;
   };
-  const { isOpen } = useSelector((state: any) => state.modal);
+  const { isOpen } = useAppSelector((state) => state.modal);
   const [state, setState] = useState<any>();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const handleDelete = function (row: any) {
     dispatch(openModal(true));
     setState(row);
