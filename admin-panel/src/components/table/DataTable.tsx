@@ -6,6 +6,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Typography,
 } from "@mui/material";
 import dataTableMUI, { tableContainerStyle } from "./DataTable.style";
 import DataTableHead from "./DataTableHead";
@@ -18,6 +19,7 @@ import { fetchTags } from "src/store/thunks/tagThunks/fetchTags";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useSelector } from "react-redux";
 import FilterTable from "./FilterTable";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 const DataTable = function ({
   columns,
   rows,
@@ -28,7 +30,8 @@ const DataTable = function ({
   const [offset, setOffset] = useState<number>(1);
   const [perPage, setPerPage] = useState<number>(5);
   const { isLoading } = useSelector((state: any) => state.tags);
-  const [doFetchTags] = useThunk(fetchTags);
+  const [doFetchTags, isFetchLoading, isFetchCreatedError] =
+    useThunk(fetchTags);
   const pageNumber = Math.ceil(count / perPage);
   const _DATA = usePagination(rows, perPage);
   const handleChange = async function (page: number = offset) {
@@ -72,6 +75,26 @@ const DataTable = function ({
                 <TableRow>
                   <TableCell>
                     <CircularProgress sx={{ color: "#8d8d91" }} />
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            ) : isFetchCreatedError ? (
+              <TableBody
+                style={{
+                  position: "absolute",
+                  left: "40%",
+                  bottom: "40%",
+                }}
+              >
+                <TableRow>
+                  <TableCell align="center">
+                    <ErrorOutlineIcon
+                      fontSize="large"
+                      style={{ color: "red" }}
+                    />
+                    <Typography variant="h1" fontSize="15px">
+                      مشکلی در دریافت اطلاعات بوجود آمده است
+                    </Typography>
                   </TableCell>
                 </TableRow>
               </TableBody>
