@@ -9,6 +9,8 @@ import {
   Version,
   UseGuards,
 } from '@nestjs/common';
+import { Query } from '@nestjs/common/decorators';
+import { PaginationQueryDto } from 'src/common/pagination-query.dto';
 import { Role } from 'src/user/decorators/role';
 import { UserRole } from 'src/user/entities/user.entity';
 import { AccessTokenGuard } from 'src/user/guard/access-token.guard';
@@ -22,16 +24,20 @@ export class TagController {
 
   @Version('1')
   @Get()
-  findAll() {
-    return this.tagService.findAll();
+  findAll(@Query() paginationQuery: PaginationQueryDto, title: string) {
+    if (title === null || title === undefined) {
+      return this.tagService.paginate(paginationQuery);
+    } else {
+      return this.tagService.findAll(paginationQuery, title);
+    }
   }
   @Version('1')
   @Get(':id')
-  findOne(id: number) {
+  findOne(@Param('id') id: number) {
     return this.tagService.findOne(id);
   }
-  @Role(UserRole.ADMIN)
-  @UseGuards(AccessTokenGuard, RoleGuard)
+  // @Role(UserRole.ADMIN)
+  // @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Post()
   create(@Body() createTagDto: CreateTagDto) {
@@ -45,8 +51,8 @@ export class TagController {
     return this.tagService.update(id, createTagDto);
   }
 
-  @Role(UserRole.ADMIN)
-  @UseGuards(AccessTokenGuard, RoleGuard)
+  // @Role(UserRole.ADMIN)
+  // @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Delete(':id')
   remove(@Param('id') id: number) {
