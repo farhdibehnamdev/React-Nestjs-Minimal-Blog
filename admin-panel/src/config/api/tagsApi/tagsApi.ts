@@ -1,7 +1,7 @@
 import { URLS } from "src/config/constants";
 import api from "../api";
 
-type tagsDataType = {
+export type tagsDataType = {
   id: number;
   title: string;
   isPublished: boolean;
@@ -43,9 +43,15 @@ export type fetchTagType = {
   id: number;
 };
 
-export const fetchTagsData = async (pagination?: paginationOptionType) => {
+export const fetchTagsData = async (
+  pagination?: paginationOptionType,
+  title?: string | null
+) => {
   return await api.get<tagsCollectionType>(URLS.fetchTagUrl, {
-    params: pagination,
+    params: {
+      pagination,
+      title: title,
+    },
   });
 };
 
