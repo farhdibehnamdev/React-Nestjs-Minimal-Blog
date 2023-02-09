@@ -13,4 +13,5 @@ export interface IDataTableProps {
   columnData?: IDataTableColumn[];
   perPage: number;
   offset: number;
+  filterData: [];
 }

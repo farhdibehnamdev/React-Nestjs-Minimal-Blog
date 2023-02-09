@@ -19,6 +19,7 @@ const DataTableBody: React.FC<IDataTableProps> = function ({
   perPage,
   offset,
   setPage,
+  filterData,
 }: any): JSX.Element {
   const rowNumber = function (
     pageNum: any,
@@ -33,6 +34,7 @@ const DataTableBody: React.FC<IDataTableProps> = function ({
   const [state, setState] = useState<any>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const data = filterData ? filterData : rows;
   const handleDelete = function (row: any) {
     dispatch(openModal(true));
     setState(row);
@@ -51,7 +53,7 @@ const DataTableBody: React.FC<IDataTableProps> = function ({
         />
       )}
       <TableBody>
-        {rows.map((row: any, i: number) => (
+        {data.map((row: any, i: number) => (
           <TableRow
             key={row.id}
             sx={{

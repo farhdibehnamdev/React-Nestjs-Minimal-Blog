@@ -29,6 +29,7 @@ const DataTable = function ({
 }: any) {
   const [offset, setOffset] = useState<number>(1);
   const [perPage, setPerPage] = useState<number>(5);
+  const [filterData, setFilterData] = useState<any>();
   const { isLoading } = useSelector((state: any) => state.tags);
   const [doFetchTags, isFetchLoading, isFetchCreatedError] =
     useThunk(fetchTags);
@@ -59,7 +60,11 @@ const DataTable = function ({
   }, [pageNumber, offset, rows, doFetchTags, perPage]);
   return (
     <>
-      <FilterTable typeOperation={typeOperation} />
+      <FilterTable
+        typeOperation={typeOperation}
+        setFilterData={setFilterData}
+        perPage={perPage}
+      />
       <Grid sx={dataTableMUI}>
         <TableContainer sx={tableContainerStyle}>
           <Table stickyHeader aria-label="sticky table">
@@ -103,6 +108,7 @@ const DataTable = function ({
                 rows={_DATA.currentData()}
                 offset={offset}
                 perPage={perPage}
+                filterData={filterData}
               />
             )}
           </Table>
