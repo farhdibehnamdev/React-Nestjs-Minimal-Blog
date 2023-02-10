@@ -28,13 +28,11 @@ const AddEditTag = function ({
   onEdit,
   editFormData,
 }: any) {
-  const initialState = { isPublished: true, title: "", description: "" };
-
-  const {
-    title: name,
-    isPublished: published,
-    description: desc,
-  } = editFormData;
+  const initialState = {
+    isPublished: editFormData?.isPublished || true,
+    title: editFormData?.title || "",
+    description: editFormData?.description || "",
+  };
 
   const {
     control,
@@ -43,12 +41,7 @@ const AddEditTag = function ({
     reset,
   } = useForm<FormTagValidationType>({
     resolver: yupResolver(schema),
-    defaultValues:
-      {
-        title: name,
-        isPublished: published,
-        description: desc,
-      } || initialState,
+    defaultValues: initialState,
   });
   const [form, setForm] = useState(initialState);
   const onSumbit = function () {
