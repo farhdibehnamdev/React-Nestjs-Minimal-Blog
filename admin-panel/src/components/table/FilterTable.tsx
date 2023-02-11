@@ -6,18 +6,28 @@ import { Link } from "react-router-dom";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import axios from "axios";
-import { fetchTagsData } from "src/config/api/tagsApi/tagsApi";
+import {
+  fetchFiltersData,
+  fetchTagsData,
+} from "src/config/api/tagsApi/tagsApi";
 
-const FilterTable = function ({ typeOperation, setFilterData, perPage }: any) {
+const FilterTable = function ({
+  typeOperation,
+  setFilterData,
+  perPage,
+  offset,
+}: any) {
   const [searchTerm, setSearchTerm] = useState<string | null>(null);
   const handleSearch = function (e: any) {
     setSearchTerm(e.target.value);
   };
   useEffect(() => {
     const pagination = { offset: 0, limit: perPage };
-    fetchTagsData(pagination, searchTerm).then((res) =>
-      setFilterData(res.data.data)
-    );
+    if (searchTerm === "" || searchTerm) {
+      fetchFiltersData(pagination, searchTerm).then((res) =>
+        setFilterData(res.data.data)
+      );
+    }
   }, [searchTerm]);
   return (
     <Box sx={filterTable}>
