@@ -38,6 +38,7 @@ const DataTable = function ({
   const handleChange = async function (page: number = offset) {
     setOffset(page);
     await doFetchTags({ offset: page, limit: perPage });
+    setFilterData(undefined);
     _DATA.jump(page);
   };
   const handleChangeRowCount = function (rowCount: number = perPage) {
@@ -50,8 +51,10 @@ const DataTable = function ({
   useEffect(() => {
     const fetchData = async () => {
       if (rows.length < 1) {
+        console.log("rows.length < 1 ::");
         setOffset(pageNumber);
         if (offset > 0) {
+          console.log("offset > 0 :");
           await doFetchTags({ offset, limit: perPage });
         }
       }
@@ -64,6 +67,7 @@ const DataTable = function ({
         typeOperation={typeOperation}
         setFilterData={setFilterData}
         perPage={perPage}
+        offset={offset}
       />
       <Grid sx={dataTableMUI}>
         <TableContainer sx={tableContainerStyle}>
