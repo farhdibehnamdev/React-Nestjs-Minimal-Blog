@@ -2,6 +2,7 @@ export interface IDataTableColumn {
   id: string;
   title: string;
   align?: "center" | "justify" | "left" | "right";
+  isPublished: boolean;
 }
 
 export interface IDataTableHeadProps {
