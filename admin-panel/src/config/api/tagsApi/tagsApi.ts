@@ -1,4 +1,4 @@
-import { URLS } from "src/config/constants";
+import { paginationOptionType, URLS } from "src/config/constants";
 import api from "../api";
 
 export type tagsDataType = {
@@ -27,11 +27,6 @@ export type removeTagType = {
   description: string;
 };
 
-type paginationOptionType = {
-  offset: number;
-  limit: number;
-};
-
 export type editTagType = {
   id: number;
   title: string;
@@ -43,13 +38,19 @@ export type fetchTagType = {
   id: number;
 };
 
-export const fetchTagsData = async (
+export const fetchTagsData = async (pagination?: paginationOptionType) => {
+  return await api.get<tagsCollectionType>(URLS.fetchTagUrl, {
+    params: pagination,
+  });
+};
+
+export const fetchFiltersData = async (
   pagination?: paginationOptionType,
-  title?: string | null
+  title?: string
 ) => {
   return await api.get<tagsCollectionType>(URLS.fetchTagUrl, {
     params: {
-      pagination,
+      pagination: pagination,
       title: title,
     },
   });
