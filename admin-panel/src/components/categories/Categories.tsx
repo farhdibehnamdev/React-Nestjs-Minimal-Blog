@@ -19,7 +19,6 @@ const columns = [
 const Categories = function () {
   const [doFetchCategories] = useThunk(fetchCategories);
   const { data, count } = useAppSelector((state) => state.category);
-  console.log("ssss ::", data);
   useEffect(() => {
     doFetchCategories();
   }, [doFetchCategories]);
@@ -33,6 +32,8 @@ const Categories = function () {
         columns={columns}
         rows={data}
         count={count}
+        thunkFetch={fetchCategories}
+        thunkRemove={fetchCategories}
         typeOperation="فهرست"
       />
     </>

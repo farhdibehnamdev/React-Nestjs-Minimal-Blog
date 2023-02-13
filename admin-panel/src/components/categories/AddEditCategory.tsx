@@ -9,110 +9,153 @@ import {
   Typography,
   Button,
 } from "@mui/material";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import DoDisturbAltOutlinedIcon from "@mui/icons-material/DoDisturbAltOutlined";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import addEditFormStyle from "../common/styles/addEditForm.style";
-
-const AddEditCategory = function () {
-  const [age, setAge] = useState("");
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
-  const onSumbit = function (data: any) {
-    console.log("data:", data);
+import RichTextEditor from "../richTextEditor/RichTextEditor";
+import { FormCategoryValidationType } from "./Categories.types";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+const schema = yup.object({
+  title: yup.string().required(),
+  isPublished: yup.boolean().notRequired(),
+  description: yup.string().notRequired(),
+});
+const AddEditCategory = function ({
+  typeOperation,
+  onAdd,
+  onEdit,
+  editFormData,
+}: any) {
+  const initialState = {
+    isPublished: editFormData?.isPublished || true,
+    title: editFormData?.title || "",
+    description: editFormData?.description || "",
   };
-  const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value);
+  const [form, setForm] = useState(initialState);
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<FormCategoryValidationType>({
+    resolver: yupResolver(schema),
+    defaultValues: initialState,
+  });
+  const onSumbit = function () {
+    typeOperation === "Add" ? onAdd(form) : onEdit(form);
+    reset({});
+  };
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setForm((state) => ({
+      ...state,
+      [event.target.name]:
+        event.target.name === "isPublished"
+          ? event.target.checked
+          : event.target.value,
+    }));
   };
 
   return (
     <>
       <Grid container sx={addEditFormStyle}>
-        <form
-          style={{ width: "100%", flexWrap: "wrap" }}
-          onSubmit={handleSubmit(onSumbit)}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "25px",
-            }}
+        <form style={{ width: "100%" }} onSubmit={handleSubmit(onSumbit)}>
+          <Grid
+            container
+            spacing={2}
+            alignItems="center"
+            justifyContent="center"
+            mb={3}
           >
-            <TextField
-              fullWidth
-              required
-              id="outlined-required"
-              label="عنوان پست"
-              hiddenLabel={true}
-              placeholder="عنوان پست"
-              sx={{ marginRight: "10px" }}
-            />
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-around",
-              alignItems: "center",
-              marginBottom: "25px",
-            }}
-          >
-            <FormControl
-              fullWidth
-              sx={{
-                m: 1.2,
-                minWidth: 120,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: "5px",
-                border: "1px solid #c6c6ce",
-                padding: "6px",
-              }}
-            >
-              <FormControlLabel
-                control={<Switch defaultChecked />}
-                label="منتشر شود"
+            <Grid item xl={6}>
+              <Controller
+                name="title"
+                control={control}
+                render={({ field: { onChange, ...field } }) => (
+                  <TextField
+                    {...field}
+                    ref={null}
+                    id="title"
+                    fullWidth
+                    hiddenLabel={true}
+                    required
+                    label="عنوان پست"
+                    placeholder="عنوان پست"
+                    error={!!errors.title}
+                    helperText={errors.title ? "فیلد عنوان اجباری است" : null}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      onChange(e);
+                      handleChange(e);
+                    }}
+                  />
+                )}
               />
-            </FormControl>
-          </Box>
-          <br />
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Button
-              fullWidth
-              variant="contained"
-              size="large"
-              startIcon={<SaveOutlinedIcon />}
-              sx={{ m: 1.2 }}
-            >
-              <Typography sx={{ color: "#fff", fontSize: "20px" }}>
-                ذخیره
-              </Typography>
-            </Button>
-            <Button
-              color="error"
-              fullWidth
-              variant="contained"
-              size="large"
-              startIcon={<DoDisturbAltOutlinedIcon />}
-            >
-              <Typography sx={{ color: "#fff", fontSize: "20px" }}>
-                بازگشت
-              </Typography>
-            </Button>
-          </Box>
+            </Grid>
+            <Grid item xl={6}>
+              <FormControl
+                fullWidth
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: "5px",
+                  border: "1px solid #c6c6ce",
+                  padding: "6px",
+                }}
+              >
+                <FormControlLabel
+                  control={
+                    <Switch
+                      defaultChecked
+                      onChange={handleChange}
+                      name="isPublished"
+                    />
+                  }
+                  labelPlacement="end"
+                  label="منتشر شود"
+                />
+              </FormControl>
+            </Grid>
+          </Grid>
+          <Grid item mb={3.1}>
+            <RichTextEditor
+              handleChange={handleChange}
+              desc="description"
+              Controller={Controller}
+              control={control}
+            />
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid item xl={6}>
+              <Button
+                fullWidth
+                variant="contained"
+                size="large"
+                startIcon={<SaveOutlinedIcon />}
+                type="submit"
+              >
+                <Typography sx={{ color: "#fff", fontSize: "20px" }}>
+                  ذخیره
+                </Typography>
+              </Button>
+            </Grid>
+            <Grid item xl={6}>
+              <Button
+                color="error"
+                fullWidth
+                variant="contained"
+                size="large"
+                startIcon={<DoDisturbAltOutlinedIcon />}
+              >
+                <Typography sx={{ color: "#fff", fontSize: "20px" }}>
+                  بازگشت
+                </Typography>
+              </Button>
+            </Grid>
+          </Grid>
         </form>
       </Grid>
     </>
