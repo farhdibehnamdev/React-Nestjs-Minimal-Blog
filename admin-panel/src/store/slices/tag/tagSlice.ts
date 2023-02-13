@@ -1,26 +1,30 @@
-import { createSlice, SerializedError } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+import { editTag } from "src/store/thunks/tagThunks/editTag";
+import { fetchTag } from "src/store/thunks/tagThunks/fetchTag";
 import { removeTag } from "src/store/thunks/tagThunks/removeTag";
-import { number } from "yup";
 import { addTag } from "../../thunks/tagThunks/addTag";
 import { fetchTags } from "../../thunks/tagThunks/fetchTags";
 type tagsData = {
   id: number | null;
   title: string;
+  isPublished: boolean;
   description: string;
 };
 
-interface tagState {
+type tagState = {
   isLoading: boolean;
   data: tagsData[];
   count: number;
   error: string | null;
-}
+};
 
 const initialState: tagState = {
   isLoading: false,
   data: [],
+  // removeTagItem: null,
   count: 0,
   error: null,
+  // selectedTagItem: null,
 };
 
 const tagSlice = createSlice({
@@ -28,7 +32,7 @@ const tagSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers(builder) {
-    //============ Fetch Tag =================
+    //============ Fetch Tags =================
 
     builder.addCase(fetchTags.pending, (state, action) => {
       state.isLoading = true;
@@ -68,6 +72,21 @@ const tagSlice = createSlice({
       state.error = action.error.message as string;
     });
     //============ Edit Tag =================
+    builder.addCase(editTag.pending, (state, action) => {
+      state.isLoading = true;
+    });
+    builder.addCase(editTag.fulfilled, (state, action) => {
+      state.isLoading = false;
+      const tag = state.data.filter((tag) => tag.id === action.payload.id);
+      state.data = tag;
+    });
+    builder.addCase(editTag.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message as string;
+    });
   },
 });
+
+export const selectTagById = (state: any, id: number) =>
+  state.tags.data.find((tag: any) => tag.id === id);
 export const tagReducer = tagSlice.reducer;
