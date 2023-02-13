@@ -12,7 +12,13 @@ const useThunk = function (
       setIsLoading(true);
       dispatch(thunk(arg))
         .unwrap()
-        .catch((err: object | null) => setError(err));
+        .then((result: any) => {
+          if (result.data) setIsLoading(false);
+        })
+        .catch((err: object | null) => {
+          setIsLoading(false);
+          setError(err);
+        });
     },
     [dispatch, thunk]
   );
