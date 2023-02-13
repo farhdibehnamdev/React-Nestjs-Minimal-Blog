@@ -1,12 +1,13 @@
+import { useEffect } from "react";
+import { useAppSelector } from "src/store/hooks";
+import useThunk from "src/hooks/useThunk";
+import { fetchTags } from "src/store/thunks/tagThunks/fetchTags";
+import { removeTag } from "src/store/thunks/tagThunks/removeTag";
 import { Grid } from "@mui/material";
 import DataTable from "../table/DataTable";
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 import { BreadcrumbsType } from "../common/BreadcrumbsProps";
-import { fetchTags } from "src/store/thunks/tagThunks/fetchTags";
-import useThunk from "src/hooks/useThunk";
-import { useSelector } from "react-redux";
-import { useEffect } from "react";
-import { removeTag } from "src/store/thunks/tagThunks/removeTag";
+
 const breadcrumbTitles: BreadcrumbsType = {
   titles: ["داشبورد", "تگ"],
 };
@@ -21,16 +22,21 @@ const columns = [
   },
   {
     id: 3,
-    title: "توضیحات",
+    title: "وضعیت",
   },
   {
     id: 4,
+    title: "توضیحات",
+  },
+
+  {
+    id: 5,
     title: "عملیات",
   },
 ];
 const Tags = function () {
-  const [doFetchTags, isLoading, loadingTagsError] = useThunk(fetchTags);
-  const { data, count } = useSelector((state: any) => state.tags);
+  const [doFetchTags] = useThunk(fetchTags);
+  const { data, count } = useAppSelector((state) => state.tags);
 
   useEffect(() => {
     doFetchTags();
@@ -38,7 +44,7 @@ const Tags = function () {
 
   return (
     <>
-      <Grid flexDirection="column" mb={6.2}>
+      <Grid flexDirection="column" mb={5.2}>
         <h1>تگ ها</h1>
         <Breadcrumbs {...breadcrumbTitles} />
       </Grid>
@@ -46,7 +52,8 @@ const Tags = function () {
         count={count}
         rows={data}
         columns={columns}
-        thunkFunction={removeTag}
+        thunkFetch={fetchTags}
+        thunkRemove={removeTag}
         typeOperation="تگ"
       />
     </>
