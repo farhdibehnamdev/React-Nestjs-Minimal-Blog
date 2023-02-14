@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import useThunk from "src/hooks/useThunk";
 import { useAppSelector } from "src/store/hooks";
 import { fetchCategories } from "src/store/thunks/categoryThunks/fetchCategories";
+import { removeCategory } from "src/store/thunks/categoryThunks/removeCategory";
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 import { BreadcrumbsType } from "../common/BreadcrumbsProps";
 import DataTable from "../table/DataTable";
@@ -33,7 +34,7 @@ const Categories = function () {
         rows={data}
         count={count}
         thunkFetch={fetchCategories}
-        thunkRemove={fetchCategories}
+        thunkRemove={removeCategory}
         typeOperation="فهرست"
       />
     </>
