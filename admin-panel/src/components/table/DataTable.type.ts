@@ -15,4 +15,6 @@ export interface IDataTableProps {
   perPage: number;
   offset: number;
   filterData: [];
+  thunkFetch: Function;
+  thunkRemove: Function;
 }
