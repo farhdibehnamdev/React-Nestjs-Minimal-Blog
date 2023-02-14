@@ -1,7 +1,7 @@
+import React, { useEffect, useState } from "react";
 import {
   TableContainer,
   Table,
-  Box,
   Grid,
   TableBody,
   TableRow,
@@ -13,11 +13,8 @@ import DataTableHead from "./DataTableHead";
 import DataTableBody from "./DataTableBody";
 import TablePagination from "./TablePagination";
 import usePagination from "src/hooks/usePagination";
-import React, { useEffect, useState } from "react";
 import useThunk from "src/hooks/useThunk";
-import { fetchTags } from "src/store/thunks/tagThunks/fetchTags";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useSelector } from "react-redux";
 import FilterTable from "./FilterTable";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 const DataTable = function ({
@@ -25,14 +22,14 @@ const DataTable = function ({
   rows,
   count,
   typeOperation,
-  thunkFunction,
+  thunkFetch,
+  thunkRemove,
 }: any) {
   const [offset, setOffset] = useState<number>(1);
   const [perPage, setPerPage] = useState<number>(5);
   const [filterData, setFilterData] = useState<any>();
-  const { isLoading } = useSelector((state: any) => state.tags);
   const [doFetchTags, isFetchLoading, isFetchCreatedError] =
-    useThunk(fetchTags);
+    useThunk(thunkFetch);
   const pageNumber = Math.ceil(count / perPage);
   const _DATA = usePagination(rows, perPage);
   const handleChange = async function (page: number = offset) {
@@ -50,17 +47,13 @@ const DataTable = function ({
 
   useEffect(() => {
     const fetchData = async () => {
-      if (rows.length < 1) {
-        console.log("rows.length < 1 ::");
-        setOffset(pageNumber);
-        if (offset > 0) {
-          console.log("offset > 0 :");
-          await doFetchTags({ offset, limit: perPage });
-        }
+      if (rows.length === 0) {
+        await doFetchTags({ offset: offset - 1, limit: perPage });
       }
     };
     fetchData();
-  }, [pageNumber, offset, rows, doFetchTags, perPage]);
+  }, [offset, rows, doFetchTags, perPage]);
+
   return (
     <>
       <FilterTable
@@ -73,7 +66,7 @@ const DataTable = function ({
         <TableContainer sx={tableContainerStyle}>
           <Table stickyHeader aria-label="sticky table">
             <DataTableHead columns={columns} />
-            {isLoading ? (
+            {isFetchLoading ? (
               <TableBody
                 style={{
                   position: "absolute",
@@ -109,6 +102,8 @@ const DataTable = function ({
               </TableBody>
             ) : (
               <DataTableBody
+                thunkFetch={thunkFetch}
+                thunkRemove={thunkRemove}
                 rows={_DATA.currentData()}
                 offset={offset}
                 perPage={perPage}
