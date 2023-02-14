@@ -1,9 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchTagsData } from "src/config/api/tagsApi/tagsApi";
-type paginationOptionType = {
-  offset: number;
-  limit: number;
-};
+import { paginationOptionType } from "src/config/constants";
+
 const fetchTags = createAsyncThunk(
   "tags/fetch",
   async (pagination: paginationOptionType) => {
