@@ -13,17 +13,22 @@ import { removeTag } from "src/store/thunks/tagThunks/removeTag";
 import { fetchTags } from "src/store/thunks/tagThunks/fetchTags";
 import Chip from "@mui/material/Chip";
 import { Typography, Grid } from "@mui/material";
+import { useAppSelector } from "src/store/hooks";
 
-const DeleteModalConfirm = function ({ state, offset, perPage }: any) {
-  const [doDeleteItem] = useThunk(removeTag);
-  const [doFetchTags] = useThunk(fetchTags);
+const DeleteModalConfirm = function ({
+  state,
+  offset,
+  perPage,
+  thunkFetch,
+  thunkRemove,
+}: any) {
+  const [doDeleteItem] = useThunk(thunkRemove);
 
-  const { isOpen } = useSelector((state: any) => state.modal);
+  const { isOpen } = useAppSelector((state) => state.modal);
   const dispatch = useDispatch();
   const handleClose = () => dispatch(closeModal(false));
   const handleDelete = async () => {
     await doDeleteItem(state);
-    await doFetchTags({ offset, limit: perPage });
     dispatch(closeModal(false));
   };
   const theme = useTheme();
