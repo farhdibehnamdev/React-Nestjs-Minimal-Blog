@@ -1,12 +1,12 @@
 import { useState, useCallback } from "react";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "src/store/hooks";
 
 const useThunk = function (
   thunk: Function
 ): [Function, boolean, object | null] {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<object | null>(null);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const runThunk = useCallback(
     (arg: any): Function | void => {
       setIsLoading(true);
