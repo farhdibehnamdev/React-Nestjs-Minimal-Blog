@@ -46,13 +46,21 @@ const DataTable = function ({
   };
 
   useEffect(() => {
+    let isMounted = true;
     const fetchData = async () => {
-      if (rows.length === 0) {
-        await doFetchTags({ offset: offset - 1, limit: perPage });
+      if (offset === pageNumber) {
+        if (rows.length === 0) {
+          if (isMounted) {
+            await doFetchTags({ offset: offset - 1, limit: perPage });
+          }
+        }
       }
     };
     fetchData();
-  }, [offset, rows, doFetchTags, perPage]);
+    return () => {
+      isMounted = false;
+    };
+  }, [offset, rows, doFetchTags, perPage, pageNumber]);
 
   return (
     <>
