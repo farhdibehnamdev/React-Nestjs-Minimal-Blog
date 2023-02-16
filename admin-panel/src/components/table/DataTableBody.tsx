@@ -7,6 +7,7 @@ import {
   Grid,
   Button,
   ButtonGroup,
+  Chip,
 } from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
@@ -20,6 +21,8 @@ const DataTableBody: React.FC<IDataTableProps> = function ({
   offset,
   setPage,
   filterData,
+  thunkFetch,
+  thunkRemove,
 }: any): JSX.Element {
   const rowNumber = function (
     pageNum: any,
@@ -50,6 +53,8 @@ const DataTableBody: React.FC<IDataTableProps> = function ({
           perPage={perPage}
           offset={offset}
           setPage={setPage}
+          thunkFetch={thunkFetch}
+          thunkRemove={thunkRemove}
         />
       )}
       <TableBody>
@@ -60,11 +65,39 @@ const DataTableBody: React.FC<IDataTableProps> = function ({
               "&:last-child td, &:last-child th": { border: 0 },
             }}
           >
-            <TableCell component="th" align="center" scope="row">
+            <TableCell align="center" scope="row">
               {rowNumber(offset, perPage, i)}
             </TableCell>
-            <TableCell component="th" align="center" scope="row">
+            <TableCell align="center" scope="row">
               {row.title}
+            </TableCell>
+
+            <TableCell align="center">
+              {row.isPublished ? (
+                <Chip
+                  label="فعال"
+                  color="success"
+                  sx={{
+                    padding: "6px",
+                    fontWeight: "bold",
+                    fontFamily: "IRANYekan",
+                    fontSize: "12px",
+                    backgroundColor: "#27ed8d",
+                  }}
+                />
+              ) : (
+                <Chip
+                  label="غیر فعال"
+                  color="error"
+                  sx={{
+                    padding: "6px",
+                    fontWeight: "bold",
+                    fontFamily: "IRANYekan",
+                    fontSize: "12px",
+                    backgroundColor: "#ed2727",
+                  }}
+                />
+              )}
             </TableCell>
             <TableCell align="center">{row.description}</TableCell>
             <TableCell align="center">
