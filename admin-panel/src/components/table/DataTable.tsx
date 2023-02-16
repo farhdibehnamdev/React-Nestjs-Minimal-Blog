@@ -48,11 +48,9 @@ const DataTable = function ({
   useEffect(() => {
     let isMounted = true;
     const fetchData = async () => {
-      if (offset === pageNumber) {
-        if (rows.length === 0) {
-          if (isMounted) {
-            await doFetchTags({ offset: offset - 1, limit: perPage });
-          }
+      if (offset === pageNumber && rows.length === 0) {
+        if (isMounted) {
+          await doFetchTags({ offset: offset - 1, limit: perPage });
         }
       }
     };
