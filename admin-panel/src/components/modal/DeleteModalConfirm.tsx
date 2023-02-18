@@ -6,29 +6,28 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import { useTheme } from "@mui/system";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { closeModal } from "src/store/slices/modal/modalSlice";
 import useThunk from "src/hooks/useThunk";
-import { removeTag } from "src/store/thunks/tagThunks/removeTag";
-import { fetchTags } from "src/store/thunks/tagThunks/fetchTags";
 import Chip from "@mui/material/Chip";
 import { Typography, Grid } from "@mui/material";
 import { useAppSelector } from "src/store/hooks";
 
 const DeleteModalConfirm = function ({
   state,
-  offset,
   perPage,
   thunkFetch,
   thunkRemove,
+  offset,
 }: any) {
-  const [doDeleteItem] = useThunk(thunkRemove);
-
   const { isOpen } = useAppSelector((state) => state.modal);
   const dispatch = useDispatch();
   const handleClose = () => dispatch(closeModal(false));
+  const [doDeleteItem] = useThunk(thunkRemove);
+  const [doFetchItems] = useThunk(thunkFetch);
   const handleDelete = async () => {
     await doDeleteItem(state);
+    await doFetchItems({ offset, limit: perPage });
     dispatch(closeModal(false));
   };
   const theme = useTheme();
