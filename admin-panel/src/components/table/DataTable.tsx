@@ -48,9 +48,10 @@ const DataTable = function ({
   useEffect(() => {
     let isMounted = true;
     const fetchData = async () => {
-      if (offset === pageNumber && rows.length === 0) {
+      if (rows.length === 0 && pageNumber > 0) {
         if (isMounted) {
-          await doFetchTags({ offset: offset - 1, limit: perPage });
+          await doFetchTags({ offset: pageNumber, limit: perPage });
+          setOffset(pageNumber);
         }
       }
     };
@@ -65,6 +66,7 @@ const DataTable = function ({
       <FilterTable
         typeOperation={typeOperation}
         setFilterData={setFilterData}
+        thunkFetch={thunkFetch}
         perPage={perPage}
         offset={offset}
       />
@@ -112,8 +114,10 @@ const DataTable = function ({
                 thunkRemove={thunkRemove}
                 rows={_DATA.currentData()}
                 offset={offset}
+                currentPageNumber={pageNumber}
                 perPage={perPage}
                 filterData={filterData}
+                setFilterData={setFilterData}
               />
             )}
           </Table>
@@ -122,7 +126,6 @@ const DataTable = function ({
       <TablePagination
         count={pageNumber}
         handleChange={handleChange}
-        setPerPage={setPerPage}
         page={offset}
         perPage={perPage}
         handleChangeRowCount={handleChangeRowCount}
