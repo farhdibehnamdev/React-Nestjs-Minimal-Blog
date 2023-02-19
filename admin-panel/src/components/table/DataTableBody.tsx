@@ -23,13 +23,17 @@ const DataTableBody: React.FC<IDataTableProps> = function ({
   filterData,
   thunkFetch,
   thunkRemove,
+  currentPageNumber,
+  setFilterData,
 }: any): JSX.Element {
+  console.log("rows ::", rows);
+  console.log("filterData ::", filterData);
   const rowNumber = function (
     pageNum: any,
     rowsPerPage: any,
     index: number
   ): number {
-    let result = pageNum > 1 ? pageNum * rowsPerPage - rowsPerPage : 1;
+    let result = pageNum > 1 ? pageNum * rowsPerPage - rowsPerPage + 1 : 1;
     result += index;
     return result;
   };
@@ -37,7 +41,7 @@ const DataTableBody: React.FC<IDataTableProps> = function ({
   const [state, setState] = useState<any>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const data = filterData ? filterData : rows;
+  const data = filterData || rows;
   const handleDelete = function (row: any) {
     dispatch(openModal(true));
     setState(row);
@@ -53,8 +57,10 @@ const DataTableBody: React.FC<IDataTableProps> = function ({
           perPage={perPage}
           offset={offset}
           setPage={setPage}
+          currentPageNumber={currentPageNumber}
           thunkFetch={thunkFetch}
           thunkRemove={thunkRemove}
+          setFilterData={setFilterData}
         />
       )}
       <TableBody>
