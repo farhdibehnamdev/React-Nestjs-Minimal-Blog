@@ -21,13 +21,21 @@ export type postCategoryType = {
 };
 
 export const fetchCategoriesData = async (
-  pagination?: paginationOptionType
+  pagination?: paginationOptionType,
+  title?: string
 ) => {
   return await api.get<categoriesCollectionType>(URLS.fetchCategoryUrl, {
-    params: pagination,
+    params: {
+      ...pagination,
+      title,
+    },
   });
 };
 
 export const postCategoryData = async (body: postCategoryType) => {
   return await api.post<postCategoryType>(URLS.fetchCategoryUrl, body);
+};
+
+export const removeCategoryData = async (id: number) => {
+  return await api.delete<categoriesDataType>(`${URLS.fetchCategoryUrl}${id}`);
 };
