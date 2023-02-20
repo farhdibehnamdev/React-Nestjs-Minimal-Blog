@@ -1,36 +1,22 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { BaseService } from 'src/common/Base.service';
 import { PaginationQueryDto } from 'src/common/pagination-query.dto';
 import { Like, Repository } from 'typeorm';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { Tag } from './entities/tag.entity';
 
 @Injectable()
-export class TagService {
+export class TagService extends BaseService<Tag> {
   constructor(
     @InjectRepository(Tag) private readonly tagRepository: Repository<Tag>,
-  ) {}
-
-  async paginate(paginationQuery: PaginationQueryDto) {
-    const { limit, offset } = paginationQuery;
-    const newSkip = offset * limit;
-    const [tags, total] = await this.tagRepository.findAndCount({
-      skip: newSkip,
-      take: limit,
-    });
-    return { data: tags, count: total };
-  }
-
-  async findAll(paginationQuery: PaginationQueryDto, tagTitle: string) {
-    const { limit, offset } = paginationQuery;
-    const newSkip = offset * limit;
-    const [tags, total] = await this.tagRepository.findAndCount({
-      skip: newSkip,
-      take: limit,
-      where: [{ title: Like(`%${tagTitle}%`) }],
-    });
-    if (!tags) throw new NotFoundException("There isn't any Tags!!");
-    return { data: tags, count: total };
+  ) {
+    super(tagRepository);
   }
 
   async findOne(id: number) {

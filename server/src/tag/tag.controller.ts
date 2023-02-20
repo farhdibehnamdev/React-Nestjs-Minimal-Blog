@@ -9,13 +9,15 @@ import {
   Version,
   UseGuards,
 } from '@nestjs/common';
-import { Query } from '@nestjs/common/decorators';
+import { Put, Query, Req } from '@nestjs/common/decorators';
 import { PaginationQueryDto } from 'src/common/pagination-query.dto';
 import { Role } from 'src/user/decorators/role';
 import { UserRole } from 'src/user/entities/user.entity';
 import { AccessTokenGuard } from 'src/user/guard/access-token.guard';
 import { RoleGuard } from 'src/user/guard/authorization.guard';
+import { Like, FindOptionsWhere } from 'typeorm';
 import { CreateTagDto } from './dto/create-tag.dto';
+import { Tag } from './entities/tag.entity';
 import { TagService } from './tag.service';
 
 @Controller('api/tag')
@@ -24,11 +26,18 @@ export class TagController {
 
   @Version('1')
   @Get()
-  findAll(@Query() paginationQuery: PaginationQueryDto, title: string) {
-    if (title === null || title === undefined) {
-      return this.tagService.paginate(paginationQuery);
+  findAll(
+    @Query() pagination: PaginationQueryDto,
+    @Query('title') title?: string,
+  ) {
+    if (title === null || title === undefined || title === '') {
+      return this.tagService.paginate(pagination);
     } else {
-      return this.tagService.findAll(paginationQuery, title);
+      const searchCriteria: FindOptionsWhere<Tag> = {
+        title: Like(`%${title}%`),
+      };
+
+      return this.tagService.findAll(pagination, searchCriteria);
     }
   }
   @Version('1')
@@ -43,8 +52,8 @@ export class TagController {
   create(@Body() createTagDto: CreateTagDto) {
     return this.tagService.create(createTagDto);
   }
-  @Role(UserRole.ADMIN)
-  @UseGuards(AccessTokenGuard, RoleGuard)
+  // @Role(UserRole.ADMIN)
+  // @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Patch(':id')
   update(@Param('id') id: number, @Body() createTagDto: CreateTagDto) {
