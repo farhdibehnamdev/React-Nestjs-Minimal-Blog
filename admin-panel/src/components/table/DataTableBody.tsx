@@ -26,8 +26,6 @@ const DataTableBody: React.FC<IDataTableProps> = function ({
   currentPageNumber,
   setFilterData,
 }: any): JSX.Element {
-  console.log("rows ::", rows);
-  console.log("filterData ::", filterData);
   const rowNumber = function (
     pageNum: any,
     rowsPerPage: any,
