@@ -8,6 +8,9 @@ export class Category {
   @Column()
   title: string;
 
+  @Column({ type: 'boolean', default: false, nullable: false })
+  isPublished: boolean;
+
   @Column({ nullable: true })
   description: string;
 
