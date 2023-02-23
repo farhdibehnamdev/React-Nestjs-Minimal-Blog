@@ -23,13 +23,15 @@ const DeleteModalConfirm = function ({
   const { isOpen } = useAppSelector((state) => state.modal);
   const dispatch = useDispatch();
   const handleClose = () => dispatch(closeModal(false));
-  const [doDeleteItem] = useThunk(thunkRemove);
-  const [doFetchItems] = useThunk(thunkFetch);
+  const [doDeleteItem, isRemoveCreatedError, isRemoveLoading] =
+    useThunk(thunkRemove);
+  const [doFetchItems, isLoadingCreatedError, isLoading] = useThunk(thunkFetch);
   const handleDelete = async () => {
     await doDeleteItem(state);
-    await doFetchItems({ offset, limit: perPage });
+    await doFetchItems({ pagination: { offset, limit: perPage } });
     dispatch(closeModal(false));
   };
+
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("xl"));
   return (
