@@ -24,7 +24,7 @@ export const fetchCategoriesData = async (
   pagination?: paginationOptionType,
   title?: string
 ) => {
-  return await api.get<categoriesCollectionType>(URLS.fetchCategoryUrl, {
+  return await api.get<categoriesCollectionType>(URLS.categoryUrl, {
     params: {
       ...pagination,
       title,
@@ -33,9 +33,16 @@ export const fetchCategoriesData = async (
 };
 
 export const postCategoryData = async (body: postCategoryType) => {
-  return await api.post<postCategoryType>(URLS.fetchCategoryUrl, body);
+  return await api.post<postCategoryType>(URLS.categoryUrl, body);
 };
 
 export const removeCategoryData = async (id: number) => {
-  return await api.delete<categoriesDataType>(`${URLS.fetchCategoryUrl}${id}`);
+  return await api.delete<categoriesDataType>(`${URLS.categoryUrl}${id}`);
+};
+
+export const editCategoryData = async (
+  id: number,
+  body: categoriesDataType
+) => {
+  return await api.patch<categoriesDataType>(`${URLS.categoryUrl}${id}`, body);
 };
