@@ -1,6 +1,7 @@
 import Grid from "@mui/material/Grid";
 import { useEffect } from "react";
 import useThunk from "src/hooks/useThunk";
+import { RootState } from "src/store";
 import { useAppSelector } from "src/store/hooks";
 import { fetchCategories } from "src/store/thunks/categoryThunks/fetchCategories";
 import { removeCategory } from "src/store/thunks/categoryThunks/removeCategory";
@@ -8,7 +9,7 @@ import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 import { BreadcrumbsType } from "../common/BreadcrumbsProps";
 import DataTable from "../table/DataTable";
 const breadcrumbTitles: BreadcrumbsType = {
-  titles: ["فهرست"],
+  titles: ["داشبورد", "فهرست"],
 };
 const columns = [
   { id: 1, title: "ردیف" },
@@ -18,6 +19,7 @@ const columns = [
   { id: 5, title: "عملیات" },
 ];
 const Categories = function () {
+  const categoryDataSelector = (state: RootState) => state.category;
   const [doFetchCategories] = useThunk(fetchCategories);
   const { data, count } = useAppSelector((state) => state.category);
   useEffect(() => {
@@ -36,6 +38,7 @@ const Categories = function () {
         thunkFetch={fetchCategories}
         thunkRemove={removeCategory}
         typeOperation="فهرست"
+        dataSelector={categoryDataSelector}
       />
     </>
   );

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import {
   TableContainer,
   Table,
@@ -17,6 +17,7 @@ import useThunk from "src/hooks/useThunk";
 import CircularProgress from "@mui/material/CircularProgress";
 import FilterTable from "./FilterTable";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+
 const DataTable = function ({
   columns,
   rows,
@@ -24,24 +25,26 @@ const DataTable = function ({
   typeOperation,
   thunkFetch,
   thunkRemove,
+  dataSelector,
 }: any) {
   const [offset, setOffset] = useState<number>(1);
   const [perPage, setPerPage] = useState<number>(5);
   const [filterData, setFilterData] = useState<any>();
-  const [doFetchTags, isFetchLoading, isFetchCreatedError] =
+  const [searchTerm, setSearchTerm] = useState<string>();
+  const [doFetchItems, isFetchLoading, isFetchCreatedError] =
     useThunk(thunkFetch);
   const pageNumber = Math.ceil(count / perPage);
   const _DATA = usePagination(rows, perPage);
   const handleChange = async function (page: number = offset) {
     setOffset(page);
-    await doFetchTags({ offset: page, limit: perPage });
+    await doFetchItems({ pagination: { offset: page, limit: perPage } });
     setFilterData(undefined);
     _DATA.jump(page);
   };
   const handleChangeRowCount = function (rowCount: number = perPage) {
     setOffset(1);
     setPerPage(rowCount);
-    doFetchTags({ offset: 1, limit: rowCount });
+    doFetchItems({ offset: 1, limit: rowCount });
     _DATA.jump(1);
   };
 
@@ -50,7 +53,7 @@ const DataTable = function ({
     const fetchData = async () => {
       if (rows.length === 0 && pageNumber > 0) {
         if (isMounted) {
-          await doFetchTags({ offset: pageNumber, limit: perPage });
+          await doFetchItems({ offset: pageNumber, limit: perPage });
           setOffset(pageNumber);
         }
       }
@@ -59,8 +62,7 @@ const DataTable = function ({
     return () => {
       isMounted = false;
     };
-  }, [offset, rows, doFetchTags, perPage, pageNumber]);
-
+  }, [offset, rows, doFetchItems, perPage, pageNumber]);
   return (
     <>
       <FilterTable
@@ -69,6 +71,9 @@ const DataTable = function ({
         thunkFetch={thunkFetch}
         perPage={perPage}
         offset={offset}
+        dataSelector={dataSelector}
+        setSearchTerm={setSearchTerm}
+        searchTerm={searchTerm}
       />
       <Grid sx={dataTableMUI}>
         <TableContainer sx={tableContainerStyle}>
@@ -118,6 +123,7 @@ const DataTable = function ({
                 perPage={perPage}
                 filterData={filterData}
                 setFilterData={setFilterData}
+                setSearchTerm={setSearchTerm}
               />
             )}
           </Table>
