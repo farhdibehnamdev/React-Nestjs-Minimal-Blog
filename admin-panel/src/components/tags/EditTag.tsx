@@ -1,10 +1,9 @@
+import React, { useState } from "react";
 import AddEditTag from "./AddEditTag";
 import { BreadcrumbsType } from "../common/BreadcrumbsProps";
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
-import Box from "@mui/material/Box";
 import useThunk from "src/hooks/useThunk";
 import { editTag } from "src/store/thunks/tagThunks/editTag";
-import React, { useEffect, useState } from "react";
 import { editTagType } from "src/config/api/tagsApi/tagsApi";
 import Grid from "@mui/material/Grid";
 import Snackbar from "@mui/material/Snackbar";
@@ -24,7 +23,7 @@ const EditTag = function () {
   );
   const [open, setOpen] = useState<boolean>(false);
   const handleTagEdit = function (formData: editTagType) {
-    editTagInfo(formData);
+    editTagInfo({ ...formData, id });
     setOpen(true);
   };
 
