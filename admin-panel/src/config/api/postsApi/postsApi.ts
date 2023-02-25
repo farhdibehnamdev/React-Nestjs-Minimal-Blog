@@ -1,14 +1,25 @@
+import { paginationOptionType, URLS } from "src/config/constants";
 import api from "../api";
 
-const URLS = {
-  fetchPostUrl: "api/article",
+type postType = {
+  id: number;
+  title: string;
+  body: string;
+  isPublished: boolean;
+  publishedAt: string;
+  mainImageUrl: string;
+  categoryId: number;
+  userId: string;
+  tags: string[];
 };
 
-export type PostData = {
-  //   message: string;
-  //   status: "success" | "error";
+type postsCollectionType = {
+  data: postType[];
+  count: number;
 };
-
-export const fetchPost = () => {
-  return api.get<PostData>(URLS.fetchPostUrl);
+export const fetchPosts = async (
+  pagination?: paginationOptionType,
+  title?: string
+) => {
+  return await api.get<postsCollectionType>(URLS.postUrl);
 };
