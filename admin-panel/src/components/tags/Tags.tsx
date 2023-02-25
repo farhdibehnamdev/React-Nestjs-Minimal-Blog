@@ -7,6 +7,7 @@ import { Grid } from "@mui/material";
 import DataTable from "../table/DataTable";
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 import { BreadcrumbsType } from "../common/BreadcrumbsProps";
+import { RootState } from "src/store";
 
 const breadcrumbTitles: BreadcrumbsType = {
   titles: ["داشبورد", "تگ"],
@@ -35,6 +36,7 @@ const columns = [
   },
 ];
 const Tags = function () {
+  const tagsDataSelector = (state: RootState) => state.tags;
   const [doFetchTags] = useThunk(fetchTags);
   const { data, count } = useAppSelector((state) => state.tags);
 
@@ -55,6 +57,7 @@ const Tags = function () {
         thunkFetch={fetchTags}
         thunkRemove={removeTag}
         typeOperation="تگ"
+        dataSelector={tagsDataSelector}
       />
     </>
   );
