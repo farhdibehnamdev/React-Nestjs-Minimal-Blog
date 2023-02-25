@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { editTag } from "src/store/thunks/tagThunks/editTag";
-import { fetchTag } from "src/store/thunks/tagThunks/fetchTag";
 import { removeTag } from "src/store/thunks/tagThunks/removeTag";
 import { addTag } from "../../thunks/tagThunks/addTag";
 import { fetchTags } from "../../thunks/tagThunks/fetchTags";
@@ -21,10 +20,8 @@ type tagState = {
 const initialState: tagState = {
   isLoading: false,
   data: [],
-  // removeTagItem: null,
   count: 0,
   error: null,
-  // selectedTagItem: null,
 };
 
 const tagSlice = createSlice({

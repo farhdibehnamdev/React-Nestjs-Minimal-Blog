@@ -38,9 +38,15 @@ export type fetchTagType = {
   id: number;
 };
 
-export const fetchTagsData = async (pagination?: paginationOptionType) => {
-  return await api.get<tagsCollectionType>(URLS.fetchTagUrl, {
-    params: pagination,
+export const fetchTagsData = async (
+  pagination?: paginationOptionType,
+  title?: string
+) => {
+  return await api.get<tagsCollectionType>(URLS.tagUrl, {
+    params: {
+      ...pagination,
+      title,
+    },
   });
 };
 
@@ -48,26 +54,26 @@ export const fetchFiltersData = async (
   pagination?: paginationOptionType,
   title?: string
 ) => {
-  return await api.get<tagsCollectionType>(URLS.fetchTagUrl, {
+  return await api.get<tagsCollectionType>(URLS.tagUrl, {
     params: {
-      pagination: pagination,
-      title: title,
+      ...pagination,
+      title,
     },
   });
 };
 
 export const postTagData = async (body: postTagsType) => {
-  return await api.post<postTagsType>(URLS.postTagUrl, body);
+  return await api.post<postTagsType>(URLS.tagUrl, body);
 };
 
 export const removeTagData = async (id: number) => {
-  return await api.delete<removeTagType>(`${URLS.removeTagUrl}${id}`);
+  return await api.delete<removeTagType>(`${URLS.tagUrl}${id}`);
 };
 
-export const editTagData = async (body: editTagType) => {
-  return await api.patch<editTagType>(URLS.editTagUrl, body);
+export const editTagData = async (id: number, body: editTagType) => {
+  return await api.patch<editTagType>(`${URLS.tagUrl}${id}`, body);
 };
 
 export const fetchTagData = async (id: fetchTagType) => {
-  return await api.get<fetchTagType>(`${URLS.fetchTagUrl}/${id}`);
+  return await api.get<fetchTagType>(`${URLS.tagUrl}/${id}`);
 };
