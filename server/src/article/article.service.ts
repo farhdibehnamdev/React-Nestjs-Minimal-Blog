@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from 'src/category/entities/category.entity';
+import { BaseService } from 'src/common/Base.service';
 import { PaginationQueryDto } from 'src/common/pagination-query.dto';
 import { Tag } from 'src/tag/entities/tag.entity';
 import { Repository } from 'typeorm';
@@ -9,7 +10,7 @@ import { UpdateArticleDto } from './dto/update-article.dto';
 import Article from './entities/article.entity';
 
 @Injectable()
-export class ArticleService {
+export class ArticleService extends BaseService<Article> {
   constructor(
     @InjectRepository(Article)
     private readonly articleRepository: Repository<Article>,
@@ -17,15 +18,8 @@ export class ArticleService {
     private readonly categoryRepository: Repository<Category>,
     @InjectRepository(Tag)
     private readonly tagRepository: Repository<Tag>,
-  ) {}
-
-  findAll(paginationQuery: PaginationQueryDto) {
-    const { limit, offset } = paginationQuery;
-    return this.articleRepository.find({
-      relations: ['category', 'tags'],
-      skip: offset,
-      take: limit,
-    });
+  ) {
+    super(articleRepository);
   }
 
   async findOne(id: number) {

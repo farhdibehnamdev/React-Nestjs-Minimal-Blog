@@ -7,15 +7,17 @@ import {
   Patch,
   Param,
 } from '@nestjs/common';
-import { UseGuards, Version } from '@nestjs/common/decorators';
+import { Query, UseGuards, Version } from '@nestjs/common/decorators';
 import { PaginationQueryDto } from 'src/common/pagination-query.dto';
 import { Role } from 'src/user/decorators/role';
 import { UserRole } from 'src/user/entities/user.entity';
 import { AccessTokenGuard } from 'src/user/guard/access-token.guard';
 import { RoleGuard } from 'src/user/guard/authorization.guard';
+import { FindOptionsWhere, Like } from 'typeorm';
 import { ArticleService } from './article.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
+import Article from './entities/article.entity';
 
 @Controller('api/article')
 export class ArticleController {
@@ -23,8 +25,18 @@ export class ArticleController {
 
   @Version('1')
   @Get()
-  findAll(paginationQueryDto: PaginationQueryDto) {
-    return this.articleService.findAll(paginationQueryDto);
+  findAll(
+    @Query() pagination: PaginationQueryDto,
+    @Query('title') title?: string,
+  ) {
+    if (title === null || title === undefined || title === '') {
+      return this.articleService.paginate(pagination);
+    } else {
+      const searchCriteria: FindOptionsWhere<Article> = {
+        title: Like(`%${title}%`),
+      };
+      return this.articleService.findAll(pagination, searchCriteria);
+    }
   }
   @Version('1')
   @Get()
