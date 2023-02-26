@@ -20,7 +20,7 @@ const DataTableHead: React.FC<IDataTableHeadProps> = function ({
         {columns.map((column) => {
           return (
             <TableCell key={column.id} align="center">
-              {column.title}
+              {column.headerName}
             </TableCell>
           );
         })}

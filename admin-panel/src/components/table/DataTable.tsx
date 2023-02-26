@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import {
   TableContainer,
   Table,
@@ -17,6 +17,13 @@ import useThunk from "src/hooks/useThunk";
 import CircularProgress from "@mui/material/CircularProgress";
 import FilterTable from "./FilterTable";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import { DataTableReducer, initialState } from "./DataTable.reducer";
+import {
+  SET_FILTER_DATA,
+  SET_OFFSET,
+  SET_PER_PAGE,
+  SET_SEARCH_TERM,
+} from "./constants";
 
 const DataTable = function ({
   columns,
@@ -27,23 +34,20 @@ const DataTable = function ({
   thunkRemove,
   dataSelector,
 }: any) {
-  const [offset, setOffset] = useState<number>(1);
-  const [perPage, setPerPage] = useState<number>(5);
-  const [filterData, setFilterData] = useState<any>();
-  const [searchTerm, setSearchTerm] = useState<string>();
+  const [state, dispatch] = useReducer(DataTableReducer, initialState);
   const [doFetchItems, isFetchLoading, isFetchCreatedError] =
     useThunk(thunkFetch);
-  const pageNumber = Math.ceil(count / perPage);
-  const _DATA = usePagination(rows, perPage);
-  const handleChange = async function (page: number = offset) {
-    setOffset(page);
-    await doFetchItems({ pagination: { offset: page, limit: perPage } });
-    setFilterData(undefined);
+  const pageNumber = Math.ceil(count / state.perPage);
+  const _DATA = usePagination(rows, state.perPage);
+  const handleChange = async function (page: number = state.offset) {
+    dispatch({ type: SET_OFFSET, payload: page });
+    await doFetchItems({ pagination: { offset: page, limit: state.perPage } });
+    dispatch({ type: SET_FILTER_DATA, payload: undefined });
     _DATA.jump(page);
   };
-  const handleChangeRowCount = function (rowCount: number = perPage) {
-    setOffset(1);
-    setPerPage(rowCount);
+  const handleChangeRowCount = function (rowCount: number = state.perPage) {
+    dispatch({ type: SET_OFFSET, payload: 1 });
+    dispatch({ type: SET_PER_PAGE, payload: rowCount });
     doFetchItems({ offset: 1, limit: rowCount });
     _DATA.jump(1);
   };
@@ -53,8 +57,8 @@ const DataTable = function ({
     const fetchData = async () => {
       if (rows.length === 0 && pageNumber > 0) {
         if (isMounted) {
-          await doFetchItems({ offset: pageNumber, limit: perPage });
-          setOffset(pageNumber);
+          await doFetchItems({ offset: pageNumber, limit: state.perPage });
+          dispatch({ type: "SET_OFFSET", payload: pageNumber });
         }
       }
     };
@@ -62,18 +66,22 @@ const DataTable = function ({
     return () => {
       isMounted = false;
     };
-  }, [offset, rows, doFetchItems, perPage, pageNumber]);
+  }, [state.offset, rows, doFetchItems, state.perPage, pageNumber]);
   return (
     <>
       <FilterTable
         typeOperation={typeOperation}
-        setFilterData={setFilterData}
+        setFilterData={(data: any) =>
+          dispatch({ type: SET_FILTER_DATA, payload: data })
+        }
         thunkFetch={thunkFetch}
-        perPage={perPage}
-        offset={offset}
+        perPage={state.perPage}
+        offset={state.offset}
         dataSelector={dataSelector}
-        setSearchTerm={setSearchTerm}
-        searchTerm={searchTerm}
+        setSearchTerm={(term: string) =>
+          dispatch({ type: SET_SEARCH_TERM, payload: term })
+        }
+        searchTerm={state.searchTerm}
       />
       <Grid sx={dataTableMUI}>
         <TableContainer sx={tableContainerStyle}>
@@ -115,15 +123,20 @@ const DataTable = function ({
               </TableBody>
             ) : (
               <DataTableBody
+                columns={columns}
                 thunkFetch={thunkFetch}
                 thunkRemove={thunkRemove}
                 rows={_DATA.currentData()}
-                offset={offset}
+                offset={state.offset}
                 currentPageNumber={pageNumber}
-                perPage={perPage}
-                filterData={filterData}
-                setFilterData={setFilterData}
-                setSearchTerm={setSearchTerm}
+                perPage={state.perPage}
+                filterData={state.filterData}
+                setFilterData={(data: any) =>
+                  dispatch({ type: SET_FILTER_DATA, payload: data })
+                }
+                setSearchTerm={(term: string) =>
+                  dispatch({ type: SET_SEARCH_TERM, payload: term })
+                }
               />
             )}
           </Table>
@@ -132,8 +145,8 @@ const DataTable = function ({
       <TablePagination
         count={pageNumber}
         handleChange={handleChange}
-        page={offset}
-        perPage={perPage}
+        page={state.offset}
+        perPage={state.perPage}
         handleChangeRowCount={handleChangeRowCount}
       />
     </>

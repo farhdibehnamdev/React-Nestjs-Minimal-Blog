@@ -6,7 +6,7 @@ export interface IDataTableColumn {
 }
 
 export interface IDataTableHeadProps {
-  columns: IDataTableColumn[];
+  columns: any[];
 }
 
 export interface IDataTableProps {
@@ -15,6 +15,10 @@ export interface IDataTableProps {
   perPage: number;
   offset: number;
   filterData: [];
+  columns: Array<{ field: string; headerName: string }>;
   thunkFetch: Function;
   thunkRemove: Function;
+  currentPageNumber: number;
+  setFilterData: Function;
+  setSearchTerm: Function;
 }

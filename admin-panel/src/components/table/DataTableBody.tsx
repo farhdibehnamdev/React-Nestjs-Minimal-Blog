@@ -15,6 +15,7 @@ import { IDataTableProps } from "./DataTable.type";
 import DeleteModalConfirm from "src/components/modal/DeleteModalConfirm";
 import { openModal } from "src/store/slices/modal/modalSlice";
 import { useNavigate } from "react-router-dom";
+import { rowNumber } from "src/utils/rowTableNumber";
 const DataTableBody: React.FC<IDataTableProps> = function ({
   rows,
   perPage,
@@ -25,16 +26,9 @@ const DataTableBody: React.FC<IDataTableProps> = function ({
   thunkRemove,
   currentPageNumber,
   setFilterData,
+  columns,
+  setSearchTerm,
 }: any): JSX.Element {
-  const rowNumber = function (
-    pageNum: any,
-    rowsPerPage: any,
-    index: number
-  ): number {
-    let result = pageNum > 1 ? pageNum * rowsPerPage - rowsPerPage + 1 : 1;
-    result += index;
-    return result;
-  };
   const { isOpen } = useAppSelector((state) => state.modal);
   const [state, setState] = useState<any>();
   const navigate = useNavigate();
@@ -72,9 +66,11 @@ const DataTableBody: React.FC<IDataTableProps> = function ({
             <TableCell align="center" scope="row">
               {rowNumber(offset, perPage, i)}
             </TableCell>
-            <TableCell align="center" scope="row">
-              {row.title}
-            </TableCell>
+            {columns.map((column: any) => (
+              <TableCell key={column.id} align="center" scope="row">
+                {row[column.field]}
+              </TableCell>
+            ))}
 
             <TableCell align="center">
               {row.isPublished ? (
