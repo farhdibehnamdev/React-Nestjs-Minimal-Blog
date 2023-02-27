@@ -12,11 +12,35 @@ const breadcrumbTitles: BreadcrumbsType = {
   titles: ["داشبورد", "فهرست"],
 };
 const columns = [
-  { id: 1, title: "ردیف" },
-  { id: 2, title: "عنوان" },
-  { id: 3, title: "وضعیت" },
-  { id: 4, title: "توضیحات" },
-  { id: 5, title: "عملیات" },
+  {
+    colId: 1,
+    field: "colId",
+    headerName: "ردیف",
+    width: 20,
+  },
+  {
+    colId: 2,
+    field: "title",
+    headerName: "عنوان",
+    width: 20,
+  },
+  {
+    colId: 3,
+    field: "isPublished",
+    headerName: "وضعیت",
+    width: 20,
+  },
+  {
+    colId: 4,
+    field: "description",
+    headerName: "توضیحات",
+    width: 30,
+  },
+  {
+    colId: 5,
+    field: "operation",
+    headerName: "ویرایش / حذف",
+  },
 ];
 const Categories = function () {
   const categoryDataSelector = (state: RootState) => state.category;

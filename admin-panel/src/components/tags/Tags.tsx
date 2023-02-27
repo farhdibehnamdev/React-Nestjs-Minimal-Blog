@@ -14,25 +14,33 @@ const breadcrumbTitles: BreadcrumbsType = {
 };
 const columns = [
   {
-    id: 1,
-    title: "ردیف",
+    colId: 1,
+    field: "colId",
+    headerName: "ردیف",
+    width: 20,
   },
   {
-    id: 2,
-    title: "عنوان",
+    colId: 2,
+    field: "title",
+    headerName: "عنوان",
+    width: 20,
   },
   {
-    id: 3,
-    title: "وضعیت",
+    colId: 3,
+    field: "isPublished",
+    headerName: "وضعیت",
+    width: 20,
   },
   {
-    id: 4,
-    title: "توضیحات",
+    colId: 4,
+    field: "description",
+    headerName: "توضیحات",
+    width: 30,
   },
-
   {
-    id: 5,
-    title: "عملیات",
+    colId: 5,
+    field: "operation",
+    headerName: "ویرایش / حذف",
   },
 ];
 const Tags = function () {
