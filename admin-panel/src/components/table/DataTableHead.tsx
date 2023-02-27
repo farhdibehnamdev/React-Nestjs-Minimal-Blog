@@ -19,7 +19,11 @@ const DataTableHead: React.FC<IDataTableHeadProps> = function ({
       <TableRow>
         {columns.map((column) => {
           return (
-            <TableCell key={column.id} align="center">
+            <TableCell
+              key={column.colId}
+              align="center"
+              style={{ minWidth: column.width }}
+            >
               {column.headerName}
             </TableCell>
           );

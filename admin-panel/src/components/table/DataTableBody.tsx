@@ -1,21 +1,11 @@
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "src/store/hooks";
-import {
-  TableBody,
-  TableRow,
-  TableCell,
-  Grid,
-  Button,
-  ButtonGroup,
-  Chip,
-} from "@mui/material";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import { TableBody } from "@mui/material";
 import { IDataTableProps } from "./DataTable.type";
 import DeleteModalConfirm from "src/components/modal/DeleteModalConfirm";
 import { openModal } from "src/store/slices/modal/modalSlice";
 import { useNavigate } from "react-router-dom";
-import { rowNumber } from "src/utils/rowTableNumber";
+import DataTableRow from "./DataTableRow";
 const DataTableBody: React.FC<IDataTableProps> = function ({
   rows,
   perPage,
@@ -27,7 +17,6 @@ const DataTableBody: React.FC<IDataTableProps> = function ({
   currentPageNumber,
   setFilterData,
   columns,
-  setSearchTerm,
 }: any): JSX.Element {
   const { isOpen } = useAppSelector((state) => state.modal);
   const [state, setState] = useState<any>();
@@ -56,79 +45,16 @@ const DataTableBody: React.FC<IDataTableProps> = function ({
         />
       )}
       <TableBody>
-        {data.map((row: any, i: number) => (
-          <TableRow
-            key={row.id}
-            sx={{
-              "&:last-child td, &:last-child th": { border: 0 },
-            }}
-          >
-            <TableCell align="center" scope="row">
-              {rowNumber(offset, perPage, i)}
-            </TableCell>
-            {columns.map((column: any) => (
-              <TableCell key={column.id} align="center" scope="row">
-                {row[column.field]}
-              </TableCell>
-            ))}
-
-            <TableCell align="center">
-              {row.isPublished ? (
-                <Chip
-                  label="فعال"
-                  color="success"
-                  sx={{
-                    padding: "6px",
-                    fontWeight: "bold",
-                    fontFamily: "IRANYekan",
-                    fontSize: "12px",
-                    backgroundColor: "#27ed8d",
-                  }}
-                />
-              ) : (
-                <Chip
-                  label="غیر فعال"
-                  color="error"
-                  sx={{
-                    padding: "6px",
-                    fontWeight: "bold",
-                    fontFamily: "IRANYekan",
-                    fontSize: "12px",
-                    backgroundColor: "#ed2727",
-                  }}
-                />
-              )}
-            </TableCell>
-            <TableCell align="center">{row.description}</TableCell>
-            <TableCell align="center">
-              <Grid container justifyContent="center">
-                <Grid item xl={6}>
-                  <ButtonGroup
-                    disableElevation
-                    variant="contained"
-                    aria-label="Disabled elevation buttons"
-                  >
-                    <Button
-                      variant="contained"
-                      color="error"
-                      startIcon={<DeleteOutlineOutlinedIcon />}
-                      onClick={() => handleDelete(row)}
-                    >
-                      حذف
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="success"
-                      startIcon={<EditOutlinedIcon />}
-                      onClick={() => handleEdit(row.id)}
-                    >
-                      ویرایش
-                    </Button>
-                  </ButtonGroup>
-                </Grid>
-              </Grid>
-            </TableCell>
-          </TableRow>
+        {data.map((row: any, index: number) => (
+          <DataTableRow
+            row={row}
+            columns={columns}
+            perPage={perPage}
+            offset={offset}
+            index={index}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+          />
         ))}
       </TableBody>
     </>
