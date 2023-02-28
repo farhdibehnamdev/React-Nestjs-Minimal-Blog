@@ -215,16 +215,16 @@ const sidebarStyle: SxProps = {
     marginBottom: "10px",
   },
   ".menuList": {
+    ".navText": {
+      textDecoration: "none",
+      color: "#828282",
+    },
     ".listStyleItemButton": {
       minHeight: 48,
       px: 2.5,
       marginRight: "10px",
       paddingLeft: "33px",
       width: "100%",
-      ".navText": {
-        textDecoration: "none",
-        color: "#828282",
-      },
 
       ".listStyleItemIcon": {
         minWidth: 0,
