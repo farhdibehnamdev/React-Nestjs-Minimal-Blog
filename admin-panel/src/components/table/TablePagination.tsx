@@ -35,42 +35,42 @@ const TablePagination = function ({
           shape="rounded"
         />
       </Grid>
-      <Grid item xl={3}>
-        <Grid container alignItems="center" justifyContent="center">
-          <Grid item xl={2}>
-            <Typography>نمایش</Typography>
-          </Grid>
-          <Grid item xl={2}>
-            <FormControl
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                m: 1,
-                minWidth: 100,
+      <Grid container xl={2} alignItems="center" justifyContent="center">
+        <Grid item xl={3}>
+          <Typography>نمایش</Typography>
+        </Grid>
+        <Grid item xl={3}>
+          <FormControl
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              m: 1,
+              minWidth: 100,
+            }}
+            fullWidth
+            size="small"
+          >
+            <InputLabel id="demo-simple-select-label">تعداد</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              label="page"
+              onChange={(e: any) => {
+                handleChangeRowCount(parseInt(e.target.value));
               }}
-              fullWidth
-              size="small"
+              value={perPage}
             >
-              <InputLabel id="demo-simple-select-label">تعداد</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="page"
-                onChange={(e: any) => {
-                  handleChangeRowCount(parseInt(e.target.value));
-                }}
-                value={perPage}
-              >
-                <MenuItem defaultValue={5} value={5}>
-                  5
-                </MenuItem>
-                <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={20}>20</MenuItem>
-                <MenuItem value={30}>30</MenuItem>
-                <MenuItem value={40}>40</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
+              <MenuItem defaultValue={5} value={5}>
+                5
+              </MenuItem>
+              <MenuItem value={10}>10</MenuItem>
+              <MenuItem value={20}>20</MenuItem>
+              <MenuItem value={30}>30</MenuItem>
+              <MenuItem value={40}>40</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xl={3}>
           <Typography>رکورد</Typography>
         </Grid>
       </Grid>
