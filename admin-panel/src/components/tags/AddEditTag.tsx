@@ -45,11 +45,7 @@ const AddEditTag = function ({
   });
   const [form, setForm] = useState(initialState);
   const onSumbit = function () {
-    if (typeOperation === "Add") {
-      onAdd(form);
-    } else {
-      onEdit(form);
-    }
+    typeOperation === "Add" ? onAdd(form) : onEdit(form);
     reset({});
   };
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
