@@ -1,16 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchPostsThunk } from "src/store/thunks/postThunks/fetchPosts";
-type postType = {
-  id: number;
-  title: string;
-  body: string;
-  isPublished: boolean;
-  publishedAt: string;
-  mainImageUrl: string;
-  categoryId: number;
-  userId: string;
-  tags: string[];
-};
+import { postType } from "src/config/api/postsApi/postsApi";
+import { addPostThunk } from "src/store/thunks/postThunks/addPostThunk";
+import { fetchPostsThunk } from "src/store/thunks/postThunks/fetchPostsThunk";
+
 type postState = {
   isLoading: boolean;
   data: postType[];
@@ -29,7 +21,7 @@ export const postSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers(builder) {
-    //============ Fetch Tags =================
+    //============ Fetch Posts =================
     builder.addCase(fetchPostsThunk.pending, (state, action) => {
       state.isLoading = true;
     });
@@ -39,6 +31,22 @@ export const postSlice = createSlice({
       state.count = action.payload.count;
     });
     builder.addCase(fetchPostsThunk.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message as string;
+    });
+
+    //============ Add Post =================
+
+    builder.addCase(addPostThunk.pending, (state, action) => {
+      state.isLoading = false;
+    });
+
+    builder.addCase(addPostThunk.fulfilled, (state, action) => {
+      state.isLoading = true;
+      state.data.push(action.payload);
+    });
+
+    builder.addCase(addPostThunk.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.error.message as string;
     });
