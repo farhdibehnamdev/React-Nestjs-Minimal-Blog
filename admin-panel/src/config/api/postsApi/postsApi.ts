@@ -1,7 +1,7 @@
 import { paginationOptionType, URLS } from "src/config/constants";
 import api from "../api";
 
-type postType = {
+export type postType = {
   id: number;
   title: string;
   body: string;
@@ -22,4 +22,8 @@ export const fetchPosts = async (
   title?: string
 ) => {
   return await api.get<postsCollectionType>(URLS.postUrl);
+};
+
+export const addPost = async (body: postType) => {
+  return await api.post<postType>(URLS.postUrl, body);
 };
