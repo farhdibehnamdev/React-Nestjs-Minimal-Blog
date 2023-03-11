@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   FormControl,
+  SelectChangeEvent,
   Grid,
   InputLabel,
   MenuItem,
@@ -14,24 +15,49 @@ import RichTextEditor from "../richTextEditor/RichTextEditor";
 import DoDisturbAltOutlinedIcon from "@mui/icons-material/DoDisturbAltOutlined";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 import { BreadcrumbsType } from "../common/BreadcrumbsProps";
+import * as yup from "yup";
+import { FormSendMessageValidationType } from "./sendMessage.type";
+import { yupResolver } from "@hookform/resolvers/yup";
+const schema = yup.object({
+  title: yup.string().required(),
+  body: yup.string().required(),
+});
 const breadcrumbTitles: BreadcrumbsType = {
   titles: ["داشبورد", "ارسال پیام"],
 };
 const SendMessage = function () {
-  const [selectedUser, setSelectedUser] = useState();
+  const initialState = { title: "", body: "" };
+  const [value, setValue] = useState<string>();
+  const [form, setForm] = useState(initialState);
   const {
-    register,
+    control,
     handleSubmit,
-    watch,
     formState: { errors },
-  } = useForm();
+  } = useForm<FormSendMessageValidationType>({
+    resolver: yupResolver(schema),
+    defaultValues: initialState,
+  });
   const onSumbit = function (data: any) {
     console.log("data:", data);
   };
-  const handleSelectUserChange = function () {};
+  const handleChange = function (event: React.ChangeEvent<HTMLInputElement>) {
+    setForm((state) => ({
+      ...state,
+      [event.target.name]: event.target.value,
+    }));
+  };
+  const handleSelectUserChange = function (event: SelectChangeEvent<any>) {
+    const name = event.target.name;
+    const value = event.target.value;
+    setForm((state) => ({
+      ...state,
+      [name]: value,
+    }));
+    setValue(value);
+  };
   return (
     <>
       <Grid item mb={5.2}>
@@ -48,7 +74,7 @@ const SendMessage = function () {
               <Select
                 labelId="demo-simple-select-helper-label"
                 id="demo-simple-select-helper"
-                value={selectedUser}
+                value={value}
                 label="کاربر"
                 onChange={handleSelectUserChange}
               >
@@ -71,9 +97,14 @@ const SendMessage = function () {
               placeholder="عنوان پیام"
             />
           </Box>
-          <RichTextEditor />
-          <br />
-          <br />
+          <Grid item mb={3.1}>
+            <RichTextEditor
+              desc="description"
+              Controller={Controller}
+              control={control}
+              handleChange={handleChange}
+            />
+          </Grid>
           <Grid container spacing={2} justifyContent="center">
             <Grid item xl={6}>
               <Button
