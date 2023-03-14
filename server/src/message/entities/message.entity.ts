@@ -1,5 +1,12 @@
 import User from 'src/user/entities/user.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Message {
@@ -21,6 +28,7 @@ export class Message {
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   sender: User;
 
-  @ManyToOne(() => User, { onDelete: 'CASCADE' })
-  reciver: User;
+  @ManyToMany(() => User, { onDelete: 'CASCADE' })
+  @JoinTable()
+  receivers: User[];
 }

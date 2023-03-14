@@ -1,5 +1,12 @@
 import Article from 'src/article/entities/article.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Message } from 'src/message/entities/message.entity';
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 export enum UserRole {
   USER = 'user',
@@ -28,4 +35,7 @@ export default class User {
 
   @OneToMany(() => Article, (article) => article.user)
   articles: Article[];
+
+  @ManyToMany(() => Message, { cascade: true })
+  messages: Message[];
 }
