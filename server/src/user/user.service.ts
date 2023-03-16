@@ -8,6 +8,7 @@ import { hash, compare } from 'bcrypt';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { usersDataAndCount } from './types/user.type';
 
 export interface JWTTokens {
   accessToken: string;
@@ -47,8 +48,9 @@ export class UserService {
     return this.getTokens(user);
   }
 
-  async findAll(): Promise<User[]> {
-    return await this.userRepository.find();
+  async findAll(): Promise<usersDataAndCount> {
+    const [items, count] = await this.userRepository.findAndCount();
+    return { data: items, count };
   }
 
   async findById(id: string): Promise<User> {
