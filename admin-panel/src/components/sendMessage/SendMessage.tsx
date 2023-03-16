@@ -14,23 +14,40 @@ import addEditFormStyle from "../common/styles/addEditForm.style";
 import RichTextEditor from "../richTextEditor/RichTextEditor";
 import DoDisturbAltOutlinedIcon from "@mui/icons-material/DoDisturbAltOutlined";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 import { BreadcrumbsType } from "../common/BreadcrumbsProps";
 import * as yup from "yup";
 import { FormSendMessageValidationType } from "./sendMessage.type";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { fetchUsers } from "src/store/thunks/userThunks/fetchUsers";
+import useThunk from "src/hooks/useThunk";
+import { useAppSelector } from "src/store/hooks";
 const schema = yup.object({
   title: yup.string().required(),
   body: yup.string().required(),
 });
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 const breadcrumbTitles: BreadcrumbsType = {
   titles: ["داشبورد", "ارسال پیام"],
 };
 const SendMessage = function () {
   const initialState = { title: "", body: "" };
-  const [value, setValue] = useState<string>();
+  const [doFetchUsers] = useThunk(fetchUsers);
+  const { data } = useAppSelector((state) => state.user);
+  console.log("data ::", data);
+  const [value, setValue] = useState<string[]>([]);
   const [form, setForm] = useState(initialState);
   const {
     control,
@@ -56,8 +73,12 @@ const SendMessage = function () {
       ...state,
       [name]: value,
     }));
-    setValue(value);
+    setValue(typeof value === "string" ? value.split(",") : value);
   };
+
+  useEffect(() => {
+    doFetchUsers({ all: true });
+  }, [doFetchUsers]);
   return (
     <>
       <Grid item mb={5.2}>
@@ -76,14 +97,17 @@ const SendMessage = function () {
                 id="demo-simple-select-helper"
                 value={value}
                 label="کاربر"
+                multiple
                 onChange={handleSelectUserChange}
+                MenuProps={MenuProps}
               >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+                {data.length > 0
+                  ? data?.map((user) => (
+                      <MenuItem value={user.id} key={user.id}>
+                        <em>{`${user.firstName}${user.lastName}`}</em>
+                      </MenuItem>
+                    ))
+                  : false}
               </Select>
             </FormControl>
           </Box>
