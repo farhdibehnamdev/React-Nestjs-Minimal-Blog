@@ -22,19 +22,10 @@ export const fetchUsersData = async (
   all: boolean,
   paginationTitle?: userTitleAndPagination
 ) => {
+  const params = { all };
   if (paginationTitle) {
     const { pagination, title } = paginationTitle;
-    return await api.get<usersDataType>(URLS.userUrl, {
-      params: {
-        all,
-        pagination,
-        title,
-      },
-    });
+    Object.assign(params, { pagination, title });
   }
-  return await api.get<usersDataType>(URLS.userUrl, {
-    params: {
-      all,
-    },
-  });
+  return await api.get<usersDataType>(URLS.userUrl, { params });
 };
