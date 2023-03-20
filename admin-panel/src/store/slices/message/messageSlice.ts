@@ -1,14 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { messagesDataType } from "src/components/common/common.type";
+import { createMessageThunk } from "src/store/thunks/messageThunks/createMessage";
+import { fetchReceivedMessages } from "src/store/thunks/messageThunks/fetchReceivedMessages";
 import { fetchSentMessages } from "src/store/thunks/messageThunks/fetchSentMessages";
-type messagesData = {
-  id: number | null;
-  messageTitle: string;
-  messageBody: string;
-};
 
 export type messageState = {
   isLoading: boolean;
-  data: messagesData[];
+  data: messagesDataType[];
   count: number;
   error: string | null;
 };
@@ -36,10 +34,10 @@ export const messageSlice = createSlice({
     });
     builder.addCase(fetchSentMessages.rejected, (state, action) => {
       state.isLoading = false;
-      state.error = action.error.message as string;
+      state.error = action.error as string;
     });
 
-    //============ Fetch Sent Messages =================
+    //============ Fetch Received Messages =================
 
     builder.addCase(fetchReceivedMessages.pending, (state, action) => {
       state.isLoading = true;
@@ -51,7 +49,19 @@ export const messageSlice = createSlice({
     });
     builder.addCase(fetchReceivedMessages.rejected, (state, action) => {
       state.isLoading = false;
-      state.error = action.error.message as string;
+      state.error = action.error as string;
+    });
+    //============ Create Message =================
+    builder.addCase(createMessageThunk.pending, (state, action) => {
+      state.isLoading = true;
+    });
+    builder.addCase(createMessageThunk.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.data.push(action.payload.data);
+    });
+    builder.addCase(createMessageThunk.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = state.error as string;
     });
   },
 });
