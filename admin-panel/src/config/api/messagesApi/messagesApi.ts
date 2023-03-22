@@ -1,20 +1,16 @@
+import { messagesDataType } from "src/components/common/common.type";
 import { paginationOptionType, URLS } from "src/config/constants";
 import api from "../api";
 
-type messagesDataType = {
-  id: number;
-  messageTitle: string;
-  messageBody: string;
-};
-
-type messageTitleAndPagination = {
+export type messageTitleAndPagination = {
   pagination: paginationOptionType;
   title: string;
 };
 
-export const fetchSentMessagesData = async (
+export const fetchMessagesData = async (
   all: boolean,
   userId: string,
+  typeMessage: string,
   paginationTitle?: messageTitleAndPagination
 ) => {
   const params = { all };
@@ -22,5 +18,16 @@ export const fetchSentMessagesData = async (
     const { pagination, title } = paginationTitle;
     Object.assign(params, { pagination, title });
   }
-  return await api.get<messagesDataType>(URLS.messageUrl, { params: userId });
+  return await api.get<messagesDataType>(URLS.messageUrl, {
+    params: { typeMessage, userId },
+  });
+};
+
+export const createMessageApi = async (
+  messageTitle: string,
+  messageBody: string
+) => {
+  return await api.post<messagesDataType>(URLS.messageUrl, {
+    params: { messageTitle, messageBody },
+  });
 };
