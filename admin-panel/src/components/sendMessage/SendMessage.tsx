@@ -24,7 +24,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { fetchUsers } from "src/store/thunks/userThunks/fetchUsers";
 import useThunk from "src/hooks/useThunk";
 import { useAppSelector } from "src/store/hooks";
+import { createMessageThunk } from "src/store/thunks/messageThunks/createMessage";
 const schema = yup.object({
+  users: yup.string().required(),
   title: yup.string().required(),
   body: yup.string().required(),
 });
@@ -43,10 +45,11 @@ const breadcrumbTitles: BreadcrumbsType = {
   titles: ["داشبورد", "ارسال پیام"],
 };
 const SendMessage = function () {
-  const initialState = { title: "", body: "" };
+  const initialState = { users: [], title: "", body: "" };
   const [doFetchUsers] = useThunk(fetchUsers);
+  const [sendMessage, isSendingMessage, sedingMessageError] =
+    useThunk(createMessageThunk);
   const { data } = useAppSelector((state) => state.user);
-  console.log("data ::", data);
   const [value, setValue] = useState<string[]>([]);
   const [form, setForm] = useState(initialState);
   const {
@@ -57,23 +60,20 @@ const SendMessage = function () {
     resolver: yupResolver(schema),
     defaultValues: initialState,
   });
-  const onSumbit = function (data: any) {
-    console.log("data:", data);
+
+  const onSubmit = function () {
+    console.log("form data:", form);
   };
-  const handleChange = function (event: React.ChangeEvent<HTMLInputElement>) {
-    setForm((state) => ({
-      ...state,
-      [event.target.name]: event.target.value,
-    }));
-  };
-  const handleSelectUserChange = function (event: SelectChangeEvent<any>) {
-    const name = event.target.name;
-    const value = event.target.value;
+
+  const handleChange = function (
+    event: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<any>
+  ) {
+    const { name, value } = event.target;
     setForm((state) => ({
       ...state,
       [name]: value,
     }));
-    setValue(typeof value === "string" ? value.split(",") : value);
+    if (Array.isArray(value)) setValue(value);
   };
 
   useEffect(() => {
@@ -86,7 +86,7 @@ const SendMessage = function () {
         <Breadcrumbs {...breadcrumbTitles} />
       </Grid>
       <Grid container sx={addEditFormStyle}>
-        <form style={{ width: "100%" }} onSubmit={handleSubmit(onSumbit)}>
+        <form style={{ width: "100%" }} onSubmit={handleSubmit(onSubmit)}>
           <Box mb={3}>
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-helper-label">
@@ -94,15 +94,14 @@ const SendMessage = function () {
               </InputLabel>
               <Select
                 labelId="demo-simple-select-helper-label"
-                id="demo-simple-select-helper"
                 value={value}
                 label="کاربر"
                 multiple
-                onChange={handleSelectUserChange}
+                onChange={handleChange}
                 MenuProps={MenuProps}
               >
                 {data.length > 0
-                  ? data?.map((user) => (
+                  ? data?.map((user: any) => (
                       <MenuItem value={user.id} key={user.id}>
                         <em>{`${user.firstName}${user.lastName}`}</em>
                       </MenuItem>
@@ -136,6 +135,7 @@ const SendMessage = function () {
                 variant="contained"
                 size="large"
                 startIcon={<SaveOutlinedIcon />}
+                type="submit"
               >
                 <Typography sx={{ color: "#fff", fontSize: "20px" }}>
                   ارسال پیام
