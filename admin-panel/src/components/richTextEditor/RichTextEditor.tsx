@@ -1,11 +1,16 @@
 import { Editor } from "@tinymce/tinymce-react";
 
-const RichTextEditor = function ({ handleChange, control, Controller }: any) {
+const RichTextEditor = function ({
+  handleChange,
+  control,
+  Controller,
+  elementName,
+}: any) {
   const parseEditorData = function (newValue: any) {
     const removedHtmlTags = newValue.replace(/<[^>]+>/g, "");
     return {
       target: {
-        name: "description",
+        name: elementName,
         value: removedHtmlTags,
       },
     };
@@ -13,13 +18,13 @@ const RichTextEditor = function ({ handleChange, control, Controller }: any) {
   return (
     <>
       <Controller
-        name="description"
+        name={elementName}
         control={control}
         render={({ field: { onChange, ...field } }: any) => (
           <Editor
             {...field}
             ref={null}
-            id="description"
+            id={elementName}
             apiKey="gzzvye1m3v6mexm536ii0av310tb85vla0tkrun3m7c1y9l8"
             init={{
               height: 500,
@@ -59,7 +64,7 @@ const RichTextEditor = function ({ handleChange, control, Controller }: any) {
               onChange(newValue);
               handleChange(parseEditorData(newValue));
             }}
-            textareaName="description"
+            textareaName={elementName}
           />
         )}
       />
