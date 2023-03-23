@@ -1,4 +1,5 @@
 export type FormSendMessageValidationType = {
-  title: string;
-  body: string;
+  receivers: string[];
+  messageTitle: string;
+  messageBody: string;
 };
