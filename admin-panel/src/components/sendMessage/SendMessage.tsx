@@ -26,9 +26,9 @@ import useThunk from "src/hooks/useThunk";
 import { useAppSelector } from "src/store/hooks";
 import { createMessageThunk } from "src/store/thunks/messageThunks/createMessage";
 const schema = yup.object({
-  users: yup.string().required(),
-  title: yup.string().required(),
-  body: yup.string().required(),
+  receivers: yup.array().min(1, "حداقل یک دریافت کننده پیام باید مشخص شود."),
+  messageTitle: yup.string().required(),
+  messageBody: yup.string().required(),
 });
 
 const ITEM_HEIGHT = 48;
@@ -45,7 +45,7 @@ const breadcrumbTitles: BreadcrumbsType = {
   titles: ["داشبورد", "ارسال پیام"],
 };
 const SendMessage = function () {
-  const initialState = { users: [], title: "", body: "" };
+  const initialState = { receivers: [], messageTitle: "", messageBody: "" };
   const [doFetchUsers] = useThunk(fetchUsers);
   const [sendMessage, isSendingMessage, sedingMessageError] =
     useThunk(createMessageThunk);
@@ -62,7 +62,10 @@ const SendMessage = function () {
   });
 
   const onSubmit = function () {
-    console.log("form data:", form);
+    const senderId = "da154cf1-aacb-46cf-a407-290c318244a7";
+    const res = Object.assign(form, { senderId });
+    console.log("form data:", res);
+    sendMessage(res);
   };
 
   const handleChange = function (
@@ -87,42 +90,71 @@ const SendMessage = function () {
       </Grid>
       <Grid container sx={addEditFormStyle}>
         <form style={{ width: "100%" }} onSubmit={handleSubmit(onSubmit)}>
-          <Box mb={3}>
+          <Grid mb={3}>
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-helper-label">
-                لیست کاربران
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-helper-label"
-                value={value}
-                label="کاربر"
-                multiple
-                onChange={handleChange}
-                MenuProps={MenuProps}
-              >
-                {data.length > 0
-                  ? data?.map((user: any) => (
-                      <MenuItem value={user.id} key={user.id}>
-                        <em>{`${user.firstName}${user.lastName}`}</em>
-                      </MenuItem>
-                    ))
-                  : false}
-              </Select>
+              <InputLabel id="users">لیست کاربران</InputLabel>
+              <Controller
+                name="receivers"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    labelId="receivers"
+                    id="receivers"
+                    multiple
+                    value={field.value || []}
+                    error={!!errors.receivers}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      handleChange(e);
+                    }}
+                    MenuProps={MenuProps}
+                  >
+                    {data.length > 0
+                      ? data?.map((user: any) => (
+                          <MenuItem value={user.id} key={user.id}>
+                            <em>{`${user.firstName}${user.lastName}`}</em>
+                          </MenuItem>
+                        ))
+                      : false}
+                  </Select>
+                )}
+              />
             </FormControl>
-          </Box>
-          <Box mb={3}>
-            <TextField
-              fullWidth
-              required
-              id="outlined-required"
-              label="عنوان پیام"
-              hiddenLabel={true}
-              placeholder="عنوان پیام"
+            {errors.receivers && (
+              <Typography>حداقل یک دریافت کننده پیام باید مشخص شود.</Typography>
+            )}
+          </Grid>
+          <Grid item mb={3}>
+            <Controller
+              name="messageTitle"
+              control={control}
+              render={({ field: { onChange, ...field } }) => (
+                <TextField
+                  {...field}
+                  ref={null}
+                  id="messageTitle"
+                  fullWidth
+                  hiddenLabel={true}
+                  required
+                  label="عنوان پیام"
+                  placeholder="عنوان پیام"
+                  error={!!errors.messageTitle}
+                  helperText={
+                    errors.messageTitle ? "فیلد عنوان اجباری است" : null
+                  }
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    onChange(e);
+                    handleChange(e);
+                  }}
+                />
+              )}
             />
-          </Box>
+          </Grid>
           <Grid item mb={3.1}>
             <RichTextEditor
-              desc="description"
+              desc="messageBody"
+              elementName="messageBody"
               Controller={Controller}
               control={control}
               handleChange={handleChange}
