@@ -31,7 +31,7 @@ export class MessageService {
 
     message.sender = sender;
     const receivers = [];
-    for (const receiverId of createMessageDto.receiverId) {
+    for (const receiverId of createMessageDto.receivers) {
       const receiver = await this.userRepository
         .createQueryBuilder('user')
         .where('user.id = :id', { id: receiverId })

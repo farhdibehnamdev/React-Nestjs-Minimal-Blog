@@ -18,29 +18,23 @@ import { CreateMessageDto } from './dto/create-message.dto';
 import { ValidationPipe } from '@nestjs/common/pipes';
 import { IncomingHttpHeaders } from 'http2';
 @Controller('api/message')
-export class MessageController implements CanActivate {
+export class MessageController {
   constructor(private messageService: MessageService) {}
-
-  public async canActivate(ctx: ExecutionContext): Promise<boolean> {
-    const request = ctx.switchToHttp().getRequest<Request>();
-    const requestBody: any = request.body;
-    const requestHeaders: any = request.headers;
-
-    console.log('BODY', requestBody);
-    console.log('HEADERS', requestHeaders);
-    return true;
-  }
 
   @Version('1')
   @Post()
-  async createMessage(@Body() createMessageDto: CreateMessageDto) {
-    console.log('createMessage controller ::', createMessageDto);
-    // const createMessageDto: CreateMessageDto = {
-    //   senderId,
-    //   receiverId,
-    //   messageTitle,
-    //   messageBody,
-    // };
+  async createMessage(
+    @Body('messageTitle') messageTitle: string,
+    @Body('messageBody') messageBody: string,
+    @Body('senderId') senderId: string,
+    @Body('receivers') receivers: string[],
+  ) {
+    const createMessageDto = {
+      messageTitle,
+      messageBody,
+      senderId,
+      receivers,
+    };
     const message = await this.messageService.createMessage(createMessageDto);
     return message;
   }
