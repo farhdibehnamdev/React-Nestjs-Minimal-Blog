@@ -56,6 +56,7 @@ const SendMessage = function () {
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<FormSendMessageValidationType>({
     resolver: yupResolver(schema),
     defaultValues: initialState,
@@ -63,9 +64,9 @@ const SendMessage = function () {
 
   const onSubmit = function () {
     const senderId = "da154cf1-aacb-46cf-a407-290c318244a7";
-    const res = Object.assign(form, { senderId });
-    console.log("form data:", res);
-    sendMessage(res);
+    Object.assign(form, { senderId });
+    sendMessage({ args: form });
+    reset({});
   };
 
   const handleChange = function (
