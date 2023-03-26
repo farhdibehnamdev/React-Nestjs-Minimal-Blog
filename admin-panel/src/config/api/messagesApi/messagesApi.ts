@@ -24,10 +24,15 @@ export const fetchMessagesData = async (
 };
 
 export const createMessageApi = async (
+  senderId: string,
   messageTitle: string,
-  messageBody: string
+  messageBody: string,
+  receivers: []
 ) => {
   return await api.post<messagesDataType>(URLS.messageUrl, {
-    params: { messageTitle, messageBody },
+    senderId,
+    messageTitle,
+    messageBody,
+    receivers,
   });
 };
