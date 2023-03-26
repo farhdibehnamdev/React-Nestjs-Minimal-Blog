@@ -9,6 +9,8 @@ import {
   Select,
   TextField,
   Typography,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import addEditFormStyle from "../common/styles/addEditForm.style";
 import RichTextEditor from "../richTextEditor/RichTextEditor";
@@ -45,9 +47,10 @@ const breadcrumbTitles: BreadcrumbsType = {
   titles: ["داشبورد", "ارسال پیام"],
 };
 const SendMessage = function () {
+  const [open, setOpen] = useState<boolean>(false);
   const initialState = { receivers: [], messageTitle: "", messageBody: "" };
   const [doFetchUsers] = useThunk(fetchUsers);
-  const [sendMessage, isSendingMessage, sedingMessageError] =
+  const [sendMessage, isSendingMessage, createMessageError] =
     useThunk(createMessageThunk);
   const { data } = useAppSelector((state) => state.user);
   const [value, setValue] = useState<string[]>([]);
@@ -66,6 +69,7 @@ const SendMessage = function () {
     const senderId = "da154cf1-aacb-46cf-a407-290c318244a7";
     Object.assign(form, { senderId });
     sendMessage({ args: form });
+    setOpen(true);
     reset({});
   };
 
@@ -80,11 +84,52 @@ const SendMessage = function () {
     if (Array.isArray(value)) setValue(value);
   };
 
+  const handleClose = (
+    event: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickAway") return;
+    setOpen(false);
+  };
+
   useEffect(() => {
     doFetchUsers({ all: true });
   }, [doFetchUsers]);
   return (
     <>
+      {!!createMessageError ? (
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          open={open}
+          autoHideDuration={3000}
+          onClose={handleClose}
+        >
+          <Alert
+            onClose={handleClose}
+            variant="filled"
+            severity="error"
+            sx={{ width: "100%" }}
+          >
+            مشکلی در ارسال دیتا بوجود آمده است
+          </Alert>
+        </Snackbar>
+      ) : (
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          open={open}
+          autoHideDuration={6000}
+          onClose={handleClose}
+        >
+          <Alert
+            onClose={handleClose}
+            severity="success"
+            variant="filled"
+            sx={{ width: "100%" }}
+          >
+            پیام شما با موفقیت ارسال شد.
+          </Alert>
+        </Snackbar>
+      )}
       <Grid item mb={5.2}>
         <h1>ارسال پیام</h1>
         <Breadcrumbs {...breadcrumbTitles} />
