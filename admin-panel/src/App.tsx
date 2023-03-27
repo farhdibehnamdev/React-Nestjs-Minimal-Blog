@@ -36,6 +36,7 @@ import CategoriesLayout from "./components/categories/CategoriesLayout";
 import TagsLayout from "./components/tags/TagsLayout";
 import AddTag from "./components/tags/AddTag";
 import EditTag from "./components/tags/EditTag";
+import ResetPassword from "./components/resetPassword/ResetPassword";
 const cacheRTL = createCache({
   key: "muirtl",
   stylisPlugins: [prefixer, rtlPlugin],
@@ -56,7 +57,7 @@ function App() {
           <CssBaseline />
           <Routes>
             <Route element={<DashboardLayout />}>
-              <Route path="/" element={<Dashboard />}>
+              <Route element={<Dashboard />}>
                 <Route index element={<Home />} />
                 <Route path="settings" element={<Settings />} />
                 <Route path="profile" element={<Profile />} />
@@ -77,12 +78,14 @@ function App() {
                 </Route>
                 <Route path="send-message" element={<SendMessage />} />
                 <Route path="user-management" element={<UserManagement />} />
+
                 <Route path="sign-out" element={<SignOut />} />
               </Route>
             </Route>
-            <Route element={<AuthLayout />}>
-              <Route path="/signin" element={<SignIn />} />
-              <Route path="/signup" element={<SignUp />} />
+            <Route path="auth" element={<AuthLayout />}>
+              <Route path="sign-in" element={<SignIn />} />
+              <Route path="sign-up" element={<SignUp />} />
+              <Route path="reset-password" element={<ResetPassword />} />
             </Route>
           </Routes>
           {mediaQ && (
