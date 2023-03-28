@@ -7,7 +7,14 @@ import {
   Patch,
   Param,
 } from '@nestjs/common';
-import { Query, UseGuards, Version } from '@nestjs/common/decorators';
+import {
+  Query,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+  Version,
+} from '@nestjs/common/decorators';
+import { FileInterceptor } from '@nestjs/platform-express/multer';
 import { PaginationQueryDto } from 'src/common/pagination-query.dto';
 import { Role } from 'src/user/decorators/role';
 import { UserRole } from 'src/user/entities/user.entity';
@@ -35,7 +42,7 @@ export class ArticleController {
       const searchCriteria: FindOptionsWhere<Article> = {
         title: Like(`%${title}%`),
       };
-      return this.articleService.findAll(pagination, searchCriteria);
+      return this.articleService.findAll(false, pagination, searchCriteria);
     }
   }
   @Version('1')
@@ -43,11 +50,15 @@ export class ArticleController {
   findOne(id: number) {
     return this.articleService.findOne(id);
   }
+  // @Role(UserRole.ADMIN)
+  // @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
-  @Role(UserRole.ADMIN)
-  @UseGuards(AccessTokenGuard, RoleGuard)
   @Post()
-  create(@Body() createArticleDto: CreateArticleDto) {
+  @UseInterceptors(FileInterceptor('image'))
+  create(@UploadedFile() file, @Body() createArticleDto: CreateArticleDto) {
+    if (file) {
+      createArticleDto.image = file.path;
+    }
     return this.articleService.create(createArticleDto);
   }
   @Version('1')
