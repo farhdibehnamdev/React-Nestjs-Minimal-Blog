@@ -38,16 +38,21 @@ export type fetchTagType = {
   id: number;
 };
 
+type tagTitleAndPagination = {
+  pagination: paginationOptionType;
+  title: string;
+};
+
 export const fetchTagsData = async (
-  pagination?: paginationOptionType,
-  title?: string
+  all: boolean,
+  paginationTitle?: tagTitleAndPagination
 ) => {
-  return await api.get<tagsCollectionType>(URLS.tagUrl, {
-    params: {
-      ...pagination,
-      title,
-    },
-  });
+  const params = { all };
+  if (paginationTitle) {
+    const { pagination, title } = paginationTitle;
+    Object.assign(params, { pagination, title });
+  }
+  return await api.get<tagsCollectionType>(URLS.tagUrl, { params });
 };
 
 export const fetchFiltersData = async (
