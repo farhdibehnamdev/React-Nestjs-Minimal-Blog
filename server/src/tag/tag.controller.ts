@@ -26,18 +26,24 @@ export class TagController {
 
   @Version('1')
   @Get()
-  findAll(
+  async findAll(
+    @Query('all') all: boolean,
     @Query() pagination: PaginationQueryDto,
     @Query('title') title?: string,
   ) {
-    if (title === null || title === undefined || title === '') {
+    if (all) {
+      const tags = await this.tagService.findAll(all, pagination, {
+        title: title,
+      });
+      return { data: tags, count: tags.count };
+    } else if (title === null || title === undefined || title === '') {
       return this.tagService.paginate(pagination);
     } else {
       const searchCriteria: FindOptionsWhere<Tag> = {
         title: Like(`%${title}%`),
       };
 
-      return this.tagService.findAll(pagination, searchCriteria);
+      return this.tagService.findAll(all, pagination, searchCriteria);
     }
   }
   @Version('1')
