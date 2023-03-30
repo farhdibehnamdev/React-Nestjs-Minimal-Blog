@@ -6,17 +6,18 @@ import Typography from "@mui/material/Typography";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PhotoIcon from "@mui/icons-material/Photo";
 
-const Uploader = function () {
+const Uploader = function ({ handleChange }: any) {
   const inputRef = useRef<any>(null);
   const [image, setImage] = useState<string | null>(null);
   const [fileName, setFileName] = useState("فایلی انتخاب نشده است");
   const handleClick = function () {
     inputRef.current.click();
   };
-  const handleOnChange = function (files: any) {
-    files[0] && setFileName(files[0].name);
-    if (files) {
-      setImage(URL.createObjectURL(files[0]));
+  const handleOnChange = function (event: React.ChangeEvent<HTMLInputElement>) {
+    if (event.target.files) {
+      event.target.files[0] && setFileName(event.target.files[0].name);
+      setImage(URL.createObjectURL(event.target.files[0]));
+      handleChange(event);
     }
   };
   return (
@@ -30,7 +31,7 @@ const Uploader = function () {
             value=""
             accept="image/*"
             hidden
-            onChange={({ target: { files } }) => handleOnChange(files)}
+            onChange={(event) => handleOnChange(event)}
           />
           {image ? (
             <img
