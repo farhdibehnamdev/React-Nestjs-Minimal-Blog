@@ -40,7 +40,7 @@ export default class Article {
   views: number;
 
   @Column()
-  mainImageUrl: string;
+  image: string;
 
   @ManyToOne(() => User, (user) => user.articles)
   user: User;
