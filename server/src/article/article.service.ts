@@ -45,6 +45,9 @@ export class ArticleService extends BaseService<Article> {
     });
     article.slug = slug;
     article.publishedAt = new Date(createArticleDto.publishedAt);
+    if (createArticleDto.image) {
+      article.image = createArticleDto.image;
+    }
     return this.articleRepository.save(article);
   }
 

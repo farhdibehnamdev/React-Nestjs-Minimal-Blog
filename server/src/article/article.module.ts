@@ -5,9 +5,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import Article from './entities/article.entity';
 import { CategoryModule } from 'src/category/category.module';
 import { TagModule } from 'src/tag/tag.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
-  imports: [TagModule, CategoryModule, TypeOrmModule.forFeature([Article])],
+  imports: [
+    MulterModule.register({
+      dest: './uploads',
+    }),
+    TagModule,
+    CategoryModule,
+    TypeOrmModule.forFeature([Article]),
+  ],
   providers: [ArticleService],
   controllers: [ArticleController],
 })

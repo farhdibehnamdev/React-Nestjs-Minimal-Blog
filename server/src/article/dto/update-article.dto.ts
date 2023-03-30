@@ -21,7 +21,7 @@ export class UpdateArticleDto {
   publishedAt: string;
 
   @IsString()
-  mainImageUrl: string;
+  image: string;
 
   @IsNumber()
   categoryId: number;

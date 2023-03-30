@@ -8,6 +8,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TagService } from './tag/tag.service';
 import { TagModule } from './tag/tag.module';
 import { validate } from './config/env.validation';
+import { MessageModule } from './message/message.module';
 import * as dotenv from 'dotenv';
 dotenv.config({ path: '.env' });
 @Module({
@@ -30,6 +31,7 @@ dotenv.config({ path: '.env' });
     CategoryModule,
     UserModule,
     TagModule,
+    MessageModule,
   ],
   controllers: [TagController],
   providers: [TagService],
