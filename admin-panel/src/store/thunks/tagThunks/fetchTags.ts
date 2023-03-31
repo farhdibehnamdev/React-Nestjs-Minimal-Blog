@@ -11,9 +11,12 @@ const fetchTags = createAsyncThunk("tags/fetch", async (arg: any) => {
   let response: undefined | any[any];
 
   if (arg) {
-    response = await fetchTagsData(arg.pagination, arg.title);
+    response = await fetchTagsData(arg.all, {
+      pagination: arg.pagination,
+      title: arg.title,
+    });
   } else {
-    response = await fetchTagsData();
+    response = await fetchTagsData(arg.all);
   }
 
   return response.data;
