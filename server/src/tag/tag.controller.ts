@@ -35,7 +35,7 @@ export class TagController {
       const tags = await this.tagService.findAll(all, pagination, {
         title: title,
       });
-      return { data: tags, count: tags.count };
+      return tags;
     } else if (title === null || title === undefined || title === '') {
       return this.tagService.paginate(pagination);
     } else {
