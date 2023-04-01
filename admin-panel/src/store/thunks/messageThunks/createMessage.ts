@@ -7,8 +7,7 @@ export const createMessageThunk = createAsyncThunk(
   "message/create",
   async ({ args, thunkApi }: any) => {
     try {
-      const { senderId, messageTitle, messageBody, users: receivers } = args;
-      console.log("args ::", args);
+      const { senderId, messageTitle, messageBody, receivers } = args;
       const response = await createMessageApi(
         senderId,
         messageTitle,
