@@ -1,9 +1,20 @@
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
 import { Outlet } from "react-router-dom";
 
 const AuthLayout = function () {
   return (
     <>
-      <Outlet />
+      <Grid
+        container
+        justifyContent="center"
+        alignItems="center"
+        sx={{
+          height: "100vh",
+        }}
+      >
+        <Outlet />
+      </Grid>
     </>
   );
 };
