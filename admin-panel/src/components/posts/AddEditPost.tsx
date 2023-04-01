@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { SyntheticEvent, useEffect, useState } from "react";
 import {
   Box,
   TextField,
@@ -11,6 +11,7 @@ import {
   Autocomplete,
   Typography,
   Button,
+  FormHelperText,
 } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import { Controller, useForm } from "react-hook-form";
@@ -24,15 +25,18 @@ import * as yup from "yup";
 import { formPostValidationType } from "./Post.type";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAppSelector } from "src/store/hooks";
+import useThunk from "src/hooks/useThunk";
+import { fetchTags } from "src/store/thunks/tagThunks/fetchTags";
+import { fetchCategories } from "src/store/thunks/categoryThunks/fetchCategories";
 
 const schema = yup.object({
   title: yup.string().required(),
   isPublished: yup.boolean().notRequired(),
   body: yup.string().required(),
-  publishedAt: yup.string().required(),
-  mainImageUrl: yup.string().required(),
+  image: yup.string().required(),
   userId: yup.string().required(),
-  tags: yup.string().required(),
+  tags: yup.array().min(1, "حداقل یک تگ بایدانتخاب شود."),
+  categoryId: yup.string().required(),
 });
 const AddEditPost = function ({
   typeOperation,
@@ -44,24 +48,32 @@ const AddEditPost = function ({
     isPublished: editFormData?.isPublished || true,
     title: editFormData?.title || "",
     body: editFormData?.body || "",
-    mainImageUrl: editFormData?.mainImageUrl || "",
-    publishedAt: editFormData?.publishedAt || "",
-    userId: editFormData?.userId || "",
+    image: editFormData?.image || "",
+    userId: editFormData?.userId || "da154cf1-aacb-46cf-a407-290c318244a7",
     tags: editFormData?.tags || [],
+    categoryId: editFormData?.categoryId || "",
   };
-  const { data } = useAppSelector((state) => state.category);
+  const [doFetchTags] = useThunk(fetchTags);
+  const [doFetchCategories] = useThunk(fetchCategories);
+  const { data: categoryData } = useAppSelector((state) => state.category);
+  const { data: tagData } = useAppSelector((state) => state.tags);
+  console.log("tagsData :: ", tagData);
   const {
     control,
     handleSubmit,
     formState: { errors },
     reset,
+    register,
   } = useForm<formPostValidationType>({
     resolver: yupResolver(schema),
     defaultValues: initialState,
   });
   const [form, setForm] = useState(initialState);
-  const [category, setCategory] = useState("");
-  const onSumbit = function () {
+  const [category, setCategory] = useState<string>("");
+  const onSubmit = function (data: any) {
+    console.log("hello");
+    alert(JSON.stringify(data));
+    Object.assign(form);
     typeOperation === "Add" ? onAdd(form) : onEdit(form);
   };
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,31 +82,41 @@ const AddEditPost = function ({
       [event.target.name]:
         event.target.name === "isPublished"
           ? event.target.checked
+          : event.target.name === "image"
+          ? URL.createObjectURL(event?.target?.files![0])
           : event.target.value,
     }));
   };
 
   const handleSelectChange = (event: SelectChangeEvent<any>) => {
-    const name = event.target.name;
-    const value = event.target.value;
+    const target = event.target;
+    const name = target.name;
+    const value = target.value;
     setForm((state) => ({
       ...state,
       [name]: value,
     }));
-    console.log("set from ::", form);
     setCategory(value);
+  };
+  const handleAutocompleteChange = (
+    event: React.ChangeEvent<{}>,
+    newValue: Array<any>
+  ) => {
+    const value = newValue.map((option) => option.id);
+    setForm((prevForm) => ({ ...prevForm, tags: value }));
   };
 
   useEffect(() => {
-    console.log("data ::", data);
-  }, [data]);
+    doFetchTags({ all: true });
+    doFetchCategories({ all: true });
+  }, [doFetchTags, doFetchCategories]);
 
   return (
     <>
       <Grid container sx={addEditFormStyle}>
         <form
           style={{ width: "100%", flexWrap: "wrap" }}
-          onSubmit={handleSubmit(onSumbit)}
+          onSubmit={handleSubmit((data) => onSubmit(data))}
         >
           <Grid container mb={3} spacing={2}>
             <Grid item xl={6}>
@@ -107,11 +129,10 @@ const AddEditPost = function ({
                     ref={null}
                     id="title"
                     fullWidth
-                    required
                     label="عنوان پست"
                     hiddenLabel={true}
                     placeholder="عنوان پست"
-                    error={!!errors.title}
+                    error={errors.title ? true : false}
                     helperText={errors.title ? "فیلد عنوان اجباری است" : null}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       onChange(e);
@@ -123,47 +144,69 @@ const AddEditPost = function ({
             </Grid>
             <Grid item xl={6}>
               <FormControl fullWidth>
+                <Controller
+                  control={control}
+                  name="categoryId"
+                  render={({ field }) => {
+                    return (
+                      <Select
+                        {...field}
+                        id="categoryId"
+                        value={field.value}
+                        error={errors.categoryId ? true : false}
+                        label="فهرست"
+                        onChange={(e) => {
+                          field.onChange(e);
+                          handleSelectChange(e);
+                        }}
+                      >
+                        {categoryData.map((dt: any) => (
+                          <MenuItem key={dt.id} value={dt.id}>
+                            {dt.title}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    );
+                  }}
+                />
+
+                {errors.categoryId && (
+                  <FormHelperText error>فهرست باید انتخاب شود</FormHelperText>
+                )}
                 <InputLabel id="category">فهرست</InputLabel>
-                <Select
-                  labelId="categoryLabel"
-                  id="category"
-                  value={category}
-                  label="فهرست"
-                  onChange={handleSelectChange}
-                >
-                  <MenuItem value="">
-                    <em>هیچکدام</em>
-                  </MenuItem>
-                  {data.map((dt: any) => (
-                    <MenuItem value={dt.id}>{dt.title}</MenuItem>
-                  ))}
-                </Select>
               </FormControl>
             </Grid>
           </Grid>
           <Grid container mb={3} spacing={2}>
             <Grid item xl={6}>
-              {/* <Autocomplete
-                multiple
-                limitTags={2}
-                fullWidth
-                sx={{ marginRight: "10px" }}
-                id="multiple-limit-tags"
-                // options={top100Films}
-                // getOptionLabel={(option) => option.title}
-                // defaultValue={[
-                //   top100Films[13],
-                //   top100Films[12],
-                //   top100Films[11],
-                // ]}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="تگ ها"
-                    placeholder="Favorites"
+              <Controller
+                name="tags"
+                control={control}
+                render={({ field }) => (
+                  <Autocomplete
+                    multiple
+                    options={tagData}
+                    getOptionLabel={(option: any) => option?.title || ""}
+                    fullWidth
+                    sx={{ marginRight: "10px" }}
+                    onChange={(event, newValue) => {
+                      const value = newValue.map((option) => option.id);
+                      field.onChange(value);
+                      handleAutocompleteChange(event, newValue);
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        error={errors.tags?.length === 0 ? true : false}
+                        {...params}
+                        label="تگ ها"
+                        helperText={
+                          errors.tags?.length === 0 && "حداقل یک تگ انتخاب کنید"
+                        }
+                      />
+                    )}
                   />
                 )}
-              /> */}
+              />
             </Grid>
             <Grid item xl={6}>
               <FormControl
@@ -185,43 +228,45 @@ const AddEditPost = function ({
               </FormControl>
             </Grid>
           </Grid>
-          <Uploader />
+          <Uploader handleChange={handleChange} />
           <br />
           <RichTextEditor
             handleChange={handleChange}
-            desc="description"
+            desc="body"
+            elementName="body"
             Controller={Controller}
             control={control}
           />
           <br />
+          <Grid container spacing={2} justifyContent="center">
+            <Grid item xl={6}>
+              <Button
+                fullWidth
+                variant="contained"
+                size="large"
+                startIcon={<SaveOutlinedIcon />}
+                type="submit"
+              >
+                <Typography sx={{ color: "#fff", fontSize: "20px" }}>
+                  ذخیره
+                </Typography>
+              </Button>
+            </Grid>
+            <Grid item xl={6}>
+              <Button
+                color="error"
+                fullWidth
+                variant="contained"
+                size="large"
+                startIcon={<DoDisturbAltOutlinedIcon />}
+              >
+                <Typography sx={{ color: "#fff", fontSize: "20px" }}>
+                  بازگشت
+                </Typography>
+              </Button>
+            </Grid>
+          </Grid>
         </form>
-        <Grid container spacing={2} justifyContent="center">
-          <Grid item xl={6}>
-            <Button
-              fullWidth
-              variant="contained"
-              size="large"
-              startIcon={<SaveOutlinedIcon />}
-            >
-              <Typography sx={{ color: "#fff", fontSize: "20px" }}>
-                ذخیره
-              </Typography>
-            </Button>
-          </Grid>
-          <Grid item xl={6}>
-            <Button
-              color="error"
-              fullWidth
-              variant="contained"
-              size="large"
-              startIcon={<DoDisturbAltOutlinedIcon />}
-            >
-              <Typography sx={{ color: "#fff", fontSize: "20px" }}>
-                بازگشت
-              </Typography>
-            </Button>
-          </Grid>
-        </Grid>
       </Grid>
     </>
   );
