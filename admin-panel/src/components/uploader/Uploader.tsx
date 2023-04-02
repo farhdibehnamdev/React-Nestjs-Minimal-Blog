@@ -1,12 +1,12 @@
 import { useRef, useState } from "react";
-import { Grid, Box } from "@mui/material";
+import { Grid, Box, FormHelperText, Alert } from "@mui/material";
 import { fileUploadGridContainerStyle, uploadedRow } from "./Uploader.style";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Typography from "@mui/material/Typography";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PhotoIcon from "@mui/icons-material/Photo";
 
-const Uploader = function ({ handleChange }: any) {
+const Uploader = function ({ handleChange, Controller, control, errors }: any) {
   const inputRef = useRef<any>(null);
   const [image, setImage] = useState<string | null>(null);
   const [fileName, setFileName] = useState("فایلی انتخاب نشده است");
@@ -24,15 +24,28 @@ const Uploader = function ({ handleChange }: any) {
     <>
       <Grid sx={fileUploadGridContainerStyle} onClick={handleClick}>
         <Grid className="fileUpload">
-          <input
-            type="file"
-            ref={inputRef}
-            className="inputField"
-            value=""
-            accept="image/*"
-            hidden
-            onChange={(event) => handleOnChange(event)}
+          <Controller
+            name="image"
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { ...field } }) => (
+              <input
+                id="image"
+                type="file"
+                {...field}
+                ref={inputRef}
+                className="inputField"
+                value=""
+                accept="image/*"
+                hidden
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  field.onChange(e);
+                  handleOnChange(e);
+                }}
+              />
+            )}
           />
+
           {image ? (
             <img
               src={image}
@@ -56,6 +69,7 @@ const Uploader = function ({ handleChange }: any) {
           )}
         </Grid>
       </Grid>
+
       <Box sx={uploadedRow}>
         <span
           style={{
@@ -81,10 +95,22 @@ const Uploader = function ({ handleChange }: any) {
               setFileName("فایلی انتخاب نشده است");
               setImage(null);
             }}
-            sx={{ color: "#1475cf", cursor: "pointer" }}
+            sx={{
+              color: "#1475cf",
+              cursor: "pointer",
+            }}
           />
         </span>
       </Box>
+      {errors.image && (
+        <Alert
+          variant="outlined"
+          severity="error"
+          sx={{ textAlign: "center", display: "flex", alignItems: "center" }}
+        >
+          <FormHelperText error>آپلود فایل اجباری است</FormHelperText>
+        </Alert>
+      )}
     </>
   );
 };

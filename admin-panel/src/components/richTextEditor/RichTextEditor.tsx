@@ -1,10 +1,11 @@
 import { Editor } from "@tinymce/tinymce-react";
-
+import { FormHelperText, Alert } from "@mui/material";
 const RichTextEditor = function ({
   handleChange,
   control,
   Controller,
   elementName,
+  errors,
 }: any) {
   const parseEditorData = function (newValue: any) {
     const removedHtmlTags = newValue.replace(/<[^>]+>/g, "");
@@ -20,6 +21,7 @@ const RichTextEditor = function ({
       <Controller
         name={elementName}
         control={control}
+        error={errors.body ? true : false}
         render={({ field: { onChange, ...field } }: any) => (
           <Editor
             {...field}
@@ -68,6 +70,16 @@ const RichTextEditor = function ({
           />
         )}
       />
+      <br />
+      {errors.body && (
+        <Alert
+          variant="outlined"
+          severity="error"
+          sx={{ textAlign: "center", display: "flex", alignItems: "center" }}
+        >
+          <FormHelperText error>{errors.body.message}</FormHelperText>
+        </Alert>
+      )}
     </>
   );
 };
