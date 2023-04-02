@@ -1,6 +1,5 @@
-import React, { SyntheticEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Box,
   TextField,
   Grid,
   FormControl,
@@ -32,10 +31,10 @@ import { fetchCategories } from "src/store/thunks/categoryThunks/fetchCategories
 const schema = yup.object({
   title: yup.string().required(),
   isPublished: yup.boolean().notRequired(),
-  body: yup.string().required(),
+  body: yup.string().required("این فیلد اجباری است"),
   image: yup.string().required(),
   userId: yup.string().required(),
-  tags: yup.array().min(1, "حداقل یک تگ بایدانتخاب شود."),
+  tags: yup.array().min(1, "انتخاب حداقل یک تگ اجباری است"),
   categoryId: yup.string().required(),
 });
 const AddEditPost = function ({
@@ -63,7 +62,6 @@ const AddEditPost = function ({
     handleSubmit,
     formState: { errors },
     reset,
-    register,
   } = useForm<formPostValidationType>({
     resolver: yupResolver(schema),
     defaultValues: initialState,
@@ -71,8 +69,6 @@ const AddEditPost = function ({
   const [form, setForm] = useState(initialState);
   const [category, setCategory] = useState<string>("");
   const onSubmit = function (data: any) {
-    console.log("hello");
-    alert(JSON.stringify(data));
     Object.assign(form);
     typeOperation === "Add" ? onAdd(form) : onEdit(form);
   };
@@ -105,18 +101,23 @@ const AddEditPost = function ({
     const value = newValue.map((option) => option.id);
     setForm((prevForm) => ({ ...prevForm, tags: value }));
   };
-
+  const onError = function (data: any) {
+    console.log("errors:: ", data);
+  };
   useEffect(() => {
     doFetchTags({ all: true });
     doFetchCategories({ all: true });
   }, [doFetchTags, doFetchCategories]);
 
+  useEffect(() => {
+    console.log("formm :::", form);
+  }, [form]);
   return (
     <>
       <Grid container sx={addEditFormStyle}>
         <form
           style={{ width: "100%", flexWrap: "wrap" }}
-          onSubmit={handleSubmit((data) => onSubmit(data))}
+          onSubmit={handleSubmit(onSubmit, (data) => onError(data))}
         >
           <Grid container mb={3} spacing={2}>
             <Grid item xl={6}>
@@ -171,7 +172,9 @@ const AddEditPost = function ({
                 />
 
                 {errors.categoryId && (
-                  <FormHelperText error>فهرست باید انتخاب شود</FormHelperText>
+                  <FormHelperText error>
+                    شما هیچ فهرستی انتخاب نکرده اید
+                  </FormHelperText>
                 )}
                 <InputLabel id="category">فهرست</InputLabel>
               </FormControl>
@@ -184,6 +187,7 @@ const AddEditPost = function ({
                 control={control}
                 render={({ field }) => (
                   <Autocomplete
+                    id="tags"
                     multiple
                     options={tagData}
                     getOptionLabel={(option: any) => option?.title || ""}
@@ -196,12 +200,10 @@ const AddEditPost = function ({
                     }}
                     renderInput={(params) => (
                       <TextField
-                        error={errors.tags?.length === 0 ? true : false}
+                        error={errors.tags ? true : false}
                         {...params}
                         label="تگ ها"
-                        helperText={
-                          errors.tags?.length === 0 && "حداقل یک تگ انتخاب کنید"
-                        }
+                        helperText={errors.tags && errors.tags.message}
                       />
                     )}
                   />
@@ -222,13 +224,32 @@ const AddEditPost = function ({
                 }}
               >
                 <FormControlLabel
-                  control={<Switch defaultChecked />}
+                  control={
+                    <Controller
+                      name="isPublished"
+                      control={control}
+                      rules={{ required: true }}
+                      render={({ field: { value, onChange } }) => (
+                        <Switch
+                          id="isPublished"
+                          value={value}
+                          onChange={onChange}
+                          defaultChecked
+                        />
+                      )}
+                    />
+                  }
                   label="منتشر شود"
                 />
               </FormControl>
             </Grid>
           </Grid>
-          <Uploader handleChange={handleChange} />
+          <Uploader
+            Controller={Controller}
+            control={control}
+            errors={errors}
+            handleChange={handleChange}
+          />
           <br />
           <RichTextEditor
             handleChange={handleChange}
@@ -236,6 +257,7 @@ const AddEditPost = function ({
             elementName="body"
             Controller={Controller}
             control={control}
+            errors={errors}
           />
           <br />
           <Grid container spacing={2} justifyContent="center">
