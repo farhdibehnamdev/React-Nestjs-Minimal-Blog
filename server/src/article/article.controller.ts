@@ -6,9 +6,12 @@ import {
   Delete,
   Patch,
   Param,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import {
   Query,
+  Req,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -56,11 +59,22 @@ export class ArticleController {
   @Post()
   @UseInterceptors(FileInterceptor('image'))
   create(@UploadedFile() file, @Body() createArticleDto: CreateArticleDto) {
-    if (file) {
-      createArticleDto.image = file.path;
-    }
-    return this.articleService.create(createArticleDto);
+    return this.articleService.create(createArticleDto, file);
   }
+
+  // try {
+  // } catch (error) {
+  //   console.log(error);
+
+  //   throw new HttpException(
+  //     {
+  //       status: HttpStatus.INTERNAL_SERVER_ERROR,
+  //       error,
+  //     },
+  //     HttpStatus.INTERNAL_SERVER_ERROR,
+  //     { cause: error },
+  //   );
+  // }
   @Version('1')
   @Role(UserRole.ADMIN)
   @UseGuards(AccessTokenGuard, RoleGuard)
