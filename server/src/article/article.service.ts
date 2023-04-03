@@ -8,6 +8,8 @@ import { Repository } from 'typeorm';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import Article from './entities/article.entity';
+import * as moment from 'moment';
+import User from 'src/user/entities/user.entity';
 
 @Injectable()
 export class ArticleService extends BaseService<Article> {
@@ -18,6 +20,8 @@ export class ArticleService extends BaseService<Article> {
     private readonly categoryRepository: Repository<Category>,
     @InjectRepository(Tag)
     private readonly tagRepository: Repository<Tag>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {
     super(articleRepository);
   }
@@ -32,10 +36,18 @@ export class ArticleService extends BaseService<Article> {
     return article;
   }
 
-  async create(createArticleDto: CreateArticleDto) {
+  async create(createArticleDto: CreateArticleDto, file: any) {
+    console.log('createArticleDto.tags ::', createArticleDto.tags);
+
     const tags = await Promise.all(
-      createArticleDto.tags.map((tag) => this.preloadTagsByName(tag)),
+      createArticleDto.tags.map(async (tag) => {
+        return this.tagRepository.findOne({ where: { id: Number(tag) } });
+      }),
     );
+
+    // const user = await Promise.all(this.userRepository.map(async user => {
+    //   return this.
+    // }));
     const titleSplited = createArticleDto.title.split(' ');
     const slug = titleSplited.join('-');
 
@@ -44,9 +56,13 @@ export class ArticleService extends BaseService<Article> {
       tags,
     });
     article.slug = slug;
-    article.publishedAt = new Date(createArticleDto.publishedAt);
-    if (createArticleDto.image) {
-      article.image = createArticleDto.image;
+    article.publishedAt = moment(createArticleDto.publishedAt || new Date(), [
+      'DD-MM-YYYY',
+      'YYYY-MM-DD',
+    ]).toDate();
+
+    if (file) {
+      article.image = file;
     }
     return this.articleRepository.save(article);
   }
