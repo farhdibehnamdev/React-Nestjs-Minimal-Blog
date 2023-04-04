@@ -6,8 +6,7 @@ export type postType = {
   title: string;
   body: string;
   isPublished: boolean;
-  publishedAt: string;
-  mainImageUrl: string;
+  image: string;
   categoryId: number;
   userId: string;
   tags: string[];
@@ -25,5 +24,14 @@ export const fetchPosts = async (
 };
 
 export const addPost = async (body: postType) => {
-  return await api.post<postType>(URLS.postUrl, body);
+  try {
+    return await api.post<postType>(URLS.postUrl, body, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  } catch (error: any) {
+    console.log("addPost ::", error.response);
+    throw new Error(error.response.message);
+  }
 };
