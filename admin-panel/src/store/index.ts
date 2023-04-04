@@ -4,6 +4,7 @@ import { modalReducer } from "./slices/modal/modalSlice";
 import { postReducer } from "./slices/post/postSlice";
 import { tagReducer } from "./slices/tag/tagSlice";
 import { toggleSlice } from "./slices/toggle/toggleSlice";
+import { userReducer } from "./slices/user/userSlice";
 const store = configureStore({
   reducer: {
     toggle: toggleSlice.reducer,
@@ -11,6 +12,7 @@ const store = configureStore({
     category: categoryReducer,
     tags: tagReducer,
     modal: modalReducer,
+    user: userReducer,
   },
 });
 
