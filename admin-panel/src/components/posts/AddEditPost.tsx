@@ -56,7 +56,6 @@ const AddEditPost = function ({
   const [doFetchCategories] = useThunk(fetchCategories);
   const { data: categoryData } = useAppSelector((state) => state.category);
   const { data: tagData } = useAppSelector((state) => state.tags);
-  console.log("tagsData :: ", tagData);
   const {
     control,
     handleSubmit,
@@ -67,10 +66,23 @@ const AddEditPost = function ({
     defaultValues: initialState,
   });
   const [form, setForm] = useState(initialState);
-  const [category, setCategory] = useState<string>("");
   const onSubmit = function (data: any) {
-    Object.assign(form);
-    typeOperation === "Add" ? onAdd(form) : onEdit(form);
+    const formData = new FormData();
+    console.log("ssssss ;:", form);
+    formData.append("title", data.title);
+    formData.append("body", data.body);
+    formData.append("image", form.image); // append File object directly
+    formData.append("userId", data.userId);
+
+    formData.append("categoryId", data.categoryId);
+    formData.append("isPublished", data.isPublished);
+    formData.append("publishedAt", "");
+
+    for (let i = 0; i < form.tags.length; i++) {
+      formData.append("tags[]", form.tags[i]);
+    }
+
+    typeOperation === "Add" ? onAdd(formData) : onEdit(formData);
   };
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm((state) => ({
@@ -79,7 +91,7 @@ const AddEditPost = function ({
         event.target.name === "isPublished"
           ? event.target.checked
           : event.target.name === "image"
-          ? URL.createObjectURL(event?.target?.files![0])
+          ? event?.target?.files![0]
           : event.target.value,
     }));
   };
@@ -92,7 +104,6 @@ const AddEditPost = function ({
       ...state,
       [name]: value,
     }));
-    setCategory(value);
   };
   const handleAutocompleteChange = (
     event: React.ChangeEvent<{}>,
