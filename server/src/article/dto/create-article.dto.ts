@@ -18,10 +18,7 @@ export class CreateArticleDto {
   isPublished: boolean;
 
   @IsString()
-  publishedAt: string;
-
-  @IsString()
-  image: string;
+  publishedAt?: string;
 
   @IsNumber()
   categoryId: number;
