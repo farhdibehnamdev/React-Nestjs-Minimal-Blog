@@ -58,23 +58,10 @@ export class ArticleController {
   @Version('1')
   @Post()
   @UseInterceptors(FileInterceptor('image'))
-  create(@UploadedFile() file, @Body() createArticleDto: CreateArticleDto) {
-    return this.articleService.create(createArticleDto, file);
+  create(@UploadedFile() image, @Body() createArticleDto: CreateArticleDto) {
+    return this.articleService.create(createArticleDto, image);
   }
 
-  // try {
-  // } catch (error) {
-  //   console.log(error);
-
-  //   throw new HttpException(
-  //     {
-  //       status: HttpStatus.INTERNAL_SERVER_ERROR,
-  //       error,
-  //     },
-  //     HttpStatus.INTERNAL_SERVER_ERROR,
-  //     { cause: error },
-  //   );
-  // }
   @Version('1')
   @Role(UserRole.ADMIN)
   @UseGuards(AccessTokenGuard, RoleGuard)
