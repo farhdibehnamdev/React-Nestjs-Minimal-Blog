@@ -50,11 +50,8 @@ const TablePagination = function ({
             fullWidth
             size="small"
           >
-            <InputLabel id="demo-simple-select-label">تعداد</InputLabel>
+            <InputLabel>تعداد</InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="page"
               onChange={(e: any) => {
                 handleChangeRowCount(parseInt(e.target.value));
               }}
