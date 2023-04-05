@@ -56,10 +56,12 @@ export class ArticleService extends BaseService<Article> {
       tags,
     });
     article.slug = slug;
-    article.publishedAt = moment(createArticleDto.publishedAt || new Date(), [
-      'DD-MM-YYYY',
-      'YYYY-MM-DD',
-    ]).toDate();
+    const publishedAtString = moment(
+      createArticleDto.publishedAt || new Date(),
+      ['DD-MM-YYYY', 'YYYY-MM-DD'],
+    ).format('YYYY-MM-DD');
+
+    article.publishedAt = new Date(publishedAtString);
 
     if (file) {
       article.image = file;
