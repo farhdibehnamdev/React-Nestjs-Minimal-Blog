@@ -41,24 +41,29 @@ export class BaseService<T> {
   }
 
   async findAll(
+    all: boolean,
     paginationQuery: PaginationQueryDto,
     searchCriteria: FindOptionsWhere<T>,
   ) {
-    const { limit, offset } = paginationQuery;
-    const newSkip = offset <= 1 ? 0 : (offset - 1) * limit;
+    if (all) {
+      const [items, total] = await this.repository.findAndCount();
+      return { data: items, count: total };
+    } else {
+      const { limit, offset } = paginationQuery;
+      const newSkip = offset <= 1 ? 0 : (offset - 1) * limit;
 
-    let options: FindManyOptions = {
-      skip: newSkip,
-      take: limit,
-      where: searchCriteria,
-    };
+      let options: FindManyOptions = {
+        skip: newSkip,
+        take: limit,
+        where: searchCriteria,
+      };
 
-    if (this.isArticle(this.repository.target)) {
-      options.relations = ['category', 'tags'];
+      if (this.isArticle(this.repository.target)) {
+        options.relations = ['category', 'tags'];
+      }
+      const [items, total] = await this.repository.findAndCount(options);
+      if (!items) throw new NotFoundException("There isn't any Tags!!");
+      return { data: items, count: total };
     }
-    const [items, total] = await this.repository.findAndCount(options);
-
-    if (!items) throw new NotFoundException("There isn't any Tags!!");
-    return { data: items, count: total };
   }
 }
