@@ -6,14 +6,22 @@ import Article from './entities/article.entity';
 import { CategoryModule } from 'src/category/category.module';
 import { TagModule } from 'src/tag/tag.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { UserModule } from 'src/user/user.module';
+import { diskStorage } from 'multer';
 
 @Module({
   imports: [
     MulterModule.register({
-      dest: './uploads',
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, cb) => {
+          cb(null, `${Date.now()}-${file.originalname}`);
+        },
+      }),
     }),
     TagModule,
     CategoryModule,
+    UserModule,
     TypeOrmModule.forFeature([Article]),
   ],
   providers: [ArticleService],
