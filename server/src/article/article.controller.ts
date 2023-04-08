@@ -8,6 +8,7 @@ import {
   Param,
   HttpException,
   HttpStatus,
+  ParseFilePipe,
 } from '@nestjs/common';
 import {
   Query,
@@ -28,6 +29,8 @@ import { ArticleService } from './article.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import Article from './entities/article.entity';
+import { createReadStream, createWriteStream } from 'fs';
+import { createThumbnail } from 'src/utils/thumbnailGenerator';
 
 @Controller('api/article')
 export class ArticleController {
@@ -58,8 +61,34 @@ export class ArticleController {
   @Version('1')
   @Post()
   @UseInterceptors(FileInterceptor('image'))
-  create(@UploadedFile() image, @Body() createArticleDto: CreateArticleDto) {
-    return this.articleService.create(createArticleDto, image);
+  async create(
+    @UploadedFile() image,
+    @Body() createArticleDto: CreateArticleDto,
+  ) {
+    console.log('image :::', image);
+    let imageObj;
+    if (image) {
+      const filename = `${Date.now()}-${image.originalname}`;
+      const fullImagePath = `./uploads/${filename}`;
+      const thumbnailImagepath = `./uploads/${filename}`;
+      const fileContents = createReadStream(fullImagePath);
+      await fileContents.pipe(createWriteStream(fullImagePath));
+      await createThumbnail(fullImagePath, thumbnailImagepath);
+
+      imageObj = {
+        image: {
+          fieldname: image.fieldname,
+          originalname: image.originalname,
+          encoding: image.encoding,
+          mimetype: image.mimetype,
+          destination: image.destination,
+          filename,
+          path: fullImagePath,
+          size: image.size,
+        },
+      };
+    }
+    return this.articleService.create(createArticleDto, imageObj);
   }
 
   @Version('1')
