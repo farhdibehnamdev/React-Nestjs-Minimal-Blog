@@ -26,17 +26,25 @@ export class CategoryController {
 
   @Version('1')
   @Get()
-  findAll(
+  async findAll(
+    @Query('all') all: boolean,
     @Query() pagination: PaginationQueryDto,
     @Query('title') title?: string,
   ) {
-    const searchCriteria: FindOptionsWhere<Category> = {
-      title: Like(`%${title}%`),
-    };
-    if (title === null || title === undefined || title === '') {
-      return this.categoryService.paginate(pagination);
+    if (all) {
+      const categories = await this.categoryService.findAll(all, pagination, {
+        title,
+      });
+      return { data: categories, count: categories.count };
     } else {
-      return this.categoryService.findAll(pagination, searchCriteria);
+      const searchCriteria: FindOptionsWhere<Category> = {
+        title: Like(`%${title}%`),
+      };
+      if (title === null || title === undefined || title === '') {
+        return this.categoryService.paginate(pagination);
+      } else {
+        return this.categoryService.findAll(all, pagination, searchCriteria);
+      }
     }
   }
   @Version('1')
@@ -51,8 +59,8 @@ export class CategoryController {
   create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoryService.create(createCategoryDto);
   }
-  @Role(UserRole.ADMIN)
-  @UseGuards(AccessTokenGuard, RoleGuard)
+  // @Role(UserRole.ADMIN)
+  // @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Patch(':id')
   update(
