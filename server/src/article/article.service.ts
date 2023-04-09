@@ -11,6 +11,11 @@ import Article from './entities/article.entity';
 import * as moment from 'moment';
 import User from 'src/user/entities/user.entity';
 
+const fileMimeTypes = {
+  'image/png': '.png',
+  'image/jpg': '.jpg',
+};
+
 @Injectable()
 export class ArticleService extends BaseService<Article> {
   constructor(
@@ -37,17 +42,12 @@ export class ArticleService extends BaseService<Article> {
   }
 
   async create(createArticleDto: CreateArticleDto, file: any) {
-    console.log('createArticleDto.tags ::', createArticleDto.tags);
-
     const tags = await Promise.all(
       createArticleDto.tags.map(async (tag) => {
         return this.tagRepository.findOne({ where: { id: Number(tag) } });
       }),
     );
 
-    // const user = await Promise.all(this.userRepository.map(async user => {
-    //   return this.
-    // }));
     const titleSplited = createArticleDto.title.split(' ');
     const slug = titleSplited.join('-');
 
@@ -63,8 +63,12 @@ export class ArticleService extends BaseService<Article> {
 
     article.publishedAt = new Date(publishedAtString);
 
+    const mimetype = file.image.mimetype;
+    const filename = file.image.filename + fileMimeTypes[mimetype];
+    const manipulateFile = { ...file, image: file.image, filename };
+
     if (file) {
-      article.image = file;
+      article.image = manipulateFile;
     }
     return this.articleRepository.save(article);
   }
@@ -83,7 +87,7 @@ export class ArticleService extends BaseService<Article> {
     });
 
     if (!article) {
-      throw new NotFoundException('Article not found!!');
+      throw new NotFoundException('مقاله ای یافت');
     }
 
     return this.articleRepository.save(article);
