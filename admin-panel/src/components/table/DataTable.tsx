@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer } from "react";
 import {
   TableContainer,
   Table,
@@ -41,14 +41,14 @@ const DataTable = function ({
   const _DATA = usePagination(rows, state.perPage);
   const handleChange = async function (page: number = state.offset) {
     dispatch({ type: SET_OFFSET, payload: page });
-    await doFetchItems({ pagination: { offset: page, limit: state.perPage } });
+    await doFetchItems({ offset: page, limit: state.perPage });
     dispatch({ type: SET_FILTER_DATA, payload: undefined });
     _DATA.jump(page);
   };
   const handleChangeRowCount = function (rowCount: number = state.perPage) {
     dispatch({ type: SET_OFFSET, payload: 1 });
     dispatch({ type: SET_PER_PAGE, payload: rowCount });
-    doFetchItems({ offset: 1, limit: rowCount });
+    doFetchItems({ all: false, offset: 1, limit: rowCount });
     _DATA.jump(1);
   };
 
@@ -57,7 +57,11 @@ const DataTable = function ({
     const fetchData = async () => {
       if (rows.length === 0 && pageNumber > 0) {
         if (isMounted) {
-          await doFetchItems({ offset: pageNumber, limit: state.perPage });
+          await doFetchItems({
+            all: false,
+            offset: pageNumber,
+            limit: state.perPage,
+          });
           dispatch({ type: "SET_OFFSET", payload: pageNumber });
         }
       }
