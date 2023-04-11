@@ -10,10 +10,16 @@ import { TagModule } from './tag/tag.module';
 import { validate } from './config/env.validation';
 import { MessageModule } from './message/message.module';
 import * as dotenv from 'dotenv';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 dotenv.config({ path: '.env' });
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, validate }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads', 'thumbnails'),
+      serveRoot: '/uploads/thumbnails',
+    }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
