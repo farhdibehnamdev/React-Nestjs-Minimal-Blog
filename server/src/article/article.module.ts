@@ -15,9 +15,16 @@ import { diskStorage } from 'multer';
       storage: diskStorage({
         destination: './uploads',
         filename: (req, file, cb) => {
-          cb(null, `${Date.now()}-${file.originalname}`);
+          const sanitizedFileName = file.originalname.replace(/\.\./g, '');
+          cb(null, `${Date.now()}-${sanitizedFileName}`);
         },
       }),
+      fileFilter: (req, file, cb) => {
+        if (!file.mimetype.match(/image\/(jpeg|png|gif)/)) {
+          return cb(new Error('Invalid file type'), false);
+        }
+        cb(null, true);
+      },
     }),
     TagModule,
     CategoryModule,
