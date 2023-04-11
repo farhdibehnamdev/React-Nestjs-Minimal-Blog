@@ -130,8 +130,10 @@ const AddEditTag = function ({
           <RichTextEditor
             handleChange={handleChange}
             desc="description"
+            elementName="description"
             Controller={Controller}
             control={control}
+            errors={errors}
           />
         </Grid>
         <Grid container spacing={2} justifyContent="center">

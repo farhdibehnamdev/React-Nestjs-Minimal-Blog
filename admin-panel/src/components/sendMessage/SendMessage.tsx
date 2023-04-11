@@ -204,6 +204,7 @@ const SendMessage = function () {
               Controller={Controller}
               control={control}
               handleChange={handleChange}
+              errors={errors}
             />
           </Grid>
           <Grid container spacing={2} justifyContent="center">
