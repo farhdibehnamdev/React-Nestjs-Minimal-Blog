@@ -47,7 +47,7 @@ const Categories = function () {
   const [doFetchCategories] = useThunk(fetchCategories);
   const { data, count } = useAppSelector((state) => state.category);
   useEffect(() => {
-    doFetchCategories();
+    doFetchCategories({ all: false, offset: 0, limit: 5 });
   }, [doFetchCategories]);
   return (
     <>
