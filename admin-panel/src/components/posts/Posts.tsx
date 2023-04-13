@@ -4,7 +4,7 @@ import { fetchPosts } from "src/config/api/postsApi/postsApi";
 import useThunk from "src/hooks/useThunk";
 import { RootState } from "src/store";
 import { useAppSelector } from "src/store/hooks";
-import { fetchPostsThunk } from "src/store/thunks/postThunks/fetchPosts";
+import { fetchPostsThunk } from "src/store/thunks/postThunks/fetchPostsThunk";
 import { removeTag } from "src/store/thunks/tagThunks/removeTag";
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 import { BreadcrumbsType } from "../common/BreadcrumbsProps";
@@ -63,7 +63,7 @@ const columns = [
   },
   {
     colId: 9,
-    field: "mainImageUrl",
+    field: "image",
     width: 20,
     headerName: "تصویر",
   },
@@ -85,7 +85,7 @@ const Posts = function () {
   const { data, count } = useAppSelector((state) => state.post);
 
   useEffect(() => {
-    doFetchPosts();
+    doFetchPosts({ all: false, offset: 0, limit: 5 });
   }, [doFetchPosts]);
   return (
     <>
@@ -97,7 +97,7 @@ const Posts = function () {
         count={count}
         rows={data}
         columns={columns}
-        thunkFetch={fetchPosts}
+        thunkFetch={fetchPostsThunk}
         thunkRemove={removeTag}
         typeOperation="پست ها"
         dataSelector={postsDataSelector}
