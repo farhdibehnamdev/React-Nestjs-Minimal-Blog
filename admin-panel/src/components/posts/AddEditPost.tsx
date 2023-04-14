@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   TextField,
   Grid,
@@ -13,7 +13,7 @@ import {
   FormHelperText,
 } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useController, useForm } from "react-hook-form";
 import addEditFormStyle from "../common/styles/addEditForm.style";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Uploader from "../uploader/Uploader";
@@ -28,15 +28,20 @@ import useThunk from "src/hooks/useThunk";
 import { fetchTags } from "src/store/thunks/tagThunks/fetchTags";
 import { fetchCategories } from "src/store/thunks/categoryThunks/fetchCategories";
 
+type tagsData = {
+  id: number | null;
+  title: string;
+};
 const schema = yup.object({
   title: yup.string().required(),
   isPublished: yup.boolean().notRequired(),
-  body: yup.string().required("این فیلد اجباری است"),
+  body: yup.string().notRequired(),
   image: yup.string().required(),
   userId: yup.string().required(),
   tags: yup.array().min(1, "انتخاب حداقل یک تگ اجباری است"),
   categoryId: yup.string().required(),
 });
+
 const AddEditPost = function ({
   typeOperation,
   onAdd,
@@ -61,14 +66,16 @@ const AddEditPost = function ({
     handleSubmit,
     formState: { errors },
     reset,
+    register,
+    setValue,
   } = useForm<formPostValidationType>({
     resolver: yupResolver(schema),
-    defaultValues: initialState,
+    defaultValues: { ...initialState, tags: [] },
   });
+
   const [form, setForm] = useState(initialState);
   const onSubmit = function (data: any) {
     const formData = new FormData();
-    console.log("ssssss ;:", form);
     formData.append("title", data.title);
     formData.append("body", data.body);
     formData.append("image", form.image); // append File object directly
@@ -83,6 +90,9 @@ const AddEditPost = function ({
     }
 
     typeOperation === "Add" ? onAdd(formData) : onEdit(formData);
+    reset();
+    setValue("tags", []);
+    setSelectedTags([]);
   };
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm((state) => ({
@@ -105,12 +115,19 @@ const AddEditPost = function ({
       [name]: value,
     }));
   };
+  const [selectedTags, setSelectedTags] = useState([]);
+
+  useEffect(() => {
+    register("tags");
+  }, [register]);
   const handleAutocompleteChange = (
-    event: React.ChangeEvent<{}>,
+    event: React.ChangeEvent<{}> | null,
     newValue: Array<any>
   ) => {
-    const value = newValue.map((option) => option.id);
+    const value = newValue.map((option: tagsData) => option.id);
     setForm((prevForm) => ({ ...prevForm, tags: value }));
+    setSelectedTags(value as never);
+    setValue("tags", value as never);
   };
   const onError = function (data: any) {
     console.log("errors:: ", data);
@@ -191,9 +208,10 @@ const AddEditPost = function ({
               </FormControl>
             </Grid>
           </Grid>
+
           <Grid container mb={3} spacing={2}>
             <Grid item xl={6}>
-              <Controller
+              {/* <Controller
                 name="tags"
                 control={control}
                 render={({ field }) => (
@@ -204,8 +222,13 @@ const AddEditPost = function ({
                     getOptionLabel={(option: any) => option?.title || ""}
                     fullWidth
                     sx={{ marginRight: "10px" }}
+                    value={tagData.filter((option: tagsData) => {
+                      return form.tags.includes(option.id);
+                    })}
                     onChange={(event, newValue) => {
-                      const value = newValue.map((option) => option.id);
+                      const value = newValue.map(
+                        (option: tagsData) => option.id
+                      );
                       field.onChange(value);
                       handleAutocompleteChange(event, newValue);
                     }}
@@ -217,6 +240,27 @@ const AddEditPost = function ({
                         helperText={errors.tags && errors.tags.message}
                       />
                     )}
+                  />
+                )}
+              /> */}
+
+              <Autocomplete
+                id="tags"
+                multiple
+                options={tagData}
+                getOptionLabel={(option: any) => option?.title || ""}
+                fullWidth
+                sx={{ marginRight: "10px" }}
+                value={tagData.filter((option: tagsData) => {
+                  return selectedTags.includes(option.id as never);
+                })}
+                onChange={handleAutocompleteChange}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="تگ ها"
+                    error={errors.tags ? true : false}
+                    helperText={errors.tags && errors.tags.message}
                   />
                 )}
               />
