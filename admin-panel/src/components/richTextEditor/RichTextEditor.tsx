@@ -21,13 +21,19 @@ const RichTextEditor = function ({
       <Controller
         name={elementName}
         control={control}
-        error={errors.body ? true : false}
+        error={
+          elementName === "description"
+            ? false
+            : errors[elementName]
+            ? true
+            : false
+        }
         render={({ field: { onChange, ...field } }: any) => (
           <Editor
+            tinymceScriptSrc="/tinymce/tinymce.min.js"
             {...field}
             ref={null}
             id={elementName}
-            apiKey="gzzvye1m3v6mexm536ii0av310tb85vla0tkrun3m7c1y9l8"
             init={{
               height: 500,
               menubar: false,
