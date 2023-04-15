@@ -8,6 +8,9 @@ import {
   ManyToOne,
   JoinTable,
   ManyToMany,
+  CreateDateColumn,
+  BeforeInsert,
+  BeforeUpdate,
 } from 'typeorm';
 
 @Entity()
@@ -27,8 +30,17 @@ export default class Article {
   @Column()
   isPublished: boolean;
 
-  @Column()
+  @Column({
+    type: 'date',
+  })
   publishedAt: Date;
+
+  @BeforeInsert()
+  validateDates() {
+    if (!this.publishedAt) {
+      this.publishedAt = new Date();
+    }
+  }
 
   @Column({ nullable: true })
   updatedAt: Date;
