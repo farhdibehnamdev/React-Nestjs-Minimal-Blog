@@ -120,6 +120,7 @@ const AddEditPost = function ({
   useEffect(() => {
     register("tags");
   }, [register]);
+
   const handleAutocompleteChange = (
     event: React.ChangeEvent<{}> | null,
     newValue: Array<any>
@@ -211,39 +212,6 @@ const AddEditPost = function ({
 
           <Grid container mb={3} spacing={2}>
             <Grid item xl={6}>
-              {/* <Controller
-                name="tags"
-                control={control}
-                render={({ field }) => (
-                  <Autocomplete
-                    id="tags"
-                    multiple
-                    options={tagData}
-                    getOptionLabel={(option: any) => option?.title || ""}
-                    fullWidth
-                    sx={{ marginRight: "10px" }}
-                    value={tagData.filter((option: tagsData) => {
-                      return form.tags.includes(option.id);
-                    })}
-                    onChange={(event, newValue) => {
-                      const value = newValue.map(
-                        (option: tagsData) => option.id
-                      );
-                      field.onChange(value);
-                      handleAutocompleteChange(event, newValue);
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        error={errors.tags ? true : false}
-                        {...params}
-                        label="تگ ها"
-                        helperText={errors.tags && errors.tags.message}
-                      />
-                    )}
-                  />
-                )}
-              /> */}
-
               <Autocomplete
                 id="tags"
                 multiple
