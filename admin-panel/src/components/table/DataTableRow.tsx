@@ -3,6 +3,8 @@ import Chip from "@mui/material/Chip";
 import { rowNumber } from "src/utils/rowTableNumber";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import { generateThumbnail } from "src/utils/generateThumbnail";
+
 const DataTableRow = function ({
   columns,
   row,
@@ -14,7 +16,6 @@ const DataTableRow = function ({
 }: any) {
   return (
     <TableRow
-      key={row.id}
       sx={{
         "&:last-child td, &:last-child th": { border: 0 },
       }}
@@ -22,9 +23,9 @@ const DataTableRow = function ({
       <TableCell align="center" scope="row">
         {rowNumber(offset, perPage, index)}
       </TableCell>
-      {columns.map((column: any) =>
-        column.field === "colId" ? null : (
-          <TableCell key={column.id} align="center" scope="row">
+      {columns.map((column: any) => {
+        return column.field === "colId" ? null : (
+          <TableCell key={column.colId} align="center" scope="row">
             {column.field === "isPublished" && row[column.field] ? (
               <Chip
                 label="فعال"
@@ -37,9 +38,9 @@ const DataTableRow = function ({
                   backgroundColor: "#27ed8d",
                 }}
               />
-            ) : column.field === "mainImageUrl" ? (
+            ) : column.field === "image" ? (
               <img
-                src={row[column.field]}
+                src={generateThumbnail(row[column.field])}
                 width={50}
                 height={50}
                 alt="main_image_photo"
@@ -89,8 +90,8 @@ const DataTableRow = function ({
               />
             )}
           </TableCell>
-        )
-      )}
+        );
+      })}
     </TableRow>
   );
 };
