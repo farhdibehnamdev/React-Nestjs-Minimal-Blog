@@ -56,15 +56,8 @@ export class ArticleService extends BaseService<Article> {
       tags,
     });
     article.slug = slug;
-    const publishedAtString = moment(
-      createArticleDto.publishedAt || new Date(),
-      ['DD-MM-YYYY', 'YYYY-MM-DD'],
-    ).format('YYYY-MM-DD');
 
-    article.publishedAt = new Date(publishedAtString);
-
-    const mimetype = file.image.mimetype;
-    const filename = file.image.filename + fileMimeTypes[mimetype];
+    const filename = file.image.filename;
     const manipulateFile = { ...file, image: file.image, filename };
 
     if (file) {
