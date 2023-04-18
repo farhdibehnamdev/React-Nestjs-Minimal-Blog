@@ -20,6 +20,11 @@ import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { Category } from './entities/category.entity';
 
+type paginationTitleType = {
+  title: string;
+  pagination: PaginationQueryDto;
+};
+
 @Controller('api/category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
@@ -28,25 +33,62 @@ export class CategoryController {
   @Get()
   async findAll(
     @Query('all') all: boolean,
-    @Query() pagination: PaginationQueryDto,
-    @Query('title') title?: string,
+    @Query() paginationTitle: paginationTitleType,
   ) {
     if (all) {
-      const categories = await this.categoryService.findAll(all, pagination, {
-        title,
-      });
-      return { data: categories, count: categories.count };
-    } else {
-      const searchCriteria: FindOptionsWhere<Category> = {
-        title: Like(`%${title}%`),
-      };
-      if (title === null || title === undefined || title === '') {
-        return this.categoryService.paginate(pagination);
-      } else {
-        return this.categoryService.findAll(all, pagination, searchCriteria);
-      }
+      return await this.categoryService.findAll(
+        all,
+        paginationTitle.pagination,
+        { title: paginationTitle.title },
+      );
     }
+
+    if (!paginationTitle.title) {
+      return this.categoryService.paginate(paginationTitle.pagination);
+    }
+
+    const searchCriteria: FindOptionsWhere<Category> = {
+      title: Like(`%${paginationTitle.title}%`),
+    };
+
+    return this.categoryService.findAll(
+      all,
+      paginationTitle.pagination,
+      searchCriteria,
+    );
   }
+
+  // @Version('1')
+  // @Get()
+  // async findAll(
+  //   @Query('all') all: boolean,
+  //   @Query() paginationTitle: paginationTitleType,
+  // ) {
+  //   if (all) {
+  //     return await this.categoryService.findAll(
+  //       all,
+  //       paginationTitle.pagination,
+  //       {
+  //         title: paginationTitle.title,
+  //       },
+  //     );
+  //   } else if (
+  //     paginationTitle.title === null ||
+  //     paginationTitle.title === undefined ||
+  //     paginationTitle.title === ''
+  //   ) {
+  //     return this.categoryService.paginate(paginationTitle.pagination);
+  //   } else {
+  //     const searchCriteria: FindOptionsWhere<Category> = {
+  //       title: Like(`%${paginationTitle.title}%`),
+  //     };
+  //     return this.categoryService.findAll(
+  //       all,
+  //       paginationTitle.pagination,
+  //       searchCriteria,
+  //     );
+  //   }
+  // }
   @Version('1')
   @Get(':id')
   findOne(@Param('id') id: number) {
