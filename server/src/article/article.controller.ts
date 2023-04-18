@@ -18,7 +18,7 @@ import {
   UseInterceptors,
   Version,
 } from '@nestjs/common/decorators';
-import { FileInterceptor } from '@nestjs/platform-express/multer';
+import { FileInterceptor, MulterModule } from '@nestjs/platform-express/multer';
 import { PaginationQueryDto } from 'src/common/pagination-query.dto';
 import { Role } from 'src/user/decorators/role';
 import { UserRole } from 'src/user/entities/user.entity';
@@ -31,6 +31,12 @@ import { UpdateArticleDto } from './dto/update-article.dto';
 import Article from './entities/article.entity';
 import { createReadStream, createWriteStream } from 'fs';
 import { createThumbnail } from 'src/utils/thumbnailGenerator';
+import { resolve } from 'path';
+import { promisify } from 'util';
+import { diskStorage } from 'multer';
+import { type } from 'os';
+
+type paginationTitleType = { pagination: PaginationQueryDto; title: string };
 
 @Controller('api/article')
 export class ArticleController {
@@ -38,18 +44,35 @@ export class ArticleController {
 
   @Version('1')
   @Get()
-  findAll(
-    @Query() pagination: PaginationQueryDto,
-    @Query('title') title?: string,
+  async findAll(
+    @Query('all') all: boolean,
+    @Query() paginationTitle: paginationTitleType,
   ) {
-    if (title === null || title === undefined || title === '') {
-      return this.articleService.paginate(pagination);
+    let result;
+
+    if (all) {
+      result = await this.articleService.findAll(
+        true,
+        paginationTitle.pagination,
+        {
+          title: paginationTitle.title,
+        },
+      );
+    } else if (!paginationTitle.title) {
+      result = this.articleService.paginate(paginationTitle.pagination);
     } else {
       const searchCriteria: FindOptionsWhere<Article> = {
-        title: Like(`%${title}%`),
+        title: Like(`%${paginationTitle.title}%`),
       };
-      return this.articleService.findAll(false, pagination, searchCriteria);
+
+      result = await this.articleService.findAll(
+        false,
+        paginationTitle.pagination,
+        searchCriteria,
+      );
     }
+
+    return result;
   }
   @Version('1')
   @Get()
@@ -65,16 +88,11 @@ export class ArticleController {
     @UploadedFile() image,
     @Body() createArticleDto: CreateArticleDto,
   ) {
-    console.log('image :::', image);
     let imageObj;
     if (image) {
-      const filename = `${Date.now()}-${image.originalname}`;
-      const fullImagePath = `./uploads/${filename}`;
-      const thumbnailImagepath = `./uploads/${filename}`;
-      const fileContents = createReadStream(fullImagePath);
-      await fileContents.pipe(createWriteStream(fullImagePath));
-      await createThumbnail(fullImagePath, thumbnailImagepath);
-
+      const fullImagePath = `./uploads/${image.filename}`;
+      const thumbnailImagePath = `./uploads/thumbnails/${image.filename}`;
+      await createThumbnail(fullImagePath, thumbnailImagePath);
       imageObj = {
         image: {
           fieldname: image.fieldname,
@@ -82,7 +100,7 @@ export class ArticleController {
           encoding: image.encoding,
           mimetype: image.mimetype,
           destination: image.destination,
-          filename,
+          filename: image.filename,
           path: fullImagePath,
           size: image.size,
         },
