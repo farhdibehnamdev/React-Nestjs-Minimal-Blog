@@ -19,16 +19,21 @@ export type postCategoryType = {
   isPublished: boolean;
   description: string;
 };
+type categoryTitleAndPagination = {
+  pagination: paginationOptionType;
+  title: string;
+};
 
 export const fetchCategoriesData = async (
-  pagination?: paginationOptionType,
-  title?: string
+  all: boolean,
+  paginationTitle?: categoryTitleAndPagination
 ) => {
+  const params = { all };
+  if (paginationTitle) {
+    Object.assign(params, paginationTitle);
+  }
   return await api.get<categoriesCollectionType>(URLS.categoryUrl, {
-    params: {
-      ...pagination,
-      title,
-    },
+    params,
   });
 };
 
