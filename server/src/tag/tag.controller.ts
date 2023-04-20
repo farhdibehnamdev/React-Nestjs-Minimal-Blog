@@ -20,6 +20,15 @@ import { CreateTagDto } from './dto/create-tag.dto';
 import { Tag } from './entities/tag.entity';
 import { TagService } from './tag.service';
 
+type paginationTitle = {
+  pagination: PaginationQueryDto;
+  title: string;
+};
+
+const paginationTitleType: paginationTitle = {
+  pagination: { limit: 5, offset: 0 },
+  title: '',
+};
 @Controller('api/tag')
 export class TagController {
   constructor(private readonly tagService: TagService) {}
@@ -28,22 +37,36 @@ export class TagController {
   @Get()
   async findAll(
     @Query('all') all: boolean,
-    @Query() pagination: PaginationQueryDto,
-    @Query('title') title?: string,
+    @Query() paginationTitleType: paginationTitle,
   ) {
     if (all) {
-      const tags = await this.tagService.findAll(all, pagination, {
-        title: title,
-      });
+      const tags = await this.tagService.findAll(
+        all,
+        paginationTitleType.pagination,
+        {
+          title: paginationTitleType.title,
+        },
+      );
+      console.log('1 ::', tags);
       return tags;
-    } else if (title === null || title === undefined || title === '') {
-      return this.tagService.paginate(pagination);
+    } else if (
+      paginationTitleType.title === null ||
+      paginationTitleType.title === undefined ||
+      paginationTitleType.title === ''
+    ) {
+      console.log('2 ::', paginationTitleType.pagination);
+      return this.tagService.paginate(paginationTitleType.pagination);
     } else {
+      console.log('3 ::', paginationTitleType.title);
       const searchCriteria: FindOptionsWhere<Tag> = {
-        title: Like(`%${title}%`),
+        title: Like(`%${paginationTitleType.title}%`),
       };
 
-      return this.tagService.findAll(all, pagination, searchCriteria);
+      return this.tagService.findAll(
+        all,
+        paginationTitleType.pagination,
+        searchCriteria,
+      );
     }
   }
   @Version('1')
