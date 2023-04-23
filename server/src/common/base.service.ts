@@ -49,7 +49,9 @@ export class BaseService<T> {
       const [items, total] = await this.repository.findAndCount();
       return { data: items, count: total };
     } else {
-      const { limit, offset } = paginationQuery;
+      const { limit = 5, offset = 0 } =
+        paginationQuery === undefined ? {} : paginationQuery;
+
       const newSkip = offset <= 1 ? 0 : (offset - 1) * limit;
 
       let options: FindManyOptions = {
