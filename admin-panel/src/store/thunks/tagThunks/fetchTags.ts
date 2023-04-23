@@ -6,15 +6,21 @@ type fetchTagsType = {
   pagination: paginationOptionType;
   title: string;
 };
-
+type tagTitleAndPagination = {
+  pagination: paginationOptionType;
+  title: string;
+};
+const tagsType: tagTitleAndPagination = {
+  title: "",
+  pagination: { limit: 5, offset: 0 },
+};
 const fetchTags = createAsyncThunk("tags/fetch", async (arg: any) => {
   let response: undefined | any[any];
-
   if (arg) {
-    response = await fetchTagsData(arg.all, {
-      pagination: arg.pagination,
-      title: arg.title,
-    });
+    tagsType.title = arg.title;
+    tagsType.pagination.limit = arg.limit;
+    tagsType.pagination.offset = arg.offset;
+    response = await fetchTagsData(arg.all, tagsType);
   } else {
     response = await fetchTagsData(arg.all);
   }
