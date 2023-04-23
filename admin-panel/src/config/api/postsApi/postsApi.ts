@@ -16,11 +16,18 @@ type postsCollectionType = {
   data: postType[];
   count: number;
 };
+
+type paginationTitleType = {
+  pagination: paginationOptionType;
+  title: string;
+};
 export const fetchPosts = async (
-  pagination?: paginationOptionType,
-  title?: string
+  all: boolean,
+  paginationTitle?: paginationTitleType
 ) => {
-  return await api.get<postsCollectionType>(URLS.postUrl);
+  const params = { all };
+  Object.assign(params, paginationTitle);
+  return await api.get<postsCollectionType>(URLS.postUrl, { params });
 };
 
 export const addPost = async (body: postType) => {
@@ -31,7 +38,6 @@ export const addPost = async (body: postType) => {
       },
     });
   } catch (error: any) {
-    console.log("addPost ::", error.response);
     throw new Error(error.response.message);
   }
 };
