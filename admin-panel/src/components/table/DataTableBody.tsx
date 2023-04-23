@@ -47,6 +47,7 @@ const DataTableBody: React.FC<IDataTableProps> = function ({
       <TableBody>
         {data.map((row: any, index: number) => (
           <DataTableRow
+            key={row.id}
             row={row}
             columns={columns}
             perPage={perPage}
