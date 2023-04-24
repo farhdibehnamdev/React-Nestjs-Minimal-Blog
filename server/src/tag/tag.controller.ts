@@ -47,17 +47,14 @@ export class TagController {
           title: paginationTitleType.title,
         },
       );
-      console.log('1 ::', tags);
       return tags;
     } else if (
       paginationTitleType.title === null ||
       paginationTitleType.title === undefined ||
       paginationTitleType.title === ''
     ) {
-      console.log('2 ::', paginationTitleType.pagination);
       return this.tagService.paginate(paginationTitleType.pagination);
     } else {
-      console.log('3 ::', paginationTitleType.title);
       const searchCriteria: FindOptionsWhere<Tag> = {
         title: Like(`%${paginationTitleType.title}%`),
       };
