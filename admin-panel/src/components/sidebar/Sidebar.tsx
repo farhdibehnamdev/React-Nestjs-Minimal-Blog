@@ -16,6 +16,7 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { useSelector } from "react-redux";
 import { BoxRootSidebarStyled } from "./Sidebar.style";
 import { MenuList } from "./SidebarMenu";
+import { Link } from "react-router-dom";
 
 export default function Sidebar() {
   const { toggle } = useSelector((state: any) => state.toggle);
@@ -56,12 +57,14 @@ export default function Sidebar() {
                 title="پروفایل"
                 placement="top"
               >
-                <IconButton
-                  className="profileStyleIconButton personIconButton"
-                  size="small"
-                >
-                  <Person2OutlinedIcon fontSize="inherit" />
-                </IconButton>
+                <Link to="/profile">
+                  <IconButton
+                    className="profileStyleIconButton personIconButton"
+                    size="small"
+                  >
+                    <Person2OutlinedIcon fontSize="inherit" />
+                  </IconButton>
+                </Link>
               </Tooltip>
               <Tooltip title="تنظیمات" placement="top">
                 <IconButton
