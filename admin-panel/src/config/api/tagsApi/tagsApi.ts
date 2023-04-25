@@ -49,8 +49,7 @@ export const fetchTagsData = async (
 ) => {
   const params = { all };
   if (paginationTitle) {
-    const { pagination, title } = paginationTitle;
-    Object.assign(params, { pagination, title });
+    Object.assign(params, paginationTitle);
   }
   return await api.get<tagsCollectionType>(URLS.tagUrl, { params });
 };
