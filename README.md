@@ -4,15 +4,17 @@ This is a full-stack blog admin panel application that provides a user interface
 
 ## Screenshots
 
-![App Screenshot](https://github.com/farhdibehnamdev/React-Nestjs-Minimal-Blog/screenshots/Dashboard.png)
+![App Screenshot](https://github.com/farhdibehnamdev/React-Nestjs-Minimal-Blog/screenshots/blob/main/Dashboard.png)
 
-![App Screenshot](https://github.com/farhdibehnamdev/React-Nestjs-Minimal-Blog/screenshots/Add-Post.png)
+![App Screenshot](https://github.com/farhdibehnamdev/React-Nestjs-Minimal-Blog/screenshots/blob/main/Add-Post.png)
 
-![App Screenshot](https://github.com/farhdibehnamdev/React-Nestjs-Minimal-Blog/screenshots/Posts.png)
+![App Screenshot](https://github.com/farhdibehnamdev/React-Nestjs-Minimal-Blog/screenshots/blob/main/Posts.png)
 
-![App Screenshot](https://github.com/farhdibehnamdev/React-Nestjs-Minimal-Blog/screenshots/Send-Message.png)
+![App Screenshot](https://github.com/farhdibehnamdev/React-Nestjs-Minimal-Blog/screenshots/blob/main/Send-Message.png)
 
-![App Screenshot](https://github.com/farhdibehnamdev/React-Nestjs-Minimal-Blog/screenshots/Categories.png)
+![App Screenshot](https://github.com/farhdibehnamdev/React-Nestjs-Minimal-Blog/blob/main/screenshots/Categories.png)
+
+![App Screenshot](https://github.com/farhdibehnamdev/React-Nestjs-Minimal-Blog/blob/main/screenshots/Add-Category.png)
 
 ## Roadmap
 
