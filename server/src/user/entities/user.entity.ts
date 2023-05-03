@@ -30,6 +30,9 @@ export default class User {
   @Column({ nullable: true })
   password: string;
 
+  @Column({ default: false })
+  isVerified: boolean;
+
   @Column({ type: 'varchar', default: UserRole.USER, name: 'userRole' })
   role: UserRole;
 
