@@ -9,6 +9,12 @@ import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { usersDataAndCount } from './types/user.type';
+import { MailerService } from '@nestjs-modules/mailer';
+import { v4 as uuidv4 } from 'uuid';
+
+export type createUserStatus = {
+  status: number;
+};
 
 export interface JWTTokens {
   accessToken: string;
@@ -21,19 +27,30 @@ export class UserService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private jwtService: JwtService,
     private configService: ConfigService,
+    private readonly mailerService: MailerService,
   ) {}
 
-  async createUser(signUpUserDto: SignUpUserDto) {
-    const existingUser = await this.userRepository.findOne({
-      where: { email: signUpUserDto.email },
-    });
+  async createUser(signUpUserDto: SignUpUserDto): Promise<createUserStatus> {
+    try {
+      const existingUser = await this.userRepository.findOne({
+        where: { email: signUpUserDto.email },
+      });
 
-    if (existingUser) throw new HttpException('Email already registered!', 400);
-    const createdUser = this.userRepository.create(signUpUserDto);
-    const protectedPassword = await this.hashPassword(signUpUserDto.password);
-    createdUser.role = UserRole.USER;
-    createdUser.password = protectedPassword;
-    await this.userRepository.save(createdUser);
+      if (existingUser)
+        throw new HttpException('Email already registered!', 400);
+      const createdUser = this.userRepository.create(signUpUserDto);
+      const protectedPassword = await this.hashPassword(signUpUserDto.password);
+      createdUser.role = UserRole.USER;
+      createdUser.password = protectedPassword;
+      const verificationToken = uuidv4();
+      createdUser.verificationEmailToken = verificationToken;
+      await this.userRepository.save(createdUser);
+
+      await this.sendVerificationEmail(createdUser.email, verificationToken);
+      return { status: 200 };
+    } catch (err) {
+      throw err;
+    }
   }
 
   async signin(loginDto: LoginDto): Promise<JWTTokens> {
@@ -117,5 +134,34 @@ export class UserService {
       accessToken,
       refreshToken,
     };
+  }
+
+  async sendVerificationEmail(userEmail: string, verificationToken: string) {
+    const verifyUrl = `https://localhost:3001/auth/verify-email?token=${verificationToken}`;
+
+    await this.mailerService.sendMail({
+      to: userEmail,
+      subject: 'Email Verification',
+      template: 'email-verification',
+      context: {
+        email: userEmail,
+        verificationURL: verifyUrl,
+      },
+    });
+  }
+
+  async verifyEmailToken(token: string) {
+    const user = await this.userRepository.findOne({
+      where: { verificationEmailToken: token },
+    });
+    if (!user) {
+      throw new NotFoundException('Invalid or expired verification token');
+    }
+
+    user.isVerified = true;
+    user.verificationEmailToken = null;
+    await this.userRepository.save(user);
+
+    return { message: 'Email successfully verified', status: 200 };
   }
 }
