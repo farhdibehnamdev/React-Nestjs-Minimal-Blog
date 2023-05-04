@@ -9,25 +9,32 @@ import {
 } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { SignUpUserDto } from './dto/signup-user.dto';
-import { JWTTokens, UserService } from './user.service';
+import { JWTTokens, UserService, createUserStatus } from './user.service';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import User from './entities/user.entity';
 import { PaginationQueryDto } from 'src/common/pagination-query.dto';
 import { usersDataAndCount } from './types/user.type';
+import { query } from 'express';
 
-@Controller('api/auth/')
+@Controller('auth/')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
   @Version('1')
   @Post('signup')
-  async signup(@Body() signUpUserDto: SignUpUserDto): Promise<void> {
+  async signup(
+    @Body() signUpUserDto: SignUpUserDto,
+  ): Promise<createUserStatus> {
     return await this.userService.createUser(signUpUserDto);
   }
   @Version('1')
   @Post('signin')
   async signin(@Body() loginDto: LoginDto): Promise<JWTTokens> {
     return await this.userService.signin(loginDto);
+  }
+  @Version('1')
+  @Get('verify-email')
+  async verifyEmail(@Query('token') token: string) {
+    return this.userService.verifyEmailToken(token);
   }
 
   @Version('1')
