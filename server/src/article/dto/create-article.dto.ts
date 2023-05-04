@@ -10,7 +10,6 @@ export class CreateArticleDto {
   @IsString()
   title: string;
 
-  @IsNotEmpty()
   @IsString()
   body: string;
 
