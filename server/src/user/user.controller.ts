@@ -1,20 +1,10 @@
-import {
-  Controller,
-  Body,
-  Post,
-  Version,
-  Get,
-  Param,
-  Query,
-} from '@nestjs/common';
+import { Controller, Body, Post, Version, Get, Query } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { SignUpUserDto } from './dto/signup-user.dto';
 import { JWTTokens, UserService, createUserStatus } from './user.service';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
-import User from './entities/user.entity';
 import { PaginationQueryDto } from 'src/common/pagination-query.dto';
 import { usersDataAndCount } from './types/user.type';
-import { query } from 'express';
 
 @Controller('auth/')
 export class UserController {
