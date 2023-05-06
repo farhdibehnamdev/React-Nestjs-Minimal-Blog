@@ -1,5 +1,5 @@
 import { Controller, Body, Post, Version, Get, Query } from '@nestjs/common';
-import { LoginDto } from './dto/login.dto';
+import { SigninUserDto } from './dto/login.dto';
 import { SignUpUserDto } from './dto/signup-user.dto';
 import { JWTTokens, UserService, createUserStatus } from './user.service';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
@@ -18,8 +18,8 @@ export class UserController {
   }
   @Version('1')
   @Post('signin')
-  async signin(@Body() loginDto: LoginDto): Promise<JWTTokens> {
-    return await this.userService.signin(loginDto);
+  async signin(@Body() signinUserDto: SigninUserDto): Promise<JWTTokens> {
+    return await this.userService.signin(signinUserDto);
   }
   @Version('1')
   @Get('verify-email')
