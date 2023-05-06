@@ -4,6 +4,7 @@ import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
+import { AllExceptionsFilter } from './filters/all-exceptions.filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
@@ -11,7 +12,7 @@ async function bootstrap() {
     allowedHeaders: 'GET,HEAD,PUT,PATCH,POST,DELETE,Content-Type',
     credentials: true,
   });
-
+  app.useGlobalFilters(new AllExceptionsFilter());
   const configService = app.get(ConfigService);
   app.enableVersioning({
     type: VersioningType.URI,
