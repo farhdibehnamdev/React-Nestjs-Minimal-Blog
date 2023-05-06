@@ -137,7 +137,7 @@ export class UserService {
   }
 
   async sendVerificationEmail(userEmail: string, verificationToken: string) {
-    const verifyUrl = `https://localhost:3001/auth/verify-email?token=${verificationToken}`;
+    const verifyUrl = `http://localhost:3000/auth/verified?token=${verificationToken}`;
 
     await this.mailerService.sendMail({
       to: userEmail,
@@ -161,7 +161,5 @@ export class UserService {
     user.isVerified = true;
     user.verificationEmailToken = null;
     await this.userRepository.save(user);
-
-    return { message: 'Email successfully verified', status: 200 };
   }
 }
