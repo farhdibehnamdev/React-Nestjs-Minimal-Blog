@@ -19,3 +19,13 @@ export type userTitleAndPagination = {
   pagination: paginationOptionType;
   title: string;
 };
+
+export type verifiedEmailType = {
+  status: number;
+  message: string;
+};
+
+export type signinUserTypeDto = {
+  email: string;
+  password: string;
+};
