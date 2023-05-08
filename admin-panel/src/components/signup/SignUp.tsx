@@ -1,16 +1,18 @@
 import { Button, Divider, Grid, TextField, Typography } from "@mui/material";
-import axios from "axios";
-import { useState } from "react";
 import { signupUserApi } from "src/config/api/usersApi/usersApi";
 import { useNavigate } from "react-router-dom";
 const SignUp = function () {
   const navigate = useNavigate();
-  const handleSubmit = async function (event: any) {
-    const { email, password, confirmPassword } = event;
+  const handleSubmit = async function (
+    event: React.FormEvent<HTMLFormElement>
+  ) {
+    const email = event.currentTarget.email.value;
+    const password = event.currentTarget.password.value;
+    const confirmPassword = event.currentTarget.confirmPassword.value;
     event.preventDefault();
     const response = await signupUserApi({ email, password, confirmPassword });
     if (response?.status === 201) {
-      navigate("/verify-email");
+      navigate("/auth/verify-email");
     }
   };
 
@@ -62,7 +64,7 @@ const SignUp = function () {
         <Grid container item mb={3}>
           <TextField
             placeholder="تکرار رمز عبور"
-            name="password"
+            name="confirmPassword"
             type="password"
             fullWidth
           />
