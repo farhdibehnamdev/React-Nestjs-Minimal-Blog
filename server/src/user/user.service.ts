@@ -5,12 +5,13 @@ import { SignUpUserDto } from './dto/signup-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import User, { UserRole } from './entities/user.entity';
 import { hash, compare } from 'bcrypt';
-import { LoginDto } from './dto/login.dto';
+import { SigninUserDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { usersDataAndCount } from './types/user.type';
 import { MailerService } from '@nestjs-modules/mailer';
 import { v4 as uuidv4 } from 'uuid';
+import { UnverifiedUserException } from 'src/filters/UnverifiedUserException';
 
 export type createUserStatus = {
   status: number;
@@ -53,16 +54,19 @@ export class UserService {
     }
   }
 
-  async signin(loginDto: LoginDto): Promise<JWTTokens> {
-    const { email, password } = loginDto;
+  async signin(signInDto: SigninUserDto): Promise<JWTTokens> {
+    const { email, password } = signInDto;
     const user = await this.userRepository.findOne({ where: { email } });
-    if (!user) throw new HttpException('Invalid credentials', 400);
+    if (user.isVerified) {
+      if (!user) throw new HttpException('Invalid credentials', 400);
 
-    const validPassword = await compare(password, user.password);
+      const validPassword = await compare(password, user.password);
 
-    if (!validPassword) throw new HttpException('Invalid credentials', 400);
+      if (!validPassword) throw new HttpException('Invalid credentials', 400);
 
-    return this.getTokens(user);
+      return this.getTokens(user);
+    }
+    throw new UnverifiedUserException();
   }
 
   async findAll(): Promise<usersDataAndCount> {
@@ -130,6 +134,7 @@ export class UserService {
         },
       ),
     ]);
+    console.log('acc ::', accessToken);
     return {
       accessToken,
       refreshToken,
