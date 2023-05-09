@@ -6,6 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { UnverifiedUserException } from './UnverifiedUserException';
 
 @Catch(HttpException)
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -19,9 +20,14 @@ export class AllExceptionsFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
     const statusCode = Number(status);
-    console.log(response);
+
+    const errorMessage =
+      exception instanceof UnverifiedUserException
+        ? exception.message
+        : 'Internal server error';
     response.status(status).json({
       statusCode: statusCode,
+      message: errorMessage,
       timestamp: new Date().toISOString(),
       path: request.url,
     });
