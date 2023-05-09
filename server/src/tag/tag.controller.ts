@@ -33,12 +33,16 @@ const paginationTitleType: paginationTitle = {
 export class TagController {
   constructor(private readonly tagService: TagService) {}
 
+  @Role(UserRole.USER)
+  @Role(UserRole.ADMIN)
+  @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Get()
   async findAll(
     @Query('all') all: boolean,
     @Query() paginationTitleType: paginationTitle,
   ) {
+    console.log('salam');
     if (all) {
       const tags = await this.tagService.findAll(
         all,
@@ -66,28 +70,35 @@ export class TagController {
       );
     }
   }
+
+  @Role(UserRole.USER)
+  @Role(UserRole.ADMIN)
+  @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.tagService.findOne(id);
   }
-  // @Role(UserRole.ADMIN)
-  // @UseGuards(AccessTokenGuard, RoleGuard)
+  @Role(UserRole.USER)
+  @Role(UserRole.ADMIN)
+  @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Post()
   create(@Body() createTagDto: CreateTagDto) {
     return this.tagService.create(createTagDto);
   }
-  // @Role(UserRole.ADMIN)
-  // @UseGuards(AccessTokenGuard, RoleGuard)
+  @Role(UserRole.USER)
+  @Role(UserRole.ADMIN)
+  @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Patch(':id')
   update(@Param('id') id: number, @Body() createTagDto: CreateTagDto) {
     return this.tagService.update(id, createTagDto);
   }
 
-  // @Role(UserRole.ADMIN)
-  // @UseGuards(AccessTokenGuard, RoleGuard)
+  @Role(UserRole.USER)
+  @Role(UserRole.ADMIN)
+  @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Delete(':id')
   remove(@Param('id') id: number) {

@@ -1,10 +1,23 @@
-import { Controller, Body, Post, Version, Get, Query } from '@nestjs/common';
+import {
+  Controller,
+  Body,
+  Post,
+  Version,
+  Get,
+  Query,
+  HttpCode,
+  UseGuards,
+} from '@nestjs/common';
 import { SigninUserDto } from './dto/login.dto';
 import { SignUpUserDto } from './dto/signup-user.dto';
 import { JWTTokens, UserService, createUserStatus } from './user.service';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { PaginationQueryDto } from 'src/common/pagination-query.dto';
 import { usersDataAndCount } from './types/user.type';
+import { UserRole } from './entities/user.entity';
+import { Role } from './decorators/role';
+import { AccessTokenGuard } from './guard/access-token.guard';
+import { RoleGuard } from './guard/authorization.guard';
 
 @Controller('auth/')
 export class UserController {
@@ -18,6 +31,7 @@ export class UserController {
   }
   @Version('1')
   @Post('signin')
+  @HttpCode(200)
   async signin(@Body() signinUserDto: SigninUserDto): Promise<JWTTokens> {
     return await this.userService.signin(signinUserDto);
   }
@@ -27,6 +41,8 @@ export class UserController {
     return this.userService.verifyEmailToken(token);
   }
 
+  @Role(UserRole.ADMIN)
+  @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Get('users')
   async findAll(

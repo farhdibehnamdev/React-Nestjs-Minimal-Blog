@@ -17,6 +17,10 @@ import {
 import { CreateMessageDto } from './dto/create-message.dto';
 import { ValidationPipe } from '@nestjs/common/pipes';
 import { IncomingHttpHeaders } from 'http2';
+import { Role } from 'src/user/decorators/role';
+import { AccessTokenGuard } from 'src/user/guard/access-token.guard';
+import { RoleGuard } from 'src/user/guard/authorization.guard';
+import { UserRole } from 'src/user/entities/user.entity';
 @Controller('api/message')
 export class MessageController {
   constructor(private messageService: MessageService) {}
@@ -39,6 +43,9 @@ export class MessageController {
     return message;
   }
 
+  @Role(UserRole.USER)
+  @Role(UserRole.ADMIN)
+  @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Get(':receiverId')
   async getMessagesByReceiverId(@Param('receiverId') receiverId: number) {
@@ -48,6 +55,9 @@ export class MessageController {
     return messages;
   }
 
+  @Role(UserRole.USER)
+  @Role(UserRole.ADMIN)
+  @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Patch(':messageId/read')
   async markMessageAsRead(@Param('messageId') messageId: number) {

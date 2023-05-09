@@ -34,7 +34,6 @@ import { createThumbnail } from 'src/utils/thumbnailGenerator';
 import { resolve } from 'path';
 import { promisify } from 'util';
 import { diskStorage } from 'multer';
-import { type } from 'os';
 
 type paginationTitleType = { pagination: PaginationQueryDto; title: string };
 
@@ -42,6 +41,9 @@ type paginationTitleType = { pagination: PaginationQueryDto; title: string };
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
 
+  @Role(UserRole.USER)
+  @Role(UserRole.ADMIN)
+  @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Get()
   async findAll(
@@ -74,13 +76,18 @@ export class ArticleController {
 
     return result;
   }
+
+  @Role(UserRole.USER)
+  @Role(UserRole.ADMIN)
+  @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Get()
   findOne(id: number) {
     return this.articleService.findOne(id);
   }
-  // @Role(UserRole.ADMIN)
-  // @UseGuards(AccessTokenGuard, RoleGuard)
+  @Role(UserRole.USER)
+  @Role(UserRole.ADMIN)
+  @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Post()
   @UseInterceptors(FileInterceptor('image'))
@@ -110,6 +117,7 @@ export class ArticleController {
   }
 
   @Version('1')
+  @Role(UserRole.USER)
   @Role(UserRole.ADMIN)
   @UseGuards(AccessTokenGuard, RoleGuard)
   @Patch(':id')
@@ -117,6 +125,7 @@ export class ArticleController {
     return this.articleService.update(id, updateArticleDto);
   }
   @Version('1')
+  @Role(UserRole.USER)
   @Role(UserRole.ADMIN)
   @UseGuards(AccessTokenGuard, RoleGuard)
   @Delete(':id')
