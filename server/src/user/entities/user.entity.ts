@@ -33,6 +33,9 @@ export default class User {
   @Column({ default: false })
   isVerified: boolean;
 
+  @Column({ default: false })
+  isActive: boolean;
+
   @Column({ nullable: true })
   verificationEmailToken: string;
 
