@@ -64,4 +64,16 @@ export class UserController {
   ): Promise<JWTTokens> {
     return await this.userService.refreshTokens(refreshToken);
   }
+
+  @Version('1')
+  @Post('verify-tokens')
+  @HttpCode(200)
+  async verifyTokens(
+    @Body() tokens: { accessToken: string; refreshToken: string },
+  ) {
+    return await this.userService.verifyToken(
+      tokens.accessToken,
+      tokens.refreshToken,
+    );
+  }
 }
