@@ -1,3 +1,4 @@
+import { Route, Routes } from "react-router-dom";
 import AuthLayout from "src/components/authLayout/AuthLayout";
 import AddCategory from "src/components/categories/AddCategory";
 import Categories from "src/components/categories/Categories";
@@ -11,123 +12,76 @@ import EditPost from "src/components/posts/EditPost";
 import Posts from "src/components/posts/Posts";
 import PostsLayout from "src/components/posts/PostsLayout";
 import Profile from "src/components/profile/Profile";
+import ProtectedRoute, {
+  PublicRoute,
+} from "src/components/protectedRoute/ProtectedRoute";
 import ResetPassword from "src/components/resetPassword/ResetPassword";
 import SendMessage from "src/components/sendMessage/SendMessage";
 import Settings from "src/components/settings/Settings";
+import SignIn from "src/components/signin/SignIn";
 import SignOut from "src/components/signout/SignOut";
 import SignUp from "src/components/signup/SignUp";
 import AddTag from "src/components/tags/AddTag";
-import EditTag from "src/components/tags/EditTag";
 import Tags from "src/components/tags/Tags";
 import TagsLayout from "src/components/tags/TagsLayout";
+import Unauthorized from "src/components/unauthorized/Unauthorized";
 import UserManagement from "src/components/userManagement/UserManagement";
 import { VerifiedEmail } from "src/components/verifiedEmail/VerifiedEmail";
 import { VerifyEmail } from "src/components/verifyEmail/VerifyEmail";
 
-const routeArrays = [
-  {
-    element: <DashboardLayout />,
-    children: [
-      {
-        element: <Dashboard />,
-        children: [
-          {
-            index: true,
-            element: <Home />,
-          },
-          {
-            path: "settings",
-            element: <Settings />,
-          },
-          {
-            path: "profile",
-            element: <Profile />,
-          },
-          {
-            path: "posts",
-            element: <PostsLayout />,
-            children: [
-              {
-                index: true,
-                element: <Posts />,
-              },
-              { path: "add", element: <AddPost /> },
-              { path: "edit/:id", element: <EditPost /> },
-            ],
-          },
-          {
-            path: "categories",
-            element: <CategoriesLayout />,
-            children: [
-              {
-                index: true,
-                element: <Categories />,
-              },
-              {
-                path: "add",
-                element: <AddCategory />,
-              },
-              {
-                path: "edit/:id",
-                element: <EditCategory />,
-              },
-            ],
-          },
-          {
-            path: "tags",
-            element: <TagsLayout />,
-            children: [
-              {
-                index: true,
-                element: <Tags />,
-              },
-              {
-                path: "add",
-                element: <AddTag />,
-              },
-              {
-                path: "edit/:id",
-                element: <EditTag />,
-              },
-            ],
-          },
-          {
-            path: "send-message",
-            element: <SendMessage />,
-          },
-          {
-            path: "user-management",
-            element: <UserManagement />,
-          },
-          {
-            path: "sign-out",
-            element: <SignOut />,
-          },
-        ],
-      },
-    ],
-  },
-  {
-    path: "auth",
-    element: <AuthLayout />,
-    children: [
-      {
-        path: "sign-up",
-        element: <SignUp />,
-      },
-      {
-        path: "reset-password",
-        element: <ResetPassword />,
-      },
-      {
-        path: "verify-email",
-        element: <VerifyEmail />,
-      },
-      {
-        path: "verified",
-        element: <VerifiedEmail />,
-      },
-    ],
-  },
-];
-export default routeArrays;
+export const RouteApp = function () {
+  return (
+    <Routes>
+      {/* Public Ruote */}
+      <Route path="auth" element={<AuthLayout />}>
+        <Route element={<PublicRoute />}>
+          <Route path="sign-up" element={<SignUp />} />
+        </Route>
+        <Route element={<PublicRoute />}>
+          <Route path="sign-in" element={<SignIn />} />
+        </Route>
+        <Route element={<PublicRoute />}>
+          <Route path="reset-password" element={<ResetPassword />} />
+        </Route>
+        <Route element={<PublicRoute />}>
+          <Route path="verify-email" element={<VerifyEmail />} />
+        </Route>
+        <Route element={<PublicRoute />}>
+          <Route path="verified" element={<VerifiedEmail />} />
+        </Route>
+
+        <Route path="unauthorized" element={<Unauthorized />} />
+      </Route>
+      {/* Protected Route */}
+      <Route path="/" element={<ProtectedRoute roles={["Admin", "user"]} />}>
+        <Route element={<DashboardLayout />}>
+          <Route index element={<Home />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="posts" element={<PostsLayout />}>
+            <Route index element={<Posts />} />
+            <Route path="add" element={<AddPost />} />
+            <Route path="edit/:id" element={<EditPost />} />
+          </Route>
+          <Route path="categories" element={<CategoriesLayout />}>
+            <Route index element={<Categories />} />
+            <Route path="add" element={<AddCategory />} />
+            <Route path="edit/:id" element={<EditCategory />} />
+          </Route>
+          <Route path="tags" element={<TagsLayout />}>
+            <Route index element={<Tags />} />
+            <Route path="add" element={<AddTag />} />
+            <Route path="edit/:id" element={<Tags />} />
+          </Route>
+          <Route path="send-message" element={<SendMessage />} />
+          <Route element={<ProtectedRoute roles={["admin"]} />}>
+            <Route path="user-management" element={<UserManagement />} />
+          </Route>
+          <Route element={<ProtectedRoute roles={["admin", "user"]} />}>
+            <Route path="sign-out" element={<SignOut />} />
+          </Route>
+        </Route>
+      </Route>
+    </Routes>
+  );
+};
