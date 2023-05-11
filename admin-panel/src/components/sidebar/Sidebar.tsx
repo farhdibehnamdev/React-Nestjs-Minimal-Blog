@@ -13,13 +13,19 @@ import sidebarStyle, {
   StyledBadge,
 } from "./Sidebar.style";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BoxRootSidebarStyled } from "./Sidebar.style";
 import { MenuList } from "./SidebarMenu";
 import { Link } from "react-router-dom";
+import { signOut } from "src/store/slices/auth/authSlice";
 
 export default function Sidebar() {
   const { toggle } = useSelector((state: any) => state.toggle);
+  const dispatch = useDispatch();
+
+  const handleSignOut = function () {
+    dispatch(signOut());
+  };
 
   return (
     <BoxRootSidebarStyled open={toggle}>
@@ -78,6 +84,7 @@ export default function Sidebar() {
                 <IconButton
                   className="profileStyleIconButton exitIconButton"
                   size="small"
+                  onClick={handleSignOut}
                 >
                   <LogoutIcon fontSize="inherit" />
                 </IconButton>
