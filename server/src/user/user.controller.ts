@@ -41,6 +41,7 @@ export class UserController {
     return this.userService.verifyEmailToken(token);
   }
 
+  @Role(UserRole.USER)
   @Role(UserRole.ADMIN)
   @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
