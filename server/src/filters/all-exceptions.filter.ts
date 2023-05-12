@@ -4,6 +4,7 @@ import {
   ArgumentsHost,
   HttpException,
   HttpStatus,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { UnverifiedUserException } from './UnverifiedUserException';
@@ -23,6 +24,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     const errorMessage =
       exception instanceof UnverifiedUserException
+        ? exception.message
+        : exception instanceof UnauthorizedException
         ? exception.message
         : 'Internal server error';
     response.status(status).json({
