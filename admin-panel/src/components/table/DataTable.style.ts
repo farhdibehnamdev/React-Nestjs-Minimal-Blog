@@ -34,6 +34,16 @@ export const tableContainerStyle: SxProps = {
   height: "400px",
   border: "1px solid #e9e5e5",
 
+  ".customTableHeadStyle": {
+    display: "table-header-group",
+    background: "#f7f7f7",
+    zIndex: 3,
+    position: "sticky",
+    top: "0px",
+  },
+  // ".customTableCell": {
+  //   width: "150px",
+  // },
   "::-webkit-scrollbar": {
     width: "10px",
   },

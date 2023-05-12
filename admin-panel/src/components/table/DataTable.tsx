@@ -40,8 +40,6 @@ const DataTable = function ({
   const pageNumber = Math.ceil(count / state.perPage);
   const _DATA = usePagination(rows, state.perPage);
   const handleChange = async function (page: number = state.offset) {
-    console.log("handleChange", page);
-
     dispatch({ type: SET_OFFSET, payload: page });
     await doFetchItems({ offset: page, limit: state.perPage });
     dispatch({ type: SET_FILTER_DATA, payload: undefined });

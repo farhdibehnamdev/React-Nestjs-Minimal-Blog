@@ -28,7 +28,7 @@ const DataTableBody: React.FC<IDataTableProps> = function ({
     setState(row);
   };
 
-  const handleEdit = (id: number) => navigate(`edit/${id}`);
+  const handleEdit = (id: number) => navigate(`edit/${id}`, { replace: true });
 
   return (
     <>
