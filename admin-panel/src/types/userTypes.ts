@@ -29,3 +29,9 @@ export type signinUserTypeDto = {
   email: string;
   password: string;
 };
+
+export type RefreshTokenApiResponse = {
+  data: {
+    accessToken: string;
+  };
+};

@@ -22,6 +22,23 @@ export interface JWTTokens {
   refreshToken: string;
 }
 
+class UserResponse {
+  id: string;
+  email: string;
+  role: string;
+}
+
+interface SignInResponse {
+  accessToken: string;
+  refreshToken: string;
+  userInfo: UserResponse;
+}
+
+export interface VerifyTokenType {
+  isAuthenticated: boolean;
+  userInfo: UserResponse;
+}
+
 @Injectable()
 export class UserService {
   constructor(
@@ -54,7 +71,7 @@ export class UserService {
     }
   }
 
-  async signin(signInDto: SigninUserDto): Promise<JWTTokens> {
+  async signin(signInDto: SigninUserDto): Promise<SignInResponse> {
     const { email, password } = signInDto;
     const user = await this.userRepository.findOne({ where: { email } });
     if (user.isVerified) {
@@ -63,14 +80,19 @@ export class UserService {
       const validPassword = await compare(password, user.password);
 
       if (!validPassword) throw new HttpException('Invalid credentials', 400);
-
-      return this.getTokens(user);
+      const { accessToken, refreshToken } = await this.getTokens(user);
+      const userInfo = new UserResponse();
+      userInfo.id = user.id;
+      userInfo.email = user.email;
+      userInfo.role = user.role;
+      return { accessToken, refreshToken, userInfo };
     }
     throw new UnverifiedUserException();
   }
 
   async findAll(): Promise<usersDataAndCount> {
     const [items, count] = await this.userRepository.findAndCount();
+    console.log('tt :', items, count);
     return { data: items, count };
   }
 
@@ -113,6 +135,28 @@ export class UserService {
     return hash(password, 10);
   }
 
+  async verifyToken(
+    accessToken: string,
+    refreshToken: string,
+  ): Promise<VerifyTokenType | boolean> {
+    try {
+      const decodeAccessToken = await this.jwtService.verifyAsync(accessToken);
+      const decodeRefreshToken = await this.jwtService.verifyAsync(
+        refreshToken,
+      );
+      const user = await this.findById(decodeAccessToken.id);
+      if (!user || !user.isActive) {
+        return false;
+      }
+      const userInfo = new UserResponse();
+      userInfo.email = user.email;
+      userInfo.id = user.id;
+      userInfo.role = user.role;
+      return { isAuthenticated: true, userInfo };
+    } catch (error) {
+      return false;
+    }
+  }
   private async getTokens(user: User): Promise<JWTTokens> {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
