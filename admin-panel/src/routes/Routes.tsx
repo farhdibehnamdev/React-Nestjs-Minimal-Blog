@@ -19,7 +19,6 @@ import ResetPassword from "src/components/resetPassword/ResetPassword";
 import SendMessage from "src/components/sendMessage/SendMessage";
 import Settings from "src/components/settings/Settings";
 import SignIn from "src/components/signin/SignIn";
-import SignOut from "src/components/signout/SignOut";
 import SignUp from "src/components/signup/SignUp";
 import AddTag from "src/components/tags/AddTag";
 import Tags from "src/components/tags/Tags";
@@ -76,9 +75,6 @@ export const RouteApp = function () {
           <Route path="send-message" element={<SendMessage />} />
           <Route element={<ProtectedRoute roles={["admin"]} />}>
             <Route path="user-management" element={<UserManagement />} />
-          </Route>
-          <Route element={<ProtectedRoute roles={["admin", "user"]} />}>
-            <Route path="sign-out" element={<SignOut />} />
           </Route>
         </Route>
       </Route>
