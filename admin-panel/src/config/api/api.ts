@@ -1,30 +1,29 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+
+import {
+  requestInterceptor,
+  requestInterceptorError,
+  responseInterceptor,
+  responseInterceptorError,
+} from "src/config/interceptors/interceptors";
 const axiosParams = {
   baseURL: "http://localhost:3001/v1/",
   headers: {
     "Content-Type": "application/json",
   },
+  // process.env.NODE_ENV === "development" ? "http://localhost:3001/v1/" : "/",
 };
 
-// process.env.NODE_ENV === "development" ? "http://localhost:3001/v1/" : "/",
-
-const axiosInstance = axios.create(axiosParams);
+export const axiosInstance = axios.create(axiosParams);
 
 axiosInstance.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("accToken");
-
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (err) => {
-    return Promise.reject(err);
-  }
+  requestInterceptor,
+  requestInterceptorError
 );
-
-// const withLogger = async <T>(Promise: AxiosPromise<T>) => promise.catch((error:ApiError));
+axiosInstance.interceptors.response.use(
+  responseInterceptor,
+  responseInterceptorError
+);
 
 const api = (axios: AxiosInstance) => {
   return {
