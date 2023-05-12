@@ -21,6 +21,7 @@ import Settings from "src/components/settings/Settings";
 import SignIn from "src/components/signin/SignIn";
 import SignUp from "src/components/signup/SignUp";
 import AddTag from "src/components/tags/AddTag";
+import EditTag from "src/components/tags/EditTag";
 import Tags from "src/components/tags/Tags";
 import TagsLayout from "src/components/tags/TagsLayout";
 import Unauthorized from "src/components/unauthorized/Unauthorized";
@@ -70,7 +71,7 @@ export const RouteApp = function () {
           <Route path="tags" element={<TagsLayout />}>
             <Route index element={<Tags />} />
             <Route path="add" element={<AddTag />} />
-            <Route path="edit/:id" element={<Tags />} />
+            <Route path="edit/:id" element={<EditTag />} />
           </Route>
           <Route path="send-message" element={<SendMessage />} />
           <Route element={<ProtectedRoute roles={["admin"]} />}>
