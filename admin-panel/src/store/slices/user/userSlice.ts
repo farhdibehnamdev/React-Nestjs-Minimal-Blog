@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { usersDataType } from "src/config/api/usersApi/usersApi";
+import { usersDataType } from "src/types/userTypes";
 import { fetchUsers } from "src/store/thunks/userThunks/fetchUsers";
+
 type userState = {
   isLoading: false;
   data: usersDataType[];
@@ -18,7 +19,7 @@ const userSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers(builder) {
-    //============ Fetch Tags =================
+    //============ Fetch Users =================
     builder.addCase(fetchUsers.pending, (state, action) => {
       state.isLoading = false;
     });

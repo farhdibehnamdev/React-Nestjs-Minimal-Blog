@@ -5,15 +5,45 @@ import { postReducer } from "./slices/post/postSlice";
 import { tagReducer } from "./slices/tag/tagSlice";
 import { toggleSlice } from "./slices/toggle/toggleSlice";
 import { userReducer } from "./slices/user/userSlice";
-const store = configureStore({
-  reducer: {
-    toggle: toggleSlice.reducer,
-    post: postReducer,
-    category: categoryReducer,
-    tags: tagReducer,
-    modal: modalReducer,
-    user: userReducer,
-  },
+import { authReducer } from "./slices/auth/authSlice";
+import storage from "redux-persist/lib/storage";
+import { combineReducers } from "@reduxjs/toolkit";
+import {
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
+const persistConfig = {
+  key: "root",
+  version: 1,
+  blacklist: ["toggle", "post", "category", "tags", "modal", "user"],
+  storage,
+};
+
+const reducer = combineReducers({
+  toggle: toggleSlice.reducer,
+  post: postReducer,
+  category: categoryReducer,
+  tags: tagReducer,
+  modal: modalReducer,
+  user: userReducer,
+  auth: authReducer,
+});
+
+const persistedReducer = persistReducer(persistConfig, reducer);
+
+export const store = configureStore({
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

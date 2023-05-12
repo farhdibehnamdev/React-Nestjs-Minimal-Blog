@@ -76,8 +76,6 @@ export const categorySlice = createSlice({
       state.isLoading = false;
       state.error = action.error.message as string;
     });
-
-    //============ Remove Category =================
   },
 });
 
