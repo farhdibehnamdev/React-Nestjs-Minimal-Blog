@@ -4,13 +4,31 @@ import {
   Divider,
   FormControlLabel,
   Grid,
+  Snackbar,
   TextField,
   Typography,
+  Alert,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { signinUserApi } from "src/config/api/usersApi/usersApi";
-import { authState, signIn } from "src/store/slices/auth/authSlice";
+import { signIn } from "src/store/slices/auth/authSlice";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
+const schema = yup.object({
+  email: yup.string().email().required("فیلد ایمیل اجباری است"),
+  password: yup
+    .string()
+    .required("فیلد پسورد اجباری است")
+    .min(8, "پسورد باید حداقل 8 کاراکتر باشد"),
+});
+
+type FormData = {
+  email: string;
+  password: string;
+};
 
 type user = {
   id: number;
@@ -29,23 +47,43 @@ const isApiResponse = function (data: any): data is apiResponse {
 };
 
 const SignIn = function () {
+  const [open, setOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const handleClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({ resolver: yupResolver(schema) });
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const handleSubmit = async function (
-    event: React.FormEvent<HTMLFormElement>
-  ) {
-    event.preventDefault();
-    const email = event.currentTarget.email.value;
-    const password = event.currentTarget.password.value;
+  const delay = async function (delayInMs: number) {
+    return new Promise((resolve) => setTimeout(resolve, delayInMs));
+  };
+  const onSubmit = async function (data: FormData) {
+    const email = data.email;
+    const password = data.password;
     const response = await signinUserApi({ email, password });
     if (isApiResponse(response?.data)) {
       const { accessToken, refreshToken, userInfo } =
         response?.data as apiResponse;
       if (response?.status === 200) {
+        setOpen(true);
         localStorage.setItem("accToken", accessToken);
         localStorage.setItem("refToken", refreshToken);
-        dispatch(signIn(userInfo));
-        navigate("/");
+        setIsLoading(true);
+        setTimeout(() => {
+          dispatch(signIn(userInfo));
+        }, 3000);
       }
     }
   };
@@ -59,6 +97,33 @@ const SignIn = function () {
         width: "500px",
       }}
     >
+      {isLoading ? (
+        <Snackbar
+          open={open}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          autoHideDuration={2000}
+          onClose={handleClose}
+        >
+          <Alert
+            onClose={handleClose}
+            severity="success"
+            sx={{ width: "100%" }}
+          >
+            با موفقیت وارد شدید
+          </Alert>
+        </Snackbar>
+      ) : (
+        <Snackbar
+          open={open}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          autoHideDuration={2000}
+          onClose={handleClose}
+        >
+          <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
+            مشکلی در ورود به پنل ادمین بوجود آمد
+          </Alert>
+        </Snackbar>
+      )}
       <form
         style={{
           display: "flex",
@@ -66,7 +131,7 @@ const SignIn = function () {
           alignItems: "center",
           marginBottom: "30px",
         }}
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit((data) => onSubmit(data))}
       >
         <Grid item xl={12} mb={6}>
           <img src="../assets/images/logo.png" alt="logo_image" />
@@ -81,18 +146,24 @@ const SignIn = function () {
         </Grid>
         <Grid container item mb={3}>
           <TextField
+            {...register("email", { required: true })}
+            error={!!errors.email}
             placeholder="ایمیل خود را وارد کنید"
             name="email"
             type="email"
             fullWidth
+            helperText={errors.email?.message}
           />
         </Grid>
         <Grid container item mb={3}>
           <TextField
+            {...register("password", { required: true })}
+            error={!!errors.password}
             placeholder="رمز عبور خود را وارد کنید"
             name="password"
             type="password"
             fullWidth
+            helperText={errors.password?.message}
           />
         </Grid>
         <Grid
@@ -136,9 +207,11 @@ const SignIn = function () {
         </Typography>
       </Grid>
       <Grid container justifyContent="center" alignItems="center">
-        <Button type="submit" size="large" variant="outlined" color="primary">
-          هم اکنون ثبت نام کنید!
-        </Button>
+        <NavLink to="/auth/sign-up">
+          <Button type="submit" size="large" variant="outlined" color="primary">
+            هم اکنون ثبت نام کنید!
+          </Button>
+        </NavLink>
       </Grid>
     </Grid>
   );
