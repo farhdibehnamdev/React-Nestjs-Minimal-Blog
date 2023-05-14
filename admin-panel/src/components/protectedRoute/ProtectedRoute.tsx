@@ -13,15 +13,10 @@ export type verifyTokenType = {
 };
 
 const ProtectedRoute = ({ roles }: any) => {
-  const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated, userInfo } = useAppSelector(
     (state: { auth: authState }) => state.auth
   );
-
-  if (!isAuthenticated || !roles.includes(userInfo?.role)) {
-    navigate("/auth/sign-in", { replace: true, state: { from: location } });
-  }
 
   return isAuthenticated && roles.includes(userInfo?.role) ? (
     <Outlet />
