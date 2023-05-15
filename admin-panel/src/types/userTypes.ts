@@ -28,6 +28,7 @@ export type verifiedEmailType = {
 export type signinUserTypeDto = {
   email: string;
   password: string;
+  rememberMe: boolean;
 };
 
 export type RefreshTokenApiResponse = {

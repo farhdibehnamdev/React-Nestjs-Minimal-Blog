@@ -80,7 +80,10 @@ export class UserService {
       const validPassword = await compare(password, user.password);
 
       if (!validPassword) throw new HttpException('Invalid credentials', 400);
-      const { accessToken, refreshToken } = await this.getTokens(user);
+      const { accessToken, refreshToken } = await this.getTokens(
+        user,
+        signInDto.rememberMe,
+      );
       const userInfo = new UserResponse();
       userInfo.id = user.id;
       userInfo.email = user.email;
@@ -92,7 +95,6 @@ export class UserService {
 
   async findAll(): Promise<usersDataAndCount> {
     const [items, count] = await this.userRepository.findAndCount();
-    console.log('tt :', items, count);
     return { data: items, count };
   }
 
@@ -157,15 +159,17 @@ export class UserService {
       return false;
     }
   }
-  private async getTokens(user: User): Promise<JWTTokens> {
+  private async getTokens(
+    user: User,
+    rememberMe: boolean = false,
+  ): Promise<JWTTokens> {
+    const expirationTime = rememberMe ? '7d' : '1h';
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         { sub: user.email, role: user.role },
         {
           secret: this.configService.get<string>('JWT_ACCESS_TOKEN_SECRET'),
-          expiresIn: this.configService.get<string>(
-            'JWT_ACCESS_TOKEN_EXPIRATION',
-          ),
+          expiresIn: expirationTime,
         },
       ),
       this.jwtService.signAsync(
@@ -178,7 +182,6 @@ export class UserService {
         },
       ),
     ]);
-    console.log('acc ::', accessToken);
     return {
       accessToken,
       refreshToken,
