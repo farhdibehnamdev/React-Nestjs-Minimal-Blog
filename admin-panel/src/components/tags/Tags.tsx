@@ -49,7 +49,7 @@ const Tags = function () {
   const { data, count } = useAppSelector((state) => state.tags);
 
   useEffect(() => {
-    doFetchTags();
+    doFetchTags({ all: false, offset: 0, limit: 5 });
   }, [doFetchTags]);
 
   return (
