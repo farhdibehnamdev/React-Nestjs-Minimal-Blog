@@ -10,13 +10,15 @@ import {
   Alert,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { signinUserApi } from "src/config/api/usersApi/usersApi";
 import { signIn } from "src/store/slices/auth/authSlice";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import SendIcon from "@mui/icons-material/Send";
+import LoadingButton from "@mui/lab/LoadingButton";
 const schema = yup.object({
   email: yup.string().email().required("فیلد ایمیل اجباری است"),
   password: yup
@@ -48,6 +50,7 @@ const isApiResponse = function (data: any): data is apiResponse {
 
 const SignIn = function () {
   const [open, setOpen] = useState<boolean>(false);
+  const [rememberMe, setRememberMe] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const handleClose = (
     event?: React.SyntheticEvent | Event,
@@ -65,14 +68,14 @@ const SignIn = function () {
     formState: { errors },
   } = useForm<FormData>({ resolver: yupResolver(schema) });
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const delay = async function (delayInMs: number) {
-    return new Promise((resolve) => setTimeout(resolve, delayInMs));
+  const handleRememberMe = function () {
+    setRememberMe(!rememberMe);
   };
   const onSubmit = async function (data: FormData) {
     const email = data.email;
     const password = data.password;
-    const response = await signinUserApi({ email, password });
+
+    const response = await signinUserApi({ email, password, rememberMe });
     if (isApiResponse(response?.data)) {
       const { accessToken, refreshToken, userInfo } =
         response?.data as apiResponse;
@@ -178,26 +181,34 @@ const SignIn = function () {
         >
           <Grid item>
             <FormControlLabel
-              control={<Checkbox defaultChecked />}
+              control={
+                <Checkbox value={rememberMe} onChange={handleRememberMe} />
+              }
               label="به خاطر سپاری"
             />
           </Grid>
           <Grid item>
-            <Link to="#" style={{ textDecoration: "none", color: "#292727" }}>
+            <Link
+              to="/auth/forget-password"
+              style={{ textDecoration: "none", color: "#292727" }}
+            >
               باز نشانی رمز عبور
             </Link>
           </Grid>
         </Grid>
         <Grid container justifyContent="center">
-          <Button
+          <LoadingButton
+            size="small"
+            endIcon={<SendIcon />}
+            loading={isLoading}
+            loadingPosition="end"
+            variant="contained"
             type="submit"
             fullWidth
-            size="large"
-            variant="contained"
-            color="primary"
+            sx={{ padding: "10px", fontSize: "15px" }}
           >
             ورود
-          </Button>
+          </LoadingButton>
         </Grid>
       </form>
       <Divider />
