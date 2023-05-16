@@ -8,14 +8,10 @@ export const URLS = {
   signinUrl: "auth/signin",
   verifiedEmailUrl: "auth/verify-email",
   verifyTokenUrl: "auth/verify-token",
+  refreshToken: "aut/refresh-token",
 };
 
 export type paginationOptionType = {
   offset: number;
   limit: number;
 };
-
-// export enum messageType {
-//   sentMessage,
-//   receivedMessage,
-// }
