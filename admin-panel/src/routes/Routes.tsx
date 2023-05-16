@@ -4,7 +4,6 @@ import AddCategory from "src/components/categories/AddCategory";
 import Categories from "src/components/categories/Categories";
 import CategoriesLayout from "src/components/categories/CategoriesLayout";
 import EditCategory from "src/components/categories/EditCategory";
-import Dashboard from "src/components/dashboard/Dashboard";
 import DashboardLayout from "src/components/dashboardLayout/DashboardLayout";
 import Home from "src/components/home/Home";
 import AddPost from "src/components/posts/AddPost";
@@ -41,7 +40,7 @@ export const RouteApp = function () {
           <Route path="sign-in" element={<SignIn />} />
         </Route>
         <Route element={<PublicRoute />}>
-          <Route path="reset-password" element={<ResetPassword />} />
+          <Route path="forget-password" element={<ResetPassword />} />
         </Route>
         <Route element={<PublicRoute />}>
           <Route path="verify-email" element={<VerifyEmail />} />
