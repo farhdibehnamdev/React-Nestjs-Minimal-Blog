@@ -24,6 +24,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
   @Version('1')
   @Post('signup')
+  @HttpCode(200)
   async signup(
     @Body() signUpUserDto: SignUpUserDto,
   ): Promise<createUserStatus> {
