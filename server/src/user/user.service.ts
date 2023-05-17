@@ -8,10 +8,11 @@ import { hash, compare } from 'bcrypt';
 import { SigninUserDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { usersDataAndCount } from './types/user.type';
 import { MailerService } from '@nestjs-modules/mailer';
 import { v4 as uuidv4 } from 'uuid';
 import { UnverifiedUserException } from 'src/filters/UnverifiedUserException';
+import { UserNotFoundException } from 'src/filters/UserNotFoundException';
+import { BaseService } from 'src/common/Base.service';
 
 export type createUserStatus = {
   status: number;
@@ -40,13 +41,15 @@ export interface VerifyTokenType {
 }
 
 @Injectable()
-export class UserService {
+export class UserService extends BaseService<User> {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private jwtService: JwtService,
     private configService: ConfigService,
     private readonly mailerService: MailerService,
-  ) {}
+  ) {
+    super(userRepository);
+  }
 
   async createUser(signUpUserDto: SignUpUserDto): Promise<createUserStatus> {
     try {
@@ -58,7 +61,7 @@ export class UserService {
         throw new HttpException('Email already registered!', 400);
       const createdUser = this.userRepository.create(signUpUserDto);
       const protectedPassword = await this.hashPassword(signUpUserDto.password);
-      createdUser.role = UserRole.USER;
+      createdUser.userRole = UserRole.USER;
       createdUser.password = protectedPassword;
       const verificationToken = uuidv4();
       createdUser.verificationEmailToken = verificationToken;
@@ -74,12 +77,12 @@ export class UserService {
   async signin(signInDto: SigninUserDto): Promise<SignInResponse> {
     const { email, password } = signInDto;
     const user = await this.userRepository.findOne({ where: { email } });
-    if (user.isVerified) {
-      if (!user) throw new HttpException('Invalid credentials', 400);
 
+    if (!user) throw new UserNotFoundException();
+    if (user.isVerified) {
       const validPassword = await compare(password, user.password);
 
-      if (!validPassword) throw new HttpException('Invalid credentials', 400);
+      if (!validPassword) throw new HttpException('Invalid credentials', 404);
       const { accessToken, refreshToken } = await this.getTokens(
         user,
         signInDto.rememberMe,
@@ -87,15 +90,10 @@ export class UserService {
       const userInfo = new UserResponse();
       userInfo.id = user.id;
       userInfo.email = user.email;
-      userInfo.role = user.role;
+      userInfo.role = user.userRole;
       return { accessToken, refreshToken, userInfo };
     }
     throw new UnverifiedUserException();
-  }
-
-  async findAll(): Promise<usersDataAndCount> {
-    const [items, count] = await this.userRepository.findAndCount();
-    return { data: items, count };
   }
 
   async findById(id: string): Promise<User> {
@@ -153,7 +151,7 @@ export class UserService {
       const userInfo = new UserResponse();
       userInfo.email = user.email;
       userInfo.id = user.id;
-      userInfo.role = user.role;
+      userInfo.role = user.userRole;
       return { isAuthenticated: true, userInfo };
     } catch (error) {
       return false;
@@ -166,14 +164,14 @@ export class UserService {
     const expirationTime = rememberMe ? '7d' : '1h';
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
-        { sub: user.email, role: user.role },
+        { sub: user.email, role: user.userRole },
         {
           secret: this.configService.get<string>('JWT_ACCESS_TOKEN_SECRET'),
           expiresIn: expirationTime,
         },
       ),
       this.jwtService.signAsync(
-        { sub: user.email, role: user.role },
+        { sub: user.email, role: user.userRole },
         {
           secret: this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET'),
           expiresIn: this.configService.get<string>(
