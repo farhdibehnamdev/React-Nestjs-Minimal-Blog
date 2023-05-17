@@ -42,7 +42,6 @@ export class TagController {
     @Query('all') all: boolean,
     @Query() paginationTitleType: paginationTitle,
   ) {
-    console.log('salam');
     if (all) {
       const tags = await this.tagService.findAll(
         all,

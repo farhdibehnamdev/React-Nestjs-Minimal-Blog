@@ -1,13 +1,7 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/common/Base.service';
-import { PaginationQueryDto } from 'src/common/pagination-query.dto';
-import { Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { Tag } from './entities/tag.entity';
 
