@@ -1,5 +1,4 @@
 import { SxProps } from "@mui/material";
-
 export const filterTable: SxProps = {
   marginBottom: "20px",
   background: "#fff",
@@ -65,4 +64,16 @@ export const tableContainerStyle: SxProps = {
     background: "#869094",
   },
 };
+
+export const tableRowStyle: SxProps = {
+  "&:last-child td, &:last-child th": { border: 0 },
+};
+
+export const chipStyle: SxProps = {
+  padding: "6px",
+  fontWeight: "bold",
+  fontFamily: "IRANYekan",
+  fontSize: "12px",
+};
+
 export default dataTableMUI;

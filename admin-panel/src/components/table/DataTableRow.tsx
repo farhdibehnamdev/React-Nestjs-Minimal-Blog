@@ -1,10 +1,17 @@
-import { Button, ButtonGroup, Grid, TableCell, TableRow } from "@mui/material";
+import {
+  Button,
+  ButtonGroup,
+  Grid,
+  TableCell,
+  TableRow,
+  Chip,
+} from "@mui/material";
 import { rowNumber } from "src/utils/rowTableNumber";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { tableRowStyle } from "./DataTable.style";
-import { StyledChip } from "./DataTable.style";
 import { UserRole } from "src/config/api/usersApi/usersApi";
+import { chipStyle } from "./DataTable.style";
 const DataTableRow = function ({
   columns,
   row,
@@ -15,10 +22,10 @@ const DataTableRow = function ({
   handleDelete,
 }: any) {
   const booleanColumn = ({ row, column }: any) => (
-    <StyledChip
+    <Chip
+      sx={chipStyle}
       label={row[column.field] ? "فعال" : "غیرفعال"}
-      color={row[column.field] ? "success" : "error"}
-      {...{ row, column }}
+      color={row[column.field] ? "info" : "error"}
     />
   );
 
@@ -58,12 +65,11 @@ const DataTableRow = function ({
   );
 
   const enumColumn = ({ row, column }: any) => {
-    console.log("row[column.field] ::", column.field);
-    console.log("row[column.field] ::", row[column.field]);
     return (
-      <StyledChip
+      <Chip
+        sx={chipStyle}
         label={row[column.field] === UserRole.ADMIN ? "مدیر" : "کاربر"}
-        color={row[column.field] === UserRole.ADMIN ? "warning" : "primary"}
+        color={row[column.field] === UserRole.ADMIN ? "warning" : "secondary"}
       />
     );
   };
