@@ -34,4 +34,6 @@ const userSlice = createSlice({
     });
   },
 });
+export const selectUserById = (state: any, id: string) =>
+  state.user.data.find((user: usersDataType) => user.id === id);
 export const userReducer = userSlice.reducer;

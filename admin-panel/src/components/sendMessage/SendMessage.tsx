@@ -51,7 +51,7 @@ const SendMessage = function () {
   const [doFetchUsers] = useThunk(fetchUsers);
   const [sendMessage, isSendingMessage, createMessageError] =
     useThunk(createMessageThunk);
-  const { data } = useAppSelector((state) => state.user);
+  const { data } = useAppSelector((state) => state.users);
   const [value, setValue] = useState<string[]>([]);
   const [form, setForm] = useState(initialState);
   const {
