@@ -17,29 +17,34 @@ const columns = [
     field: "colId",
     headerName: "ردیف",
     width: 20,
+    type: "number",
   },
   {
     colId: 2,
     field: "title",
     headerName: "عنوان",
     width: 20,
+    type: "string",
   },
   {
     colId: 3,
     field: "isPublished",
     headerName: "وضعیت",
     width: 20,
+    type: "boolean",
   },
   {
     colId: 4,
     field: "description",
     headerName: "توضیحات",
     width: 30,
+    type: "string",
   },
   {
     colId: 5,
     field: "operation",
     headerName: "ویرایش / حذف",
+    type: "operation",
   },
 ];
 const Categories = function () {
