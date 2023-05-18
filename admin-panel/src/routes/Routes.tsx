@@ -24,7 +24,10 @@ import EditTag from "src/components/tags/EditTag";
 import Tags from "src/components/tags/Tags";
 import TagsLayout from "src/components/tags/TagsLayout";
 import Unauthorized from "src/components/unauthorized/Unauthorized";
+import AddUser from "src/components/userManagement/AddUser";
+import { EditUser } from "src/components/userManagement/EditUser";
 import UserManagement from "src/components/userManagement/UserManagement";
+import UserManagementLayout from "src/components/userManagement/UserManagementLayout";
 import { VerifiedEmail } from "src/components/verifiedEmail/VerifiedEmail";
 import { VerifyEmail } from "src/components/verifyEmail/VerifyEmail";
 
@@ -73,8 +76,12 @@ export const RouteApp = function () {
             <Route path="edit/:id" element={<EditTag />} />
           </Route>
           <Route path="send-message" element={<SendMessage />} />
-          <Route element={<ProtectedRoute roles={["admin"]} />}>
-            <Route path="user-management" element={<UserManagement />} />
+          <Route element={<ProtectedRoute roles={["admin", "user"]} />}>
+            <Route path="user-management" element={<UserManagementLayout />}>
+              <Route index element={<UserManagement />} />
+              <Route path="add" element={<AddUser />} />
+              <Route path="edit/:id" element={<EditUser />} />
+            </Route>
           </Route>
         </Route>
       </Route>
