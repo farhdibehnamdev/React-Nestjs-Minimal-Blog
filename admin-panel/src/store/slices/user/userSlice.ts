@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { usersDataType } from "src/types/userTypes";
 import { fetchUsers } from "src/store/thunks/userThunks/fetchUsers";
+import { editUserThunk } from "src/store/thunks/userThunks/editUser";
 
 type userState = {
-  isLoading: false;
+  isLoading: boolean;
   data: usersDataType[];
   count: number;
   error: string | null;
@@ -21,7 +22,7 @@ const userSlice = createSlice({
   extraReducers(builder) {
     //============ Fetch Users =================
     builder.addCase(fetchUsers.pending, (state, action) => {
-      state.isLoading = false;
+      state.isLoading = true;
     });
     builder.addCase(fetchUsers.fulfilled, (state, action) => {
       state.isLoading = false;
@@ -32,8 +33,22 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.error = action.error.message as string;
     });
+    //================= Edit User ==============
+    builder.addCase(editUserThunk.pending, (state) => {
+      state.isLoading = false;
+    });
+
+    builder.addCase(editUserThunk.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.data = state.data.filter((user) => user.id === action.payload.id);
+    });
+
+    builder.addCase(editUserThunk.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message as string;
+    });
   },
 });
 export const selectUserById = (state: any, id: string) =>
-  state.user.data.find((user: usersDataType) => user.id === id);
+  state.users.data.find((user: usersDataType) => user.id === id);
 export const userReducer = userSlice.reducer;
