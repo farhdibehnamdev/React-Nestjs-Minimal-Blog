@@ -20,7 +20,7 @@ import {
 const persistConfig = {
   key: "root",
   version: 1,
-  blacklist: ["toggle", "post", "category", "tags", "modal", "user"],
+  blacklist: ["toggle", "modal"],
   storage,
 };
 
@@ -30,7 +30,7 @@ const reducer = combineReducers({
   category: categoryReducer,
   tags: tagReducer,
   modal: modalReducer,
-  user: userReducer,
+  users: userReducer,
   auth: authReducer,
 });
 
