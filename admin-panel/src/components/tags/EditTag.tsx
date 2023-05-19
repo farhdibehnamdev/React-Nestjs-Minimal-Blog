@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AddEditTag from "./AddEditTag";
 import { BreadcrumbsType } from "../common/BreadcrumbsProps";
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
@@ -11,12 +11,14 @@ import Alert from "@mui/material/Alert";
 import { useParams } from "react-router-dom";
 import { useAppSelector } from "src/store/hooks";
 import { selectTagById } from "src/store/slices/tag/tagSlice";
+import { fetchTags } from "src/store/thunks/tagThunks/fetchTags";
 
 const breadcrumbTitles: BreadcrumbsType = {
   titles: ["تگ", "ویرایش تگ"],
 };
 const EditTag = function () {
   const { id } = useParams();
+  const [currentTag, setCurrentTag] = useState();
   const [editTagInfo, isEditingTag, editingTagError] = useThunk(editTag);
   const tag = useAppSelector((state) =>
     selectTagById(state, parseInt(id as string))
@@ -69,13 +71,11 @@ const EditTag = function () {
         <h1>ویرایش تگ</h1>
         <Breadcrumbs {...breadcrumbTitles} />
       </Grid>
-      {tag && (
-        <AddEditTag
-          typeOperation="Edit"
-          onEdit={handleTagEdit}
-          editFormData={tag}
-        />
-      )}
+      <AddEditTag
+        typeOperation="Edit"
+        onEdit={handleTagEdit}
+        editFormData={tag}
+      />
     </>
   );
 };

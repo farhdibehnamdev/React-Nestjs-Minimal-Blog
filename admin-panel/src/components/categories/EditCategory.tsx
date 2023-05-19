@@ -70,13 +70,12 @@ const EditCategory = function () {
         <h1>ویرایش فهرست</h1>
         <Breadcrumbs {...breadcrumbTitles} />
       </Grid>
-      {category && (
-        <AddEditCategory
-          typeOperation="Edit"
-          onEdit={handleCategoryEdit}
-          editFormData={category}
-        />
-      )}
+
+      <AddEditCategory
+        typeOperation="Edit"
+        onEdit={handleCategoryEdit}
+        editFormData={category}
+      />
     </>
   );
 };

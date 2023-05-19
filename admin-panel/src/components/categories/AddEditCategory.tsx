@@ -1,10 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  Box,
   TextField,
   Grid,
   FormControl,
-  SelectChangeEvent,
   Switch,
   Typography,
   Button,
@@ -18,6 +16,7 @@ import RichTextEditor from "../richTextEditor/RichTextEditor";
 import { FormCategoryValidationType } from "./Categories.types";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useParams } from "react-router-dom";
 const schema = yup.object({
   title: yup.string().required(),
   isPublished: yup.boolean().notRequired(),
@@ -29,6 +28,7 @@ const AddEditCategory = function ({
   onEdit,
   editFormData,
 }: any) {
+  const { id } = useParams();
   const initialState = {
     isPublished: editFormData?.isPublished || true,
     title: editFormData?.title || "",
@@ -58,6 +58,12 @@ const AddEditCategory = function ({
           : event.target.value,
     }));
   };
+
+  useEffect(() => {
+    if (id) {
+      console.log("id ::", id);
+    }
+  }, [id]);
 
   return (
     <>

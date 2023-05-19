@@ -13,7 +13,7 @@ import {
   FormHelperText,
 } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
-import { Controller, useController, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import addEditFormStyle from "../common/styles/addEditForm.style";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Uploader from "../uploader/Uploader";
