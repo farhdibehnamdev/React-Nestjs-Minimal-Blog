@@ -8,7 +8,8 @@ export const URLS = {
   signinUrl: "auth/signin",
   verifiedEmailUrl: "auth/verify-email",
   verifyTokenUrl: "auth/verify-token",
-  refreshToken: "aut/refresh-token",
+  refreshToken: "auth/refresh-token",
+  editUserUrl: "auth/user/update/",
 };
 
 export type paginationOptionType = {
