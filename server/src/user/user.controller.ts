@@ -7,17 +7,35 @@ import {
   Query,
   HttpCode,
   UseGuards,
+  Patch,
+  Put,
+  Param,
 } from '@nestjs/common';
 import { SigninUserDto } from './dto/login.dto';
 import { SignUpUserDto } from './dto/signup-user.dto';
 import { JWTTokens, UserService, createUserStatus } from './user.service';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { PaginationQueryDto } from 'src/common/pagination-query.dto';
+import User, { UserRole } from './entities/user.entity';
 import { usersDataAndCount } from './types/user.type';
-import { UserRole } from './entities/user.entity';
 import { Role } from './decorators/role';
 import { AccessTokenGuard } from './guard/access-token.guard';
 import { RoleGuard } from './guard/authorization.guard';
+import { FindOptionsWhere, Like } from 'typeorm';
+import {
+  PatchUserManagementDto,
+  PutUserManagementDto,
+} from './dto/userManagement.dto';
+
+type paginationTitle = {
+  pagination: PaginationQueryDto;
+  title: string;
+};
+
+const paginationTitleType: paginationTitle = {
+  pagination: { limit: 5, offset: 0 },
+  title: '',
+};
 
 @Controller('auth/')
 export class UserController {
@@ -49,14 +67,34 @@ export class UserController {
   @Get('users')
   async findAll(
     @Query('all') all: boolean,
-    @Query() pagination: PaginationQueryDto,
-    @Query('title') title?: string,
+    @Query() paginationTitleType: paginationTitle,
   ): Promise<usersDataAndCount> {
     if (all) {
-      const ress = await this.userService.findAll();
-      return ress;
+      const usersData = await this.userService.findAll(
+        all,
+        paginationTitleType.pagination,
+        {
+          firstName: paginationTitleType.title,
+        },
+      );
+      return usersData;
+    } else if (
+      paginationTitleType.title === null ||
+      paginationTitleType.title === undefined ||
+      paginationTitleType.title === ''
+    ) {
+      return this.userService.paginate(paginationTitleType.pagination);
+    } else {
+      const searchCriteria: FindOptionsWhere<User> = {
+        firstName: Like(`%${paginationTitleType.title}%`),
+      };
+
+      return this.userService.findAll(
+        all,
+        paginationTitleType.pagination,
+        searchCriteria,
+      );
     }
-    return { data: null, count: 0 };
   }
 
   @Version('1')
@@ -77,5 +115,26 @@ export class UserController {
       tokens.accessToken,
       tokens.refreshToken,
     );
+  }
+
+  @Role(UserRole.USER)
+  @Role(UserRole.ADMIN)
+  @Version('1')
+  @Put('user/update')
+  async putUpdate(@Body() putUserManagementDto: PutUserManagementDto) {
+    return await this.userService.putUpdate(putUserManagementDto);
+  }
+
+  @Role(UserRole.USER)
+  @Role(UserRole.ADMIN)
+  @Version('1')
+  @Patch('user/update/:id')
+  async patchUpdate(
+    @Param('id') id: string,
+    @Body() patchUserManagementDto: PatchUserManagementDto,
+  ) {
+    console.log('patch update :: ', id);
+    console.log('patchUserManagementDto :: ', patchUserManagementDto);
+    return await this.userService.patchUpdate(id, patchUserManagementDto);
   }
 }
