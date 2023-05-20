@@ -13,6 +13,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { UnverifiedUserException } from 'src/filters/UnverifiedUserException';
 import { UserNotFoundException } from 'src/filters/UserNotFoundException';
 import { BaseService } from 'src/common/Base.service';
+import {
+  PatchUserManagementDto,
+  PutUserManagementDto,
+} from './dto/userManagement.dto';
 
 export type createUserStatus = {
   status: number;
@@ -108,6 +112,25 @@ export class UserService extends BaseService<User> {
     const userFound = await this.userRepository.findOne({ where: { id } });
     if (!userFound) throw new NotFoundException('User Not Found!!!');
     Object.assign(userFound, updateUserDto);
+    return this.userRepository.save(userFound);
+  }
+
+  async patchUpdate(
+    id: string,
+    patchUserManagementDto: PatchUserManagementDto,
+  ) {
+    const userFound = await this.userRepository.findOne({ where: { id } });
+    if (!userFound) throw new NotFoundException('User Not Found !!!');
+    Object.assign(userFound, patchUserManagementDto);
+    return this.userRepository.save(userFound);
+  }
+
+  async putUpdate(putUserManagementDto: PutUserManagementDto) {
+    const userFound = await this.userRepository.findOne({
+      where: { id: putUserManagementDto.id },
+    });
+    if (!userFound) throw new NotFoundException('User Not Found!!!');
+    Object.assign(userFound, putUserManagementDto);
     return this.userRepository.save(userFound);
   }
 

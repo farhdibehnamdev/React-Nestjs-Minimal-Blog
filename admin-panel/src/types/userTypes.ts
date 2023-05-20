@@ -1,4 +1,3 @@
-import { UserRole } from "src/config/api/usersApi/usersApi";
 import { paginationOptionType } from "src/config/constants";
 
 export type usersDataType = {
@@ -6,7 +5,10 @@ export type usersDataType = {
   firstName: string;
   lastName: string;
   email: string;
-  role: UserRole.USER;
+  password: string;
+  isActive: boolean;
+  isVerified: boolean;
+  userRole: string;
 };
 
 export type signupUserTypeDto = {

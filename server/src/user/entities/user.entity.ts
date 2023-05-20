@@ -40,7 +40,7 @@ export default class User {
   verificationEmailToken: string;
 
   @Column({ type: 'varchar', default: UserRole.USER, name: 'userRole' })
-  role: UserRole;
+  userRole: UserRole;
 
   @OneToMany(() => Article, (article) => article.user)
   articles: Article[];
