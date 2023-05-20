@@ -1,6 +1,5 @@
 import { SxProps } from "@mui/material";
 const addEditFormStyle: SxProps = {
-  //   marginBottom: "20px",
   background: "#fff",
   padding: "40px",
   borderRadius: "10px",
