@@ -8,9 +8,8 @@ import {
   isBoolean,
 } from 'class-validator';
 
-export class PutUserManagementDto {
+export class UserManagementDto {
   @IsString()
-  @IsNotEmpty()
   id: string;
   @IsString()
   @IsNotEmpty()

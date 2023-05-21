@@ -7,6 +7,7 @@ import {
   usersDataType,
   userTitleAndPagination,
 } from "src/types/userTypes";
+import { UserFormData } from "src/components/userManagement/UserManagement.type";
 
 export enum UserRole {
   USER = "user",
@@ -74,4 +75,9 @@ export const refreshTokenApi = async function (
       refreshToken
     );
   }
+};
+
+export const createUserApi = async function (createUser: UserFormData) {
+  const createdUser = Object.assign(createUser, { id: "" });
+  return await api.post<usersDataType>(URLS.addUserUrl, createdUser);
 };

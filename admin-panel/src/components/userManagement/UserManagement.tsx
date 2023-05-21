@@ -88,7 +88,7 @@ const UserManagement = function () {
         columns={columns}
         thunkFetch={fetchUsers}
         thunkRemove={fetchUsers}
-        typeOperation="مدیریت کاربران"
+        typeOperation="کاربر"
         dataSelector={userDataSelector}
       />
     </>
