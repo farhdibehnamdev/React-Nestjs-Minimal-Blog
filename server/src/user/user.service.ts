@@ -15,7 +15,7 @@ import { UserNotFoundException } from 'src/filters/UserNotFoundException';
 import { BaseService } from 'src/common/Base.service';
 import {
   PatchUserManagementDto,
-  PutUserManagementDto,
+  UserManagementDto,
 } from './dto/userManagement.dto';
 
 export type createUserStatus = {
@@ -70,7 +70,6 @@ export class UserService extends BaseService<User> {
       const verificationToken = uuidv4();
       createdUser.verificationEmailToken = verificationToken;
       await this.userRepository.save(createdUser);
-
       await this.sendVerificationEmail(createdUser.email, verificationToken);
       return { status: 200 };
     } catch (err) {
@@ -125,13 +124,43 @@ export class UserService extends BaseService<User> {
     return this.userRepository.save(userFound);
   }
 
-  async putUpdate(putUserManagementDto: PutUserManagementDto) {
+  async putUpdate(putUserManagementDto: UserManagementDto) {
     const userFound = await this.userRepository.findOne({
       where: { id: putUserManagementDto.id },
     });
     if (!userFound) throw new NotFoundException('User Not Found!!!');
     Object.assign(userFound, putUserManagementDto);
     return this.userRepository.save(userFound);
+  }
+
+  async addUser(addUserDto: UserManagementDto) {
+    try {
+      const existingUser = await this.userRepository.findOne({
+        where: { email: addUserDto.email },
+      });
+      if (existingUser)
+        throw new HttpException('Email already registered!', 400);
+
+      const createdUser = this.userRepository.create({
+        email: addUserDto.email,
+        password: addUserDto.password,
+        isActive: addUserDto.isActive,
+        isVerified: addUserDto.isVerified,
+        firstName: addUserDto.firstName,
+        lastName: addUserDto.lastName,
+      });
+
+      const protectedPassword = await this.hashPassword(addUserDto.password);
+      createdUser.userRole = addUserDto.userRole as UserRole;
+      createdUser.password = protectedPassword;
+
+      const verificationToken = uuidv4();
+      createdUser.verificationEmailToken = verificationToken;
+      await this.userRepository.save(createdUser);
+      await this.sendVerificationEmail(createdUser.email, verificationToken);
+    } catch (error) {
+      throw error;
+    }
   }
 
   async remove(id: string): Promise<User> {

@@ -10,6 +10,7 @@ export const URLS = {
   verifyTokenUrl: "auth/verify-token",
   refreshToken: "auth/refresh-token",
   editUserUrl: "auth/user/update/",
+  addUserUrl: "auth/user/add",
 };
 
 export type paginationOptionType = {

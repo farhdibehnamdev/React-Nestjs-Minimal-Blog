@@ -24,7 +24,7 @@ import { RoleGuard } from './guard/authorization.guard';
 import { FindOptionsWhere, Like } from 'typeorm';
 import {
   PatchUserManagementDto,
-  PutUserManagementDto,
+  UserManagementDto,
 } from './dto/userManagement.dto';
 
 type paginationTitle = {
@@ -121,7 +121,7 @@ export class UserController {
   @Role(UserRole.ADMIN)
   @Version('1')
   @Put('user/update')
-  async putUpdate(@Body() putUserManagementDto: PutUserManagementDto) {
+  async putUpdate(@Body() putUserManagementDto: UserManagementDto) {
     return await this.userService.putUpdate(putUserManagementDto);
   }
 
@@ -133,8 +133,15 @@ export class UserController {
     @Param('id') id: string,
     @Body() patchUserManagementDto: PatchUserManagementDto,
   ) {
-    console.log('patch update :: ', id);
-    console.log('patchUserManagementDto :: ', patchUserManagementDto);
     return await this.userService.patchUpdate(id, patchUserManagementDto);
+  }
+
+  @Role(UserRole.USER)
+  @Role(UserRole.ADMIN)
+  @Version('1')
+  @Post('user/add')
+  @HttpCode(200)
+  async addUser(@Body() addUserDto: UserManagementDto) {
+    return await this.userService.addUser(addUserDto);
   }
 }
