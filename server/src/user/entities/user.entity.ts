@@ -3,6 +3,7 @@ import { Message } from 'src/message/entities/message.entity';
 import {
   Column,
   Entity,
+  JoinTable,
   ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -46,5 +47,6 @@ export default class User {
   articles: Article[];
 
   @ManyToMany(() => Message, { cascade: true })
+  @JoinTable()
   messages: Message[];
 }
