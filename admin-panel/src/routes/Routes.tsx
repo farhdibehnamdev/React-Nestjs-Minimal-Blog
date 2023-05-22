@@ -55,7 +55,7 @@ export const RouteApp = function () {
         <Route path="unauthorized" element={<Unauthorized />} />
       </Route>
       {/* Protected Route */}
-      <Route path="/" element={<ProtectedRoute roles={["Admin", "user"]} />}>
+      <Route path="/" element={<ProtectedRoute roles={["admin", "user"]} />}>
         <Route element={<DashboardLayout />}>
           <Route index element={<Home />} />
           <Route path="settings" element={<Settings />} />

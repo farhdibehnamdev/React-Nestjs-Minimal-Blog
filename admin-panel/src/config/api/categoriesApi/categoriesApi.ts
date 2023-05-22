@@ -8,7 +8,7 @@ export type categoriesDataType = {
   description: string;
 };
 
-type categoriesCollectionType = {
+export type categoriesCollectionType = {
   data: categoriesDataType[];
   count: number;
 };

@@ -12,7 +12,7 @@ export type postType = {
   tags: string[];
 };
 
-type postsCollectionType = {
+export type postsCollectionType = {
   data: postType[];
   count: number;
 };

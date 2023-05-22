@@ -11,6 +11,7 @@ export const URLS = {
   refreshToken: "auth/refresh-token",
   editUserUrl: "auth/user/update/",
   addUserUrl: "auth/user/add",
+  deleteUserUrl: "auth/user/remove/",
 };
 
 export type paginationOptionType = {
