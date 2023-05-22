@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { usersDataType } from "src/types/userTypes";
 import { fetchUsers } from "src/store/thunks/userThunks/fetchUsers";
 import { editUserThunk } from "src/store/thunks/userThunks/editUser";
+import { removeUserThunk } from "src/store/thunks/userThunks/removeUser";
 
 type userState = {
   isLoading: boolean;
@@ -35,7 +36,7 @@ const userSlice = createSlice({
     });
     //================= Edit User ==============
     builder.addCase(editUserThunk.pending, (state) => {
-      state.isLoading = false;
+      state.isLoading = true;
     });
 
     builder.addCase(editUserThunk.fulfilled, (state, action) => {
@@ -44,6 +45,20 @@ const userSlice = createSlice({
     });
 
     builder.addCase(editUserThunk.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message as string;
+    });
+    //================= Remove User ==============
+    builder.addCase(removeUserThunk.pending, (state) => {
+      state.isLoading = true;
+    });
+
+    builder.addCase(removeUserThunk.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.data = state.data.filter((user) => user.id !== action.payload.id);
+    });
+
+    builder.addCase(removeUserThunk.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.error.message as string;
     });

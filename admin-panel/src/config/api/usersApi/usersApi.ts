@@ -81,3 +81,7 @@ export const createUserApi = async function (createUser: UserFormData) {
   const createdUser = Object.assign(createUser, { id: "" });
   return await api.post<usersDataType>(URLS.addUserUrl, createdUser);
 };
+
+export const removeUserApi = async function (id: string) {
+  return await api.delete<string>(`${URLS.deleteUserUrl}${id}`);
+};
