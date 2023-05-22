@@ -10,6 +10,7 @@ import {
   Patch,
   Put,
   Param,
+  Delete,
 } from '@nestjs/common';
 import { SigninUserDto } from './dto/login.dto';
 import { SignUpUserDto } from './dto/signup-user.dto';
@@ -26,6 +27,7 @@ import {
   PatchUserManagementDto,
   UserManagementDto,
 } from './dto/userManagement.dto';
+import { ROLE_KEY } from './decorators/role';
 
 type paginationTitle = {
   pagination: PaginationQueryDto;
@@ -60,8 +62,7 @@ export class UserController {
     return this.userService.verifyEmailToken(token);
   }
 
-  @Role(UserRole.USER)
-  @Role(UserRole.ADMIN)
+  @Role(UserRole.USER, UserRole.ADMIN)
   @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Get('users')
@@ -117,16 +118,14 @@ export class UserController {
     );
   }
 
-  @Role(UserRole.USER)
-  @Role(UserRole.ADMIN)
+  @Role(UserRole.USER, UserRole.ADMIN)
   @Version('1')
   @Put('user/update')
   async putUpdate(@Body() putUserManagementDto: UserManagementDto) {
     return await this.userService.putUpdate(putUserManagementDto);
   }
 
-  @Role(UserRole.USER)
-  @Role(UserRole.ADMIN)
+  @Role(UserRole.USER, UserRole.ADMIN)
   @Version('1')
   @Patch('user/update/:id')
   async patchUpdate(
@@ -136,12 +135,18 @@ export class UserController {
     return await this.userService.patchUpdate(id, patchUserManagementDto);
   }
 
-  @Role(UserRole.USER)
-  @Role(UserRole.ADMIN)
+  @Role(UserRole.USER, UserRole.ADMIN)
   @Version('1')
   @Post('user/add')
   @HttpCode(200)
   async addUser(@Body() addUserDto: UserManagementDto) {
     return await this.userService.addUser(addUserDto);
+  }
+
+  @Role(UserRole.USER, UserRole.ADMIN)
+  @Version('1')
+  @Delete('user/remove/:id')
+  async removeUser(@Param('id') id: string) {
+    return await this.userService.remove(id);
   }
 }

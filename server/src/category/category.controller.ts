@@ -29,8 +29,7 @@ type paginationTitleType = {
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
-  @Role(UserRole.USER)
-  @Role(UserRole.ADMIN)
+  @Role(UserRole.USER, UserRole.ADMIN)
   @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Get()
@@ -92,25 +91,21 @@ export class CategoryController {
   //     );
   //   }
   // }
-
-  @Role(UserRole.USER)
-  @Role(UserRole.ADMIN)
+  @Role(UserRole.USER, UserRole.ADMIN)
   @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.categoryService.findOne(id);
   }
-  @Role(UserRole.USER)
-  @Role(UserRole.ADMIN)
+  @Role(UserRole.USER, UserRole.ADMIN)
   @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Post()
   create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoryService.create(createCategoryDto);
   }
-  @Role(UserRole.USER)
-  @Role(UserRole.ADMIN)
+  @Role(UserRole.USER, UserRole.ADMIN)
   @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Patch(':id')
@@ -121,8 +116,7 @@ export class CategoryController {
     return this.categoryService.update(id, createCategoryDto);
   }
 
-  @Role(UserRole.USER)
-  @Role(UserRole.ADMIN)
+  @Role(UserRole.USER, UserRole.ADMIN)
   @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Delete(':id')

@@ -43,8 +43,7 @@ export class MessageController {
     return message;
   }
 
-  @Role(UserRole.USER)
-  @Role(UserRole.ADMIN)
+  @Role(UserRole.USER, UserRole.ADMIN)
   @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Get(':receiverId')
@@ -55,8 +54,7 @@ export class MessageController {
     return messages;
   }
 
-  @Role(UserRole.USER)
-  @Role(UserRole.ADMIN)
+  @Role(UserRole.USER, UserRole.ADMIN)
   @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Patch(':messageId/read')

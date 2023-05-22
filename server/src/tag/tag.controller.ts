@@ -33,8 +33,7 @@ const paginationTitleType: paginationTitle = {
 export class TagController {
   constructor(private readonly tagService: TagService) {}
 
-  @Role(UserRole.USER)
-  @Role(UserRole.ADMIN)
+  @Role(UserRole.USER, UserRole.ADMIN)
   @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Get()
@@ -70,24 +69,21 @@ export class TagController {
     }
   }
 
-  @Role(UserRole.USER)
-  @Role(UserRole.ADMIN)
+  @Role(UserRole.USER, UserRole.ADMIN)
   @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.tagService.findOne(id);
   }
-  @Role(UserRole.USER)
-  @Role(UserRole.ADMIN)
+  @Role(UserRole.USER, UserRole.ADMIN)
   @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Post()
   create(@Body() createTagDto: CreateTagDto) {
     return this.tagService.create(createTagDto);
   }
-  @Role(UserRole.USER)
-  @Role(UserRole.ADMIN)
+  @Role(UserRole.USER, UserRole.ADMIN)
   @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Patch(':id')
@@ -95,8 +91,7 @@ export class TagController {
     return this.tagService.update(id, createTagDto);
   }
 
-  @Role(UserRole.USER)
-  @Role(UserRole.ADMIN)
+  @Role(UserRole.USER, UserRole.ADMIN)
   @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Delete(':id')

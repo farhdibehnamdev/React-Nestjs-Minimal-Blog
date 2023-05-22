@@ -41,8 +41,7 @@ type paginationTitleType = { pagination: PaginationQueryDto; title: string };
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
 
-  @Role(UserRole.USER)
-  @Role(UserRole.ADMIN)
+  @Role(UserRole.USER, UserRole.ADMIN)
   @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Get()
@@ -77,16 +76,14 @@ export class ArticleController {
     return result;
   }
 
-  @Role(UserRole.USER)
-  @Role(UserRole.ADMIN)
+  @Role(UserRole.USER, UserRole.ADMIN)
   @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Get()
   findOne(id: number) {
     return this.articleService.findOne(id);
   }
-  @Role(UserRole.USER)
-  @Role(UserRole.ADMIN)
+  @Role(UserRole.USER, UserRole.ADMIN)
   @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
   @Post()
@@ -116,17 +113,15 @@ export class ArticleController {
     return this.articleService.create(createArticleDto, imageObj);
   }
 
+  @Role(UserRole.USER, UserRole.ADMIN)
   @Version('1')
-  @Role(UserRole.USER)
-  @Role(UserRole.ADMIN)
   @UseGuards(AccessTokenGuard, RoleGuard)
   @Patch(':id')
   update(@Param('id') id: number, @Body() updateArticleDto: UpdateArticleDto) {
     return this.articleService.update(id, updateArticleDto);
   }
   @Version('1')
-  @Role(UserRole.USER)
-  @Role(UserRole.ADMIN)
+  @Role(UserRole.USER, UserRole.ADMIN)
   @UseGuards(AccessTokenGuard, RoleGuard)
   @Delete(':id')
   remove(@Param('id') id: number) {
