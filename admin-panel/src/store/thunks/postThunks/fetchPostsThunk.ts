@@ -1,31 +1,23 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchPosts } from "src/config/api/postsApi/postsApi";
+import { AxiosResponse } from "axios";
+import {
+  fetchPosts,
+  postsCollectionType,
+} from "src/config/api/postsApi/postsApi";
+import { ThunkDataType } from "src/store/thunk.type";
 
-type paginationType = {
-  limit: number;
-  offset: number;
-};
-
-type paginationTitleType = {
-  pagination: paginationType;
-  title: string;
-};
-
-const postType: paginationTitleType = {
-  pagination: { limit: 5, offset: 0 },
-  title: "",
-};
 const fetchPostsThunk = createAsyncThunk(
   "post/fetchPosts",
-  async (arg: any) => {
-    let response: undefined | any[any];
-    if (arg) {
-      postType.title = arg.title;
-      postType.pagination.limit = arg.limit;
-      postType.pagination.offset = arg.offset;
-      response = await fetchPosts(arg.all, postType);
+  async (arg: ThunkDataType) => {
+    let response: AxiosResponse<postsCollectionType>;
+    const { all, offset, limit, title } = arg;
+    if (!all) {
+      response = await fetchPosts(all, {
+        title,
+        pagination: { offset, limit },
+      });
     } else {
-      response = await fetchPosts(arg.all);
+      response = await fetchPosts(all);
     }
 
     return response.data;

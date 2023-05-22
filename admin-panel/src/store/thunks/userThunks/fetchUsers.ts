@@ -13,13 +13,14 @@ const usersType: userTitleAndPagination = {
 
 const fetchUsers = createAsyncThunk("users/fetch", async (arg: any) => {
   let response: undefined | any[any];
-  if (!arg.all) {
-    usersType.title = arg.title;
-    usersType.pagination.limit = arg.limit;
-    usersType.pagination.offset = arg.offset;
-    response = await fetchUsersData(arg.all, usersType);
+  const { all, offset, limit, title } = arg;
+  if (arg) {
+    response = await fetchUsersData(all, {
+      title,
+      pagination: { offset, limit },
+    });
   } else {
-    response = await fetchUsersData(arg.all);
+    response = await fetchUsersData(all);
   }
   return response.data;
 });

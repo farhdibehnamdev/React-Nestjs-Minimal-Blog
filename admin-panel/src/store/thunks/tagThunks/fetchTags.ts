@@ -1,31 +1,27 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchTagsData } from "src/config/api/tagsApi/tagsApi";
-import { paginationOptionType } from "src/config/constants";
+import { AxiosResponse } from "axios";
+import {
+  fetchTagsData,
+  tagsCollectionType,
+} from "src/config/api/tagsApi/tagsApi";
+import { ThunkDataType } from "src/store/thunk.type";
 
-type fetchTagsType = {
-  pagination: paginationOptionType;
-  title: string;
-};
-type tagTitleAndPagination = {
-  pagination: paginationOptionType;
-  title: string;
-};
-const tagsType: tagTitleAndPagination = {
-  title: "",
-  pagination: { limit: 5, offset: 0 },
-};
-const fetchTags = createAsyncThunk("tags/fetch", async (arg: any) => {
-  let response: undefined | any[any];
-  if (arg) {
-    tagsType.title = arg.title;
-    tagsType.pagination.limit = arg.limit;
-    tagsType.pagination.offset = arg.offset;
-    response = await fetchTagsData(arg.all, tagsType);
-  } else {
-    response = await fetchTagsData(arg.all);
+const fetchTags = createAsyncThunk(
+  "tags/fetch",
+  async (arg: ThunkDataType): Promise<tagsCollectionType> => {
+    let response: AxiosResponse<tagsCollectionType>;
+    const { all, offset, limit, title } = arg;
+    if (!all) {
+      response = await fetchTagsData(all, {
+        title,
+        pagination: { offset, limit },
+      });
+    } else {
+      response = await fetchTagsData(all);
+    }
+
+    return response.data;
   }
-
-  return response.data;
-});
+);
 
 export { fetchTags };

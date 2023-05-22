@@ -1,28 +1,23 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchCategoriesData } from "src/config/api/categoriesApi/categoriesApi";
-import { paginationOptionType } from "src/config/constants";
-
-type categoryTitleAndPagination = {
-  pagination: paginationOptionType;
-  title: string;
-};
-
-const categoryType: categoryTitleAndPagination = {
-  title: "",
-  pagination: { limit: 5, offset: 0 },
-};
+import { AxiosResponse } from "axios";
+import {
+  categoriesCollectionType,
+  fetchCategoriesData,
+} from "src/config/api/categoriesApi/categoriesApi";
+import { ThunkDataType } from "src/store/thunk.type";
 
 const fetchCategories = createAsyncThunk(
   "category/fetchCategories",
-  async (arg: any) => {
-    let response: undefined | any[any];
-    if (arg) {
-      categoryType.title = arg.title;
-      categoryType.pagination.limit = arg.limit;
-      categoryType.pagination.offset = arg.offset;
-      response = await fetchCategoriesData(arg.all, categoryType);
+  async (arg: ThunkDataType) => {
+    let response: AxiosResponse<categoriesCollectionType>;
+    const { all, offset, limit, title } = arg;
+    if (!all) {
+      response = await fetchCategoriesData(all, {
+        title,
+        pagination: { offset, limit },
+      });
     } else {
-      response = await fetchCategoriesData(arg.all);
+      response = await fetchCategoriesData(all);
     }
 
     return response.data;
