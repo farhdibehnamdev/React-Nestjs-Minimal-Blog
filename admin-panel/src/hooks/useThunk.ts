@@ -8,21 +8,24 @@ const useThunk = function (
   const [error, setError] = useState<object | null>(null);
   const dispatch = useAppDispatch();
   const runThunk = useCallback(
-    (arg: any): Function | void => {
+    (arg: any): Promise<any> => {
       setIsLoading(true);
-      dispatch(thunk(arg))
-        .unwrap()
-        .then((result: any) => {
-          if (result.data) setIsLoading(false);
-        })
-        .catch((err: object | null) => {
-          setIsLoading(false);
-          setError(err);
-        });
+      return new Promise((resolve, reject) => {
+        dispatch(thunk(arg))
+          .unwrap()
+          .then((result: any) => {
+            if (result.data) setIsLoading(false);
+            resolve(result);
+          })
+          .catch((err: object | null) => {
+            setIsLoading(false);
+            setError(err);
+            reject(err);
+          });
+      });
     },
     [dispatch, thunk]
   );
-
   return [runThunk, isLoading, error];
 };
 

@@ -23,13 +23,20 @@ const DeleteModalConfirm = function ({
   const { isOpen } = useAppSelector((state) => state.modal);
   const dispatch = useDispatch();
   const handleClose = () => dispatch(closeModal(false));
-  const [doDeleteItem, isRemoveCreatedError, isRemoveLoading] =
-    useThunk(thunkRemove);
-  const [doFetchItems, isLoadingCreatedError, isLoading] = useThunk(thunkFetch);
+  const [doDeleteItem] = useThunk(thunkRemove);
+  const [doFetchItems] = useThunk(thunkFetch);
   const handleDelete = async () => {
-    await doDeleteItem(state);
-    await doFetchItems({ pagination: { offset, limit: perPage } });
-    dispatch(closeModal(false));
+    doDeleteItem(state)
+      .then(() => {
+        dispatch(closeModal(false));
+      })
+      .then(() => {
+        return doFetchItems({ all: false, offset, limit: perPage });
+      })
+
+      .catch((error: any) => {
+        console.error("Error during delete or fetch:", error);
+      });
   };
 
   const theme = useTheme();
@@ -52,7 +59,11 @@ const DeleteModalConfirm = function ({
             gap="10px"
           >
             <Typography>آیا از حذف</Typography>
-            <Chip label={state.title} color="error" variant="outlined" />
+            <Chip
+              label={state.title || state.email}
+              color="error"
+              variant="outlined"
+            />
             <Typography>اطمینان دارید؟</Typography>
           </Grid>
         </DialogContentText>
