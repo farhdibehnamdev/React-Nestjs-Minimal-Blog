@@ -7,6 +7,7 @@ import useThunk from "src/hooks/useThunk";
 import { fetchUsers } from "src/store/thunks/userThunks/fetchUsers";
 import { useAppSelector } from "src/store/hooks";
 import { useEffect } from "react";
+import { removeUserThunk } from "src/store/thunks/userThunks/removeUser";
 
 const breadcrumbTitles: BreadcrumbsType = {
   titles: ["داشبورد", "مدیریت کاربران"],
@@ -69,12 +70,7 @@ const columns = [
 ];
 const UserManagement = function () {
   const userDataSelector = (state: RootState) => state.users;
-  const [doFetchUsers] = useThunk(fetchUsers);
   const { count, data } = useAppSelector((state) => state.users);
-
-  useEffect(() => {
-    doFetchUsers({ all: false, offset: 0, limit: 5 });
-  }, [doFetchUsers]);
 
   return (
     <>
@@ -87,7 +83,7 @@ const UserManagement = function () {
         rows={data}
         columns={columns}
         thunkFetch={fetchUsers}
-        thunkRemove={fetchUsers}
+        thunkRemove={removeUserThunk}
         typeOperation="کاربر"
         dataSelector={userDataSelector}
       />
