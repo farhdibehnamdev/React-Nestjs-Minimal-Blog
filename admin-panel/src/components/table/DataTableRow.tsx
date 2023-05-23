@@ -12,6 +12,7 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import { tableRowStyle } from "./DataTable.style";
 import { UserRole } from "src/config/api/usersApi/usersApi";
 import { chipStyle } from "./DataTable.style";
+import { useAppSelector } from "src/store/hooks";
 const DataTableRow = function ({
   columns,
   row,
@@ -21,6 +22,7 @@ const DataTableRow = function ({
   handleEdit,
   handleDelete,
 }: any) {
+  const { userInfo } = useAppSelector((state) => state.auth);
   const booleanColumn = ({ row, column }: any) => (
     <Chip
       sx={chipStyle}
@@ -40,6 +42,7 @@ const DataTableRow = function ({
           aria-label="Disabled elevation buttons"
         >
           <Button
+            disabled={userInfo?.email === row.email ? true : false}
             variant="contained"
             sx={{ color: "#fff", background: "#ee3b3b" }}
             startIcon={<DeleteOutlineOutlinedIcon />}

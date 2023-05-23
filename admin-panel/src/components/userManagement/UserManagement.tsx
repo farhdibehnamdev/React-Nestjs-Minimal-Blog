@@ -3,10 +3,8 @@ import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 import DataTable from "../table/DataTable";
 import { BreadcrumbsType } from "../common/BreadcrumbsProps";
 import { RootState } from "src/store";
-import useThunk from "src/hooks/useThunk";
 import { fetchUsers } from "src/store/thunks/userThunks/fetchUsers";
 import { useAppSelector } from "src/store/hooks";
-import { useEffect } from "react";
 import { removeUserThunk } from "src/store/thunks/userThunks/removeUser";
 
 const breadcrumbTitles: BreadcrumbsType = {
