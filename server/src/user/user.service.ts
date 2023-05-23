@@ -17,6 +17,7 @@ import {
   PatchUserManagementDto,
   UserManagementDto,
 } from './dto/userManagement.dto';
+import { UsersActivationException } from 'src/filters/UsersActivationException';
 
 export type createUserStatus = {
   status: number;
@@ -80,7 +81,8 @@ export class UserService extends BaseService<User> {
   async signin(signInDto: SigninUserDto): Promise<SignInResponse> {
     const { email, password } = signInDto;
     const user = await this.userRepository.findOne({ where: { email } });
-
+    if (user.isActive === false || user.isVerified === false)
+      throw new UsersActivationException();
     if (!user) throw new UserNotFoundException();
     if (user.isVerified) {
       const validPassword = await compare(password, user.password);

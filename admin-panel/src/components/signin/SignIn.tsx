@@ -48,6 +48,8 @@ const SignIn = function () {
     } catch (error: any) {
       if (error?.response.status === 404) {
         showNotice("کاربری با این مشخصات یافت نشد", "error");
+      } else if (error?.response.status === 403) {
+        showNotice("حساب کاربری غیرفعال یا تایید نشده است.", "error");
       } else {
         showNotice("خطا در ورود به پنل", "error");
       }

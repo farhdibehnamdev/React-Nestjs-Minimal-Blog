@@ -4,7 +4,7 @@ export const Notice = function ({ open, alertType, message, onClose }: any) {
     <Snackbar
       open={open}
       anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      autoHideDuration={3000}
+      autoHideDuration={5000}
       onClose={onClose}
     >
       <Alert onClose={onClose} severity={alertType} sx={{ width: "100%" }}>

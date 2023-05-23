@@ -10,12 +10,14 @@ import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 import { Grid } from "@mui/material";
 import { AddEditUser } from "./AddEditUser";
 import { UserFormData } from "./UserManagement.type";
+import { useState } from "react";
 
 const breadcrumbTitles: BreadcrumbsType = {
   titles: ["مدیریت کاربران", "ویرایش کاربر"],
 };
 export const EditUser = function () {
   const { id } = useParams();
+  const [loading, setLoading] = useState(false);
   const { showNotice, message, open, setOpen, noticeType } = useAlert();
   const [editUserInfo, isEditingUser, isEditingUserError] =
     useThunk(editUserThunk);
@@ -27,8 +29,10 @@ export const EditUser = function () {
     editUserInfo({ ...formData, id, typeRequest });
     if (isEditingUserError) {
       showNotice("مشکلی در ویرایش اطلاعات بوجود آمد", "error");
+      setLoading(false);
     } else {
       showNotice("کاربر با موفقیت ویرایش شد", "success");
+      setLoading(false);
     }
   };
 
@@ -53,6 +57,8 @@ export const EditUser = function () {
         typeOperation="Edit"
         onEdit={handleUserEdit}
         editFormData={user}
+        setLoading={setLoading}
+        loading={loading}
       />
     </>
   );
