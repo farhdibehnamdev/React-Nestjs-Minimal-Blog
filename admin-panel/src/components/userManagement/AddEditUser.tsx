@@ -18,6 +18,7 @@ import addEditFormStyle from "../common/styles/addEditForm.style";
 import DoDisturbAltOutlinedIcon from "@mui/icons-material/DoDisturbAltOutlined";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import { UserFormData } from "./UserManagement.type";
+import { LoadingButton } from "@mui/lab";
 const schema = yup.object({
   firstName: yup.string().required("فیلد نام اجباری است"),
   lastName: yup.string().required("فیلد نام خانوادگی اجباری است"),
@@ -32,6 +33,8 @@ export const AddEditUser = function ({
   onAdd,
   onEdit,
   editFormData,
+  loading,
+  setLoading,
 }: any) {
   const initialState = {
     firstName: editFormData?.firstName || "",
@@ -63,10 +66,13 @@ export const AddEditUser = function ({
         return formData[field] === watchedFields[field];
     });
     if (typeOperation === "Edit" && allFieldsChanged) {
+      setLoading(true);
       onEdit(formData, "put");
     } else if (typeOperation === "Edit" && !allFieldsChanged) {
+      setLoading(true);
       onEdit(formData, "patch");
     } else {
+      setLoading(true);
       onAdd(formData);
     }
   };
@@ -227,17 +233,20 @@ export const AddEditUser = function ({
         <br />
         <Grid container spacing={2} justifyContent="center">
           <Grid item xl={6}>
-            <Button
+            <LoadingButton
+              loading={loading}
+              loadingPosition="end"
+              startIcon={<SaveOutlinedIcon />}
               fullWidth
               variant="contained"
-              size="large"
-              startIcon={<SaveOutlinedIcon />}
               type="submit"
+              size="large"
             >
-              <Typography sx={{ color: "#fff", fontSize: "20px" }}>
-                ذخیره
-              </Typography>
-            </Button>
+              ذخیره
+            </LoadingButton>
+            {/* <Button startIcon={<SaveOutlinedIcon />}>
+              <Typography sx={{ color: "#fff", fontSize: "20px" }}></Typography>
+            </Button> */}
           </Grid>
           <Grid item xl={6}>
             <Button
