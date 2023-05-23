@@ -8,7 +8,7 @@ import { editTagType } from "src/config/api/tagsApi/tagsApi";
 import Grid from "@mui/material/Grid";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "src/store/hooks";
 import { selectTagById } from "src/store/slices/tag/tagSlice";
 import { fetchTags } from "src/store/thunks/tagThunks/fetchTags";
@@ -18,7 +18,7 @@ const breadcrumbTitles: BreadcrumbsType = {
 };
 const EditTag = function () {
   const { id } = useParams();
-  const [currentTag, setCurrentTag] = useState();
+  const navigate = useNavigate();
   const [editTagInfo, isEditingTag, editingTagError] = useThunk(editTag);
   const tag = useAppSelector((state) =>
     selectTagById(state, parseInt(id as string))
@@ -27,6 +27,7 @@ const EditTag = function () {
   const handleTagEdit = function (formData: editTagType) {
     editTagInfo({ ...formData, id });
     setOpen(true);
+    navigate("/tags", { state: { refreshTable: true } });
   };
 
   const handleClose = function () {

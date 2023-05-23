@@ -6,7 +6,9 @@ import { RootState } from "src/store";
 import { fetchUsers } from "src/store/thunks/userThunks/fetchUsers";
 import { useAppSelector } from "src/store/hooks";
 import { removeUserThunk } from "src/store/thunks/userThunks/removeUser";
-
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import useThunk from "src/hooks/useThunk";
 const breadcrumbTitles: BreadcrumbsType = {
   titles: ["داشبورد", "مدیریت کاربران"],
 };
@@ -68,7 +70,19 @@ const columns = [
 ];
 const UserManagement = function () {
   const userDataSelector = (state: RootState) => state.users;
+  const [doFetchUsers] = useThunk(fetchUsers);
   const { count, data } = useAppSelector((state) => state.users);
+  const { state } = useLocation();
+  const [refreshTable, setRefreshTable] = useState(
+    state?.refreshTable || false
+  );
+  useEffect(() => {
+    if (refreshTable) {
+      doFetchUsers({ all: false, offset: 0, limit: 5 }).then(() => {
+        setRefreshTable(false);
+      });
+    }
+  }, [refreshTable, data, doFetchUsers]);
 
   return (
     <>

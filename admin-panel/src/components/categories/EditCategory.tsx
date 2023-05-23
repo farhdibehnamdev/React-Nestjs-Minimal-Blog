@@ -1,7 +1,7 @@
 import AddEditCategory from "./AddEditCategory";
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 import { BreadcrumbsType } from "../common/BreadcrumbsProps";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useThunk from "src/hooks/useThunk";
 import { editCategory } from "src/store/thunks/categoryThunks/editCategory";
 import { useAppSelector } from "src/store/hooks";
@@ -17,6 +17,7 @@ const breadcrumbTitles: BreadcrumbsType = {
 };
 const EditCategory = function () {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [editCategoryInfo, isEditingCategory, isEditingCategoryError] =
     useThunk(editCategory);
   const category = useAppSelector((state) =>
@@ -26,6 +27,7 @@ const EditCategory = function () {
   const handleCategoryEdit = function (formData: categoriesDataType) {
     editCategoryInfo({ ...formData, id });
     setOpen(true);
+    navigate("/categories", { state: { refreshTable: true } });
   };
 
   const handleClose = function () {

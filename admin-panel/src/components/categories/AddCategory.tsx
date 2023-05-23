@@ -8,16 +8,19 @@ import { useState } from "react";
 import Snackbar from "@mui/material/Snackbar/Snackbar";
 import Alert from "@mui/material/Alert";
 import Grid from "@mui/material/Grid";
+import { useNavigate } from "react-router-dom";
 const breadcrumbTitles: BreadcrumbsType = {
   titles: ["فهرست", "افزودن فهرست"],
 };
 const AddCategory = function () {
+  const navigate = useNavigate();
   const [createCategory, isCreatingCategory, creatingCategoryError] =
     useThunk(addCategory);
   const [open, setOpen] = useState<boolean>(false);
   const handleCategoryAdd = function (formData: postCategoryType) {
     createCategory(formData);
     setOpen(true);
+    navigate("/categories", { state: { refreshTable: true } });
   };
   const handleClose = (
     event: React.SyntheticEvent | Event,

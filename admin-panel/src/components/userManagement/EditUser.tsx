@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { BreadcrumbsType } from "../common/BreadcrumbsProps";
 import useThunk from "src/hooks/useThunk";
 import { editUserThunk } from "src/store/thunks/userThunks/editUser";
@@ -17,6 +17,7 @@ const breadcrumbTitles: BreadcrumbsType = {
 };
 export const EditUser = function () {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const { showNotice, message, open, setOpen, noticeType } = useAlert();
   const [editUserInfo, isEditingUser, isEditingUserError] =
@@ -33,6 +34,8 @@ export const EditUser = function () {
     } else {
       showNotice("کاربر با موفقیت ویرایش شد", "success");
       setLoading(false);
+      console.log("user :: ", user);
+      navigate("/user-management", { state: { refreshTable: true } });
     }
   };
 

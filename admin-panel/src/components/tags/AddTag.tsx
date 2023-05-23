@@ -7,15 +7,18 @@ import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 import { BreadcrumbsType } from "../common/BreadcrumbsProps";
 import AddEditTag from "./AddEditTag";
 import Alert from "@mui/material/Alert";
+import { useNavigate } from "react-router-dom";
 const breadcrumbTitles: BreadcrumbsType = {
   titles: ["تگ", "افزودن تگ"],
 };
 const AddTag = function () {
+  const navigate = useNavigate();
   const [createTag, isCreatingTag, creatingTagError] = useThunk(addTag);
   const [open, setOpen] = useState<boolean>(false);
   const handleTagAdd = function (formData: postTagsType) {
     createTag(formData);
     setOpen(true);
+    navigate("/tags", { state: { refreshTable: true } });
   };
   const handleClose = (
     event: React.SyntheticEvent | Event,

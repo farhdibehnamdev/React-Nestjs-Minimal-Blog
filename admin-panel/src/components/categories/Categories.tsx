@@ -1,5 +1,5 @@
 import Grid from "@mui/material/Grid";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useThunk from "src/hooks/useThunk";
 import { RootState } from "src/store";
 import { useAppSelector } from "src/store/hooks";
@@ -8,6 +8,7 @@ import { removeCategory } from "src/store/thunks/categoryThunks/removeCategory";
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 import { BreadcrumbsType } from "../common/BreadcrumbsProps";
 import DataTable from "../table/DataTable";
+import { useLocation } from "react-router-dom";
 const breadcrumbTitles: BreadcrumbsType = {
   titles: ["داشبورد", "فهرست"],
 };
@@ -48,12 +49,20 @@ const columns = [
   },
 ];
 const Categories = function () {
+  const { state } = useLocation();
   const categoryDataSelector = (state: RootState) => state.category;
   const [doFetchCategories] = useThunk(fetchCategories);
   const { data, count } = useAppSelector((state) => state.category);
+  const [refreshTable, setRefreshTable] = useState(
+    state?.refreshTable || false
+  );
   useEffect(() => {
-    doFetchCategories({ all: false, offset: 0, limit: 5 });
-  }, [doFetchCategories]);
+    if (refreshTable) {
+      doFetchCategories({ all: false, offset: 0, limit: 5 }).then(() => {
+        setRefreshTable(false);
+      });
+    }
+  }, [doFetchCategories, refreshTable]);
   return (
     <>
       <Grid item mb={5.2}>

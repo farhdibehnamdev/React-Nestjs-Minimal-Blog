@@ -62,11 +62,7 @@ const FilterTable = function <T>({
   return (
     <Box sx={filterTable}>
       <Link to="add" style={{ textDecoration: "none" }}>
-        <Button
-          variant="contained"
-          size="large"
-          startIcon={<AddOutlinedIcon />}
-        >
+        <Button variant="contained" size="large" endIcon={<AddOutlinedIcon />}>
           <Typography sx={{ color: "#fff" }}>افزودن {typeOperation}</Typography>
         </Button>
       </Link>

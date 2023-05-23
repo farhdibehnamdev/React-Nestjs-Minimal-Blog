@@ -25,7 +25,7 @@ const AddUser = function () {
         setLoading(false);
         showNotice("عملیات افزودن کاربر با موفقیت انجام شد", "success");
         setTimeout(() => {
-          navigate("/user-management", { replace: true });
+          navigate("/user-management", { state: { refreshTable: true } });
         }, 3000);
       } else {
         showNotice("عملیات افزودن کاربر با خطا مواجه شد", "error");
