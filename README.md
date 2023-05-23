@@ -2,19 +2,12 @@
 
 This is a full-stack blog admin panel application that provides a user interface for managing blog posts. The front-end of the application is built with React, while the back-end is powered by NestJS.
 
+[![CodeFactor](https://www.codefactor.io/repository/github/farhdibehnamdev/react-nestjs-minimal-blog/badge/main)](https://www.codefactor.io/repository/github/farhdibehnamdev/react-nestjs-minimal-blog/overview/main)
+
 ## Screenshots
 
 ![App Screenshot](https://github.com/farhdibehnamdev/React-Nestjs-Minimal-Blog/blob/main/screenshots/Dashboard.png)
 
-![App Screenshot](https://github.com/farhdibehnamdev/React-Nestjs-Minimal-Blog/blob/main/screenshots/Add-Post.png)
-
-![App Screenshot](https://github.com/farhdibehnamdev/React-Nestjs-Minimal-Blog/blob/main/screenshots/Posts.png)
-
-![App Screenshot](https://github.com/farhdibehnamdev/React-Nestjs-Minimal-Blog/blob/main/screenshots/Send-Message.png)
-
-![App Screenshot](https://github.com/farhdibehnamdev/React-Nestjs-Minimal-Blog/blob/main/screenshots/Categories.png)
-
-![App Screenshot](https://github.com/farhdibehnamdev/React-Nestjs-Minimal-Blog/blob/main/screenshots/Add-Category.png)
 
 ## Roadmap
 
