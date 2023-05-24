@@ -51,22 +51,15 @@ const DeleteModalConfirm = function ({
     >
       <DialogTitle id="responsive-dialog-title">{"حذف اطلاعات ؟"}</DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          <Grid
-            container
-            alignItems="center"
-            justifyContent="center"
-            gap="10px"
-          >
-            <Typography>آیا از حذف</Typography>
-            <Chip
-              label={state.title || state.email}
-              color="error"
-              variant="outlined"
-            />
-            <Typography>اطمینان دارید؟</Typography>
-          </Grid>
-        </DialogContentText>
+        <Grid container alignItems="center" justifyContent="center" gap="10px">
+          <Typography component="span">آیا از حذف</Typography>
+          <Chip
+            label={state.title || state.email}
+            color="error"
+            variant="outlined"
+          />
+          <Typography>اطمینان دارید؟</Typography>
+        </Grid>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleDelete} autoFocus>
