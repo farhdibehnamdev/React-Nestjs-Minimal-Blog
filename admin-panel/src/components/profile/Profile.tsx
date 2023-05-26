@@ -1,18 +1,89 @@
-import { Button, Grid, TextField } from "@mui/material";
+import { Typography, Divider, Button, Grid, TextField } from "@mui/material";
+import KeyboardBackspaceSharpIcon from "@mui/icons-material/KeyboardBackspaceSharp";
+import AvatarUpload from "./AvatarUpload";
+import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
+import { BreadcrumbsType } from "../common/BreadcrumbsProps";
+import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import useThunk from "src/hooks/useThunk";
+import { userProfileThunk } from "src/store/thunks/userThunks/userProfileThunk";
+import { useAppSelector } from "src/store/hooks";
 
+const validationSchema = yup.object().shape({
+  firstName: yup.string(),
+  lastName: yup.string(),
+  avatar: yup.string(),
+  oldPassword: yup
+    .string()
+    .test(
+      "oldPasswordRequired",
+      "Old password is required",
+      function (value: any) {
+        const { newPassword, confirmNewPassword } = this.parent;
+        return newPassword || confirmNewPassword ? value : true;
+      }
+    ),
+  newPassword: yup
+    .string()
+    .test(
+      "newPasswordRequired",
+      "New password is required",
+      function (value: any) {
+        const { confirmNewPassword } = this.parent;
+        return confirmNewPassword ? value : true;
+      }
+    ),
+  confirmNewPassword: yup
+    .string()
+    .oneOf([yup.ref("newPassword"), "null"], "Passwords must match")
+    .test(
+      "confirmNewPasswordRequired",
+      "Confirm new password is required",
+      function (value: any) {
+        const { newPassword } = this.parent;
+        return newPassword ? value : true;
+      }
+    ),
+});
+
+const breadcrumbTitles: BreadcrumbsType = {
+  titles: ["داشبورد", "پروفایل"],
+};
+
+type FormUploadData = {
+  firstName: string;
+  lastName: string;
+  avatar: string;
+  oldPassword: string;
+  newPassword: string;
+  confirmNewPassword: string;
+};
 const Profile = function () {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormUploadData>({ resolver: yupResolver(validationSchema) });
+  const [userProfileEdit, isUserProfileEditing, userProfileCreatedError] =
+    useThunk(userProfileThunk);
+  const { userInfo } = useAppSelector((state) => state.auth);
+  const onSubmit = function (formUploadData: FormUploadData) {
+    const formData = new FormData();
+    formData.append("fristName", formUploadData.firstName);
+    formData.append("lastName", formUploadData.lastName);
+    formData.append("avatar", formUploadData.avatar);
+    formData.append("newPassword", formUploadData.newPassword);
+    userProfileEdit({ id: userInfo?.id, data: formData });
+  };
+
   return (
     <>
-      <Grid
-        container
-        mb={5}
-        sx={{
-          background: "#cf1010",
-          width: "100%",
-          height: "25vh",
-          borderRadius: "10px",
-        }}
-      ></Grid>
+      <Grid flexDirection="column" mb={5.2}>
+        <h1>پروفایل</h1>
+        <Breadcrumbs {...breadcrumbTitles} />
+      </Grid>
       <Grid
         container
         justifyContent="center"
@@ -21,58 +92,105 @@ const Profile = function () {
           borderRadius: "10px",
           width: "100%",
           padding: "40px",
+          position: "relative",
         }}
       >
-        <form style={{ width: "100%" }}>
-          <Grid
-            container
-            justifyContent="space-around"
-            spacing={2}
-            xl={12}
-            mb={3}
-          >
-            <Grid item xl={6}>
-              <TextField
-                placeholder="نام"
-                fullWidth
-                name="firstName"
-                type="text"
-              />
+        <form style={{ width: "100%" }} onSubmit={handleSubmit(onSubmit)}>
+          <Grid container justifyContent="space-around" alignItems="center">
+            <Grid
+              item
+              xl={3}
+              md={3}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <AvatarUpload register={register} />
             </Grid>
-            <Grid item xl={6}>
-              <TextField
-                placeholder="نام خانوادگی"
-                fullWidth
-                name="lastName"
-                type="text"
-              />
+            <Grid item xl={8} md={8}>
+              <Grid
+                item
+                mb={5}
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Typography>ویرایش پروفایل</Typography>
+                <Link
+                  to="/"
+                  style={{
+                    textDecoration: "none",
+                    color: "#000",
+                  }}
+                >
+                  <span
+                    style={{
+                      display: "flex",
+                      justifyContent: "end",
+                      alignItems: "center",
+                    }}
+                  >
+                    <span>بازگشت به داشبورد</span>
+                    <KeyboardBackspaceSharpIcon />
+                  </span>
+                </Link>
+              </Grid>
+              <Grid item mb={2}>
+                <TextField
+                  placeholder="نام"
+                  fullWidth
+                  type="text"
+                  sx={{ mb: "20px" }}
+                  {...register("firstName")}
+                />
+                <TextField
+                  placeholder="نام خانوادگی"
+                  fullWidth
+                  type="text"
+                  sx={{ mb: "20px" }}
+                  {...register("lastName")}
+                />
+                <TextField
+                  placeholder="رمز عبور فعلی"
+                  fullWidth
+                  type="password"
+                  sx={{ mb: "20px" }}
+                  {...register("oldPassword")}
+                />
+                <TextField
+                  placeholder="رمز عبور"
+                  fullWidth
+                  type="password"
+                  sx={{ mb: "20px" }}
+                  {...register("newPassword")}
+                />
+                <TextField
+                  fullWidth
+                  placeholder="تکرار رمز عبور"
+                  type="password"
+                  sx={{ mb: "20px" }}
+                  {...register("confirmNewPassword")}
+                />
+              </Grid>
+              <Button color="primary" variant="contained" type="submit">
+                بروز رسانی پروفایل
+              </Button>
             </Grid>
-          </Grid>
-          <Grid
-            container
-            justifyContent="space-around"
-            spacing={2}
-            xl={12}
-            mb={3}
-          >
-            <Grid item xl={6}>
-              <TextField
-                placeholder="ایمیل"
-                fullWidth
-                name="email"
-                type="email"
-              />
-            </Grid>
-            <Grid item xl={6}>
-              <TextField placeholder="نقش" name="role" type="text" />
-            </Grid>
-          </Grid>
-          <Grid item>
-            <Button color="primary" variant="contained">
-              بروز رسانی پروفایل
-            </Button>
           </Grid>
         </form>
+        <Divider
+          orientation="vertical"
+          sx={{
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            left: "30%",
+            width: "1px",
+            bgcolor: "divider",
+          }}
+        />
       </Grid>
     </>
   );

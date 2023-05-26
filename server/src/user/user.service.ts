@@ -18,6 +18,7 @@ import {
   UserManagementDto,
 } from './dto/userManagement.dto';
 import { UsersActivationException } from 'src/filters/UsersActivationException';
+import { UserProfileDto } from './dto/UserProfileDto';
 
 export type createUserStatus = {
   status: number;
@@ -132,6 +133,29 @@ export class UserService extends BaseService<User> {
     });
     if (!userFound) throw new NotFoundException('User Not Found!!!');
     Object.assign(userFound, putUserManagementDto);
+    return this.userRepository.save(userFound);
+  }
+
+  async profile(id: string, userProfileDto: UserProfileDto, file: any) {
+    const userFound = await this.userRepository.findOne({ where: { id } });
+    if (!userFound) throw new NotFoundException('User Not Found!!!');
+    const validatePassword = await compare(
+      userProfileDto.password,
+      userFound.password,
+    );
+    if (!validatePassword) throw new HttpException('Invalid credentials', 404);
+    const protectedPassword = await this.hashPassword(
+      userProfileDto.newPasswrod,
+    );
+    userFound.password = protectedPassword;
+
+    const filename = file.image.filename;
+    const manipulateFile = { ...file, image: file.image, filename };
+
+    if (file) {
+      userFound.avatar = manipulateFile;
+    }
+    Object.assign(userFound, userProfileDto);
     return this.userRepository.save(userFound);
   }
 

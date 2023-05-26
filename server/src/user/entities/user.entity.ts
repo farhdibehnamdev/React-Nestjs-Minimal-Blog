@@ -40,6 +40,9 @@ export default class User {
   @Column({ nullable: true })
   verificationEmailToken: string;
 
+  @Column({ nullable: true })
+  avatar: string;
+
   @Column({ type: 'varchar', default: UserRole.USER, name: 'userRole' })
   userRole: UserRole;
 
