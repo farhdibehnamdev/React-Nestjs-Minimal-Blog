@@ -11,6 +11,8 @@ import {
   Put,
   Param,
   Delete,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { SigninUserDto } from './dto/login.dto';
 import { SignUpUserDto } from './dto/signup-user.dto';
@@ -28,6 +30,9 @@ import {
   UserManagementDto,
 } from './dto/userManagement.dto';
 import { ROLE_KEY } from './decorators/role';
+import { UserProfileDto } from './dto/UserProfileDto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { createThumbnail } from 'src/utils/thumbnailGenerator';
 
 type paginationTitle = {
   pagination: PaginationQueryDto;
@@ -148,5 +153,36 @@ export class UserController {
   @Delete('user/remove/:id')
   async removeUser(@Param('id') id: string) {
     return await this.userService.remove(id);
+  }
+
+  @Role(UserRole.USER, UserRole.ADMIN)
+  @Version('1')
+  @Patch('user/profile/:id')
+  @UseInterceptors(FileInterceptor('avatar'))
+  @HttpCode(200)
+  async profile(
+    @UploadedFile() avatar,
+    @Param('id') id: string,
+    @Body() userProfileDto: UserProfileDto,
+  ) {
+    let imageObj;
+    if (avatar) {
+      const fullImagePath = `./uploads/profile/${avatar.filename}`;
+      const thumbnailImagePath = `./uploads/profileAvatar/${avatar.filename}`;
+      await createThumbnail(fullImagePath, thumbnailImagePath);
+      imageObj = {
+        image: {
+          fieldname: avatar.fieldname,
+          originalname: avatar.originalname,
+          encoding: avatar.encoding,
+          mimetype: avatar.mimetype,
+          destination: avatar.destination,
+          filename: avatar.filename,
+          path: fullImagePath,
+          size: avatar.size,
+        },
+      };
+    }
+    return this.userService.profile(id, userProfileDto, imageObj);
   }
 }
