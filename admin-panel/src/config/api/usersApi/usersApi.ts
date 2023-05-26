@@ -8,6 +8,7 @@ import {
   userTitleAndPagination,
 } from "src/types/userTypes";
 import { UserFormData } from "src/components/userManagement/UserManagement.type";
+import { UserProfileBodyData } from "src/store/thunks/userThunks/userProfileThunk";
 
 export enum UserRole {
   USER = "user",
@@ -34,6 +35,17 @@ export const editPatchUserApi = async function (
 };
 export const editPutUserApi = async function (body: usersDataType) {
   return await api.put<usersDataType>(URLS.editUserUrl, body);
+};
+
+export const userProfileApi = async function (
+  id: string,
+  body: UserProfileBodyData
+) {
+  return await api.patch<usersDataType>(`${URLS.userProfileUrl}${id}`, body, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };
 
 export const signupUserApi = async function (signUpUserDto: signupUserTypeDto) {
