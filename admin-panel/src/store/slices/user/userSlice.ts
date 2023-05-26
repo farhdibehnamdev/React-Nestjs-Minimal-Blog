@@ -3,6 +3,7 @@ import { usersDataType } from "src/types/userTypes";
 import { fetchUsers } from "src/store/thunks/userThunks/fetchUsers";
 import { editUserThunk } from "src/store/thunks/userThunks/editUser";
 import { removeUserThunk } from "src/store/thunks/userThunks/removeUser";
+import { userProfileThunk } from "src/store/thunks/userThunks/userProfileThunk";
 
 type userState = {
   isLoading: boolean;
@@ -59,6 +60,18 @@ const userSlice = createSlice({
     });
 
     builder.addCase(removeUserThunk.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message as string;
+    });
+    //================= Profile User ==============
+    builder.addCase(userProfileThunk.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(userProfileThunk.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.data = state.data.filter((user) => user.id === action.payload.id);
+    });
+    builder.addCase(userProfileThunk.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.error.message as string;
     });
