@@ -10,6 +10,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import useThunk from "src/hooks/useThunk";
 import { userProfileThunk } from "src/store/thunks/userThunks/userProfileThunk";
 import { useAppSelector } from "src/store/hooks";
+import { selectUserById } from "src/store/slices/user/userSlice";
 
 const validationSchema = yup.object().shape({
   firstName: yup.string(),
@@ -61,17 +62,29 @@ type FormUploadData = {
   confirmNewPassword: string;
 };
 const Profile = function () {
+  const { userInfo } = useAppSelector((state) => state.auth);
+  const currentUser = useAppSelector((state) =>
+    selectUserById(state, userInfo?.id as string)
+  );
+  const userImage = JSON.parse(currentUser.avatar);
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormUploadData>({ resolver: yupResolver(validationSchema) });
+  } = useForm<FormUploadData>({
+    resolver: yupResolver(validationSchema),
+    defaultValues: {
+      firstName: currentUser.firstName,
+      lastName: currentUser.lastName,
+      avatar: currentUser.avatar.path,
+    },
+  });
   const [userProfileEdit, isUserProfileEditing, userProfileCreatedError] =
     useThunk(userProfileThunk);
-  const { userInfo } = useAppSelector((state) => state.auth);
+
   const onSubmit = function (formUploadData: FormUploadData) {
     const formData = new FormData();
-    formData.append("fristName", formUploadData.firstName);
+    formData.append("firstName", formUploadData.firstName);
     formData.append("lastName", formUploadData.lastName);
     formData.append("avatar", formUploadData.avatar);
     formData.append("newPassword", formUploadData.newPassword);
@@ -107,7 +120,7 @@ const Profile = function () {
                 alignItems: "center",
               }}
             >
-              <AvatarUpload register={register} />
+              <AvatarUpload userImage={userImage} />
             </Grid>
             <Grid item xl={8} md={8}>
               <Grid
