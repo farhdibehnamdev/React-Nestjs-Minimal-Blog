@@ -139,18 +139,25 @@ export class UserService extends BaseService<User> {
   async profile(id: string, userProfileDto: UserProfileDto, file: any) {
     const userFound = await this.userRepository.findOne({ where: { id } });
     if (!userFound) throw new NotFoundException('User Not Found!!!');
-    const validatePassword = await compare(
-      userProfileDto.password,
-      userFound.password,
-    );
-    if (!validatePassword) throw new HttpException('Invalid credentials', 404);
-    const protectedPassword = await this.hashPassword(
-      userProfileDto.newPasswrod,
-    );
-    userFound.password = protectedPassword;
+    if (
+      userProfileDto.newPassword !== null &&
+      userProfileDto.newPassword !== '' &&
+      userProfileDto.newPassword !== undefined
+    ) {
+      const validatePassword = await compare(
+        userProfileDto.newPassword,
+        userFound.password,
+      );
+      if (!validatePassword)
+        throw new HttpException('Invalid credentials', 404);
+      const protectedPassword = await this.hashPassword(
+        userProfileDto.newPassword,
+      );
+      userFound.password = protectedPassword;
+    }
 
-    const filename = file.image.filename;
-    const manipulateFile = { ...file, image: file.image, filename };
+    const filename = file.avatar.filename;
+    const manipulateFile = { ...file, image: file.avatar, filename };
 
     if (file) {
       userFound.avatar = manipulateFile;

@@ -13,6 +13,7 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
+  UseFilters,
 } from '@nestjs/common';
 import { SigninUserDto } from './dto/login.dto';
 import { SignUpUserDto } from './dto/signup-user.dto';
@@ -33,6 +34,7 @@ import { ROLE_KEY } from './decorators/role';
 import { UserProfileDto } from './dto/UserProfileDto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { createThumbnail } from 'src/utils/thumbnailGenerator';
+import { CustomExceptionFilter } from 'src/filters/CustomExceptionFilter';
 
 type paginationTitle = {
   pagination: PaginationQueryDto;
@@ -155,6 +157,7 @@ export class UserController {
     return await this.userService.remove(id);
   }
 
+  @UseFilters(CustomExceptionFilter)
   @Role(UserRole.USER, UserRole.ADMIN)
   @Version('1')
   @Patch('user/profile/:id')
@@ -167,8 +170,8 @@ export class UserController {
   ) {
     let imageObj;
     if (avatar) {
-      const fullImagePath = `./uploads/profile/${avatar.filename}`;
-      const thumbnailImagePath = `./uploads/profileAvatar/${avatar.filename}`;
+      const fullImagePath = `./uploads/${avatar.filename}`;
+      const thumbnailImagePath = `./uploads/thumbnails/${avatar.filename}`;
       await createThumbnail(fullImagePath, thumbnailImagePath);
       imageObj = {
         image: {
