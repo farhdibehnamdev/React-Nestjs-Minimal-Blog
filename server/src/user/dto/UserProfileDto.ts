@@ -6,5 +6,5 @@ export class UserProfileDto {
   @IsString()
   lastName: string;
   @IsString()
-  newPasswrod: string;
+  newPassword: string;
 }
