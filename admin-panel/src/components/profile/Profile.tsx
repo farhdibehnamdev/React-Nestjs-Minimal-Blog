@@ -11,11 +11,13 @@ import useThunk from "src/hooks/useThunk";
 import { userProfileThunk } from "src/store/thunks/userThunks/userProfileThunk";
 import { useAppSelector } from "src/store/hooks";
 import { selectUserById } from "src/store/slices/user/userSlice";
-
+const breadcrumbTitles: BreadcrumbsType = {
+  titles: ["داشبورد", "پروفایل"],
+};
 const validationSchema = yup.object().shape({
   firstName: yup.string(),
   lastName: yup.string(),
-  avatar: yup.string(),
+  avatar: yup.mixed(),
   oldPassword: yup
     .string()
     .test(
@@ -49,15 +51,11 @@ const validationSchema = yup.object().shape({
     ),
 });
 
-const breadcrumbTitles: BreadcrumbsType = {
-  titles: ["داشبورد", "پروفایل"],
-};
-
 type FormUploadData = {
   firstName: string;
   lastName: string;
-  avatar: string;
   oldPassword: string;
+  avatar: FileList | null;
   newPassword: string;
   confirmNewPassword: string;
 };
@@ -66,7 +64,7 @@ const Profile = function () {
   const currentUser = useAppSelector((state) =>
     selectUserById(state, userInfo?.id as string)
   );
-  const userImage = JSON.parse(currentUser.avatar);
+
   const {
     register,
     handleSubmit,
@@ -76,7 +74,7 @@ const Profile = function () {
     defaultValues: {
       firstName: currentUser.firstName,
       lastName: currentUser.lastName,
-      avatar: currentUser.avatar.path,
+      avatar: null,
     },
   });
   const [userProfileEdit, isUserProfileEditing, userProfileCreatedError] =
@@ -86,7 +84,11 @@ const Profile = function () {
     const formData = new FormData();
     formData.append("firstName", formUploadData.firstName);
     formData.append("lastName", formUploadData.lastName);
-    formData.append("avatar", formUploadData.avatar);
+    if (formUploadData.avatar !== undefined) {
+      const file = formUploadData?.avatar?.[0] as File;
+      console.log("🚀 ~ file: Profile.tsx:93 ~ onSubmit ~ file:", file);
+      formData.append("avatar", file);
+    }
     formData.append("newPassword", formUploadData.newPassword);
     userProfileEdit({ id: userInfo?.id, data: formData });
   };
@@ -108,7 +110,10 @@ const Profile = function () {
           position: "relative",
         }}
       >
-        <form style={{ width: "100%" }} onSubmit={handleSubmit(onSubmit)}>
+        <form
+          style={{ width: "100%" }}
+          onSubmit={handleSubmit((data: FormUploadData) => onSubmit(data))}
+        >
           <Grid container justifyContent="space-around" alignItems="center">
             <Grid
               item
@@ -120,7 +125,7 @@ const Profile = function () {
                 alignItems: "center",
               }}
             >
-              <AvatarUpload userImage={userImage} />
+              <AvatarUpload currentUser={currentUser} register={register} />
             </Grid>
             <Grid item xl={8} md={8}>
               <Grid
