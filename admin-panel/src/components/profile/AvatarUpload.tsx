@@ -1,42 +1,34 @@
 import { Box, Avatar, Typography, Chip, Grid } from "@mui/material";
 import { avatarWrapper } from "./AvatarUpload.style";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import CameraAltOutlinedIcon from "@mui/icons-material/CameraAltOutlined";
-const AvatarUpload = function ({ register }: any) {
-  const inputFileRef = useRef<HTMLInputElement>(null);
-  const [image, setImage] = useState<string | null>(null);
-  const handleClick = function () {
-    if (inputFileRef?.current) {
-      (inputFileRef?.current as HTMLInputElement).click();
+import { generateThumbnail } from "src/utils/generateThumbnail";
+const AvatarUpload = function ({ currentUser, register }: any) {
+  const userAvatarImage = JSON.parse(currentUser.avatar);
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    generateThumbnail(userAvatarImage)
+  );
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setImagePreview(URL.createObjectURL(e.target?.files[0]));
     }
   };
 
-  const handleOnChange = function (event: React.ChangeEvent<HTMLInputElement>) {
-    console.log("salam");
-
-    if (event.target.files) {
-      setImage(URL.createObjectURL(event.target.files[0]));
-      console.log("set value ::", event.target.files);
-      // setValue(event.target.files[0]);
-    }
-  };
   return (
     <Grid item sx={{ marginRight: "10px" }}>
       <Grid item>
         <Box sx={avatarWrapper}>
-          <Avatar
-            className="profile-pic"
-            src={image || "assets/images/avatar.jpg"}
-          />
+          <Avatar className="profile-pic" src={imagePreview || ""} />
           <Box>
             <input
               id="avatar-image"
-              type="file"
-              ref={inputFileRef}
-              accept="image/*"
               className="file-upload"
+              type="file"
+              accept="image/*"
               {...register("avatar", {
-                onChange: (e: any) => handleOnChange(e),
+                valueAsFile: true,
+                onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+                  handleImageChange(e),
               })}
             />
             <label htmlFor="avatar-image" className="uploadButton">
