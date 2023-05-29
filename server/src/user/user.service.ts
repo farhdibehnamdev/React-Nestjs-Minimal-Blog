@@ -156,14 +156,16 @@ export class UserService extends BaseService<User> {
       userFound.password = protectedPassword;
     }
 
-    const filename = file.avatar.filename;
-    const manipulateFile = { ...file, image: file.avatar, filename };
+    const filename = file.filename;
+    const manipulateFile = { ...file, filename };
 
     if (file) {
       userFound.avatar = manipulateFile;
     }
     Object.assign(userFound, userProfileDto);
-    return this.userRepository.save(userFound);
+    const data = await this.userRepository.save(userFound);
+    const { firstName, lastName, avatar } = data as User;
+    return { firstName, lastName, avatar };
   }
 
   async addUser(addUserDto: UserManagementDto) {
