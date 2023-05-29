@@ -12,6 +12,7 @@ export const URLS = {
   editUserUrl: "auth/user/update/",
   addUserUrl: "auth/user/add",
   deleteUserUrl: "auth/user/remove/",
+  userProfileUrl: "auth/user/profile/",
 };
 
 export type paginationOptionType = {

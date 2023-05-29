@@ -17,6 +17,7 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
+import { profileReducer } from "./slices/profile/profileSlice";
 const persistConfig = {
   key: "root",
   version: 1,
@@ -32,6 +33,7 @@ const reducer = combineReducers({
   modal: modalReducer,
   users: userReducer,
   auth: authReducer,
+  profile: profileReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);
