@@ -11,7 +11,7 @@ export const generateThumbnail = function (file: any) {
   return imageUrl;
 };
 
-const isJSON = function (file: any) {
+export const isJSON = function (file: any) {
   try {
     JSON.parse(file);
     return true;
