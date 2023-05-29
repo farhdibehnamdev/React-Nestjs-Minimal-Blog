@@ -9,6 +9,7 @@ import { removeUserThunk } from "src/store/thunks/userThunks/removeUser";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import useThunk from "src/hooks/useThunk";
+import { useUserUpdated } from "src/hooks/useUserUpdated";
 const breadcrumbTitles: BreadcrumbsType = {
   titles: ["داشبورد", "مدیریت کاربران"],
 };
@@ -69,20 +70,28 @@ const columns = [
   },
 ];
 const UserManagement = function () {
+  const { userUpdated, setUserUpdated } = useUserUpdated();
   const userDataSelector = (state: RootState) => state.users;
   const [doFetchUsers] = useThunk(fetchUsers);
   const { count, data } = useAppSelector((state) => state.users);
+
   const { state } = useLocation();
   const [refreshTable, setRefreshTable] = useState(
     state?.refreshTable || false
   );
+
   useEffect(() => {
-    if (refreshTable) {
+    doFetchUsers({ all: false, offset: 0, limit: 5 });
+  }, []);
+
+  useEffect(() => {
+    if (refreshTable || userUpdated) {
       doFetchUsers({ all: false, offset: 0, limit: 5 }).then(() => {
         setRefreshTable(false);
+        setUserUpdated(false);
       });
     }
-  }, [refreshTable, data, doFetchUsers]);
+  }, [refreshTable, data, doFetchUsers, userUpdated, setUserUpdated]);
 
   return (
     <>
