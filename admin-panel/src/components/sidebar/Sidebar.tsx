@@ -18,10 +18,41 @@ import { BoxRootSidebarStyled } from "./Sidebar.style";
 import { MenuList } from "./SidebarMenu";
 import { Link } from "react-router-dom";
 import { signOut } from "src/store/slices/auth/authSlice";
+import { useAppSelector } from "src/store/hooks";
+import { generateThumbnail } from "src/utils/generateThumbnail";
+import { selectUserById } from "src/store/slices/user/userSlice";
+
+type imageData = {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  destination: string;
+  filename: string;
+  path: string;
+  size: number;
+};
+
+const isJSON = function (file: any) {
+  try {
+    JSON.parse(file);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
 
 export default function Sidebar() {
+  const { userInfo } = useAppSelector((state) => state.auth);
+  const currentUser = useAppSelector((state) =>
+    selectUserById(state, userInfo?.id as string)
+  );
+
   const { toggle } = useSelector((state: any) => state.toggle);
   const dispatch = useDispatch();
+  const { image } = !isJSON(currentUser?.avatar!)
+    ? (currentUser?.avatar! as any)
+    : (JSON.parse(currentUser?.avatar!) as any);
 
   const handleSignOut = function () {
     dispatch(signOut());
@@ -47,15 +78,15 @@ export default function Sidebar() {
             <Avatar
               className="avatar"
               alt="Remy Sharp"
-              src="/assets/images/avatar.jpg"
+              src={image ? generateThumbnail(image) : ""}
             />
           </StyledBadge>
           <Box className="boxUserInfoStyle">
             <Typography className="typographyName" component="h5">
-              بهنام فرهادی
+              {currentUser?.firstName} {currentUser?.lastName}
             </Typography>
             <Typography component="span" className="typographyUserRoleSpan">
-              مدیر
+              {userInfo?.role === "admin" ? "مدیر" : "نویسنده"}
             </Typography>
             <Stack direction="row" spacing={2}>
               <Tooltip

@@ -5,51 +5,17 @@ import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 import { BreadcrumbsType } from "../common/BreadcrumbsProps";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useThunk from "src/hooks/useThunk";
 import { userProfileThunk } from "src/store/thunks/userThunks/userProfileThunk";
 import { useAppSelector } from "src/store/hooks";
+import { useUserUpdated } from "src/hooks/useUserUpdated";
 import { selectUserById } from "src/store/slices/user/userSlice";
+import { isJSON } from "src/utils/generateThumbnail";
+import { validationSchema } from "./ValidationSchema";
 const breadcrumbTitles: BreadcrumbsType = {
   titles: ["داشبورد", "پروفایل"],
 };
-const validationSchema = yup.object().shape({
-  firstName: yup.string(),
-  lastName: yup.string(),
-  avatar: yup.mixed(),
-  oldPassword: yup
-    .string()
-    .test(
-      "oldPasswordRequired",
-      "Old password is required",
-      function (value: any) {
-        const { newPassword, confirmNewPassword } = this.parent;
-        return newPassword || confirmNewPassword ? value : true;
-      }
-    ),
-  newPassword: yup
-    .string()
-    .test(
-      "newPasswordRequired",
-      "New password is required",
-      function (value: any) {
-        const { confirmNewPassword } = this.parent;
-        return confirmNewPassword ? value : true;
-      }
-    ),
-  confirmNewPassword: yup
-    .string()
-    .oneOf([yup.ref("newPassword"), "null"], "Passwords must match")
-    .test(
-      "confirmNewPasswordRequired",
-      "Confirm new password is required",
-      function (value: any) {
-        const { newPassword } = this.parent;
-        return newPassword ? value : true;
-      }
-    ),
-});
 
 type FormUploadData = {
   firstName: string;
@@ -59,11 +25,18 @@ type FormUploadData = {
   newPassword: string;
   confirmNewPassword: string;
 };
+
 const Profile = function () {
+  const { setUserUpdated } = useUserUpdated();
+  const { profileData } = useAppSelector((state) => state.profile);
   const { userInfo } = useAppSelector((state) => state.auth);
   const currentUser = useAppSelector((state) =>
     selectUserById(state, userInfo?.id as string)
   );
+
+  const { image } = !isJSON(profileData?.avatar!)
+    ? (profileData?.avatar! as any)
+    : (JSON.parse(profileData?.avatar!) as any);
 
   const {
     register,
@@ -72,13 +45,12 @@ const Profile = function () {
   } = useForm<FormUploadData>({
     resolver: yupResolver(validationSchema),
     defaultValues: {
-      firstName: currentUser.firstName,
-      lastName: currentUser.lastName,
-      avatar: null,
+      firstName: currentUser?.firstName!,
+      lastName: currentUser?.lastName!,
+      avatar: image,
     },
   });
-  const [userProfileEdit, isUserProfileEditing, userProfileCreatedError] =
-    useThunk(userProfileThunk);
+  const [userProfileEdit] = useThunk(userProfileThunk);
 
   const onSubmit = function (formUploadData: FormUploadData) {
     const formData = new FormData();
@@ -86,11 +58,11 @@ const Profile = function () {
     formData.append("lastName", formUploadData.lastName);
     if (formUploadData.avatar !== undefined) {
       const file = formUploadData?.avatar?.[0] as File;
-      console.log("🚀 ~ file: Profile.tsx:93 ~ onSubmit ~ file:", file);
       formData.append("avatar", file);
     }
     formData.append("newPassword", formUploadData.newPassword);
     userProfileEdit({ id: userInfo?.id, data: formData });
+    setUserUpdated(true);
   };
 
   return (

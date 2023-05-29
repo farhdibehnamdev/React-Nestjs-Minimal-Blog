@@ -2,11 +2,17 @@ import { Box, Avatar, Typography, Chip, Grid } from "@mui/material";
 import { avatarWrapper } from "./AvatarUpload.style";
 import { useState } from "react";
 import CameraAltOutlinedIcon from "@mui/icons-material/CameraAltOutlined";
-import { generateThumbnail } from "src/utils/generateThumbnail";
+import { generateThumbnail, isJSON } from "src/utils/generateThumbnail";
+import { useAppSelector } from "src/store/hooks";
+
 const AvatarUpload = function ({ currentUser, register }: any) {
-  const userAvatarImage = JSON.parse(currentUser.avatar);
+  const { userInfo } = useAppSelector((state) => state.auth);
+  const { image } = !isJSON(currentUser?.avatar!)
+    ? (currentUser?.avatar! as any)
+    : (JSON.parse(currentUser?.avatar!) as any);
+
   const [imagePreview, setImagePreview] = useState<string | null>(
-    generateThumbnail(userAvatarImage)
+    image ? generateThumbnail(image) : ""
   );
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -46,7 +52,9 @@ const AvatarUpload = function ({ currentUser, register }: any) {
           gap: "15px",
         }}
       >
-        <Typography component="span">بهنام فرهادی</Typography>
+        <Typography component="span">
+          {currentUser.firstName} {currentUser.lastName}
+        </Typography>
         <Chip
           sx={{
             backgroundColor: "#d36008",
@@ -59,7 +67,7 @@ const AvatarUpload = function ({ currentUser, register }: any) {
                 color: "#fff",
               }}
             >
-              مدیر
+              {userInfo?.role === "admin" ? "مدیر" : "نویسنده"}
             </Typography>
           }
         />
