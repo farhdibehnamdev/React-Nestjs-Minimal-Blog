@@ -9,6 +9,7 @@ export type usersDataType = {
   isActive: boolean;
   isVerified: boolean;
   userRole: string;
+  avatar: string;
 };
 
 export type signupUserTypeDto = {

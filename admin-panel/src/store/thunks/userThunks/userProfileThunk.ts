@@ -6,7 +6,7 @@ export type UserProfileBodyData = {
   firstName: string;
   lastName: string;
   newPassword: string;
-  avatar: FileList;
+  avatar: File;
 };
 
 type UserProfileType = {
