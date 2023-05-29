@@ -12,6 +12,8 @@ import { MessageModule } from './message/message.module';
 import * as dotenv from 'dotenv';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 dotenv.config({ path: '.env' });
 @Module({
   imports: [
@@ -19,6 +21,27 @@ dotenv.config({ path: '.env' });
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads', 'thumbnails'),
       serveRoot: '/uploads/thumbnails',
+    }),
+    MailerModule.forRoot({
+      transport: {
+        host: process.env.SMTP_HOST,
+        port: parseInt(process.env.SMTP_PORT, 10),
+        secure: process.env.SMTP_SECURE === 'true',
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
+        },
+      },
+      defaults: {
+        from: process.env.MAILER_FROM,
+      },
+      template: {
+        dir: join(__dirname, '..', 'templates'),
+        adapter: new HandlebarsAdapter(),
+        options: {
+          strict: true,
+        },
+      },
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
