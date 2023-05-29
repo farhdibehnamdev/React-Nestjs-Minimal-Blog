@@ -34,7 +34,7 @@ import { ROLE_KEY } from './decorators/role';
 import { UserProfileDto } from './dto/UserProfileDto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { createThumbnail } from 'src/utils/thumbnailGenerator';
-import { CustomExceptionFilter } from 'src/filters/CustomExceptionFilter';
+import { UnhandledExceptionFilter } from 'src/filters/UnhandledExceptionFilterExceptionFilter';
 
 type paginationTitle = {
   pagination: PaginationQueryDto;
@@ -157,7 +157,7 @@ export class UserController {
     return await this.userService.remove(id);
   }
 
-  @UseFilters(CustomExceptionFilter)
+  @UseFilters(UnhandledExceptionFilter)
   @Role(UserRole.USER, UserRole.ADMIN)
   @Version('1')
   @Patch('user/profile/:id')
