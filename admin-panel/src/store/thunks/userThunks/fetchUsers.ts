@@ -1,28 +1,33 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchUsersData } from "src/config/api/usersApi/usersApi";
-import { paginationOptionType } from "src/config/constants";
+interface FetchUsersArguments {
+  arg: {
+    all: boolean;
+    offset: number;
+    limit: number;
+    title: string;
+  };
+}
 
-type userTitleAndPagination = {
-  pagination: paginationOptionType;
-  title: string;
-};
-const usersType: userTitleAndPagination = {
-  title: "",
-  pagination: { limit: 5, offset: 0 },
-};
-
-const fetchUsers = createAsyncThunk("users/fetch", async (arg: any) => {
-  let response: undefined | any[any];
-  const { all, offset, limit, title } = arg;
-  if (arg) {
-    response = await fetchUsersData(all, {
-      title,
-      pagination: { offset, limit },
-    });
-  } else {
-    response = await fetchUsersData(all);
+const fetchUsers = createAsyncThunk(
+  "users/fetch",
+  async (arg: any, { rejectWithValue }) => {
+    try {
+      let response: undefined | any[any];
+      const { all, offset, limit, title } = arg;
+      if (!all) {
+        response = await fetchUsersData(all, {
+          title,
+          pagination: { offset, limit },
+        });
+      } else {
+        response = await fetchUsersData(all);
+      }
+      return response.data;
+    } catch (err: any) {
+      return rejectWithValue(err);
+    }
   }
-  return response.data;
-});
+);
 
 export { fetchUsers };
