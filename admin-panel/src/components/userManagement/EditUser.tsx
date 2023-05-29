@@ -11,12 +11,14 @@ import { Grid } from "@mui/material";
 import { AddEditUser } from "./AddEditUser";
 import { UserFormData } from "./UserManagement.type";
 import { useState } from "react";
+import { useUserUpdated } from "src/hooks/useUserUpdated";
 
 const breadcrumbTitles: BreadcrumbsType = {
   titles: ["مدیریت کاربران", "ویرایش کاربر"],
 };
 export const EditUser = function () {
   const { id } = useParams();
+  const { setUserUpdated } = useUserUpdated();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const { showNotice, message, open, setOpen, noticeType } = useAlert();
@@ -36,6 +38,7 @@ export const EditUser = function () {
       setLoading(false);
       console.log("user :: ", user);
       navigate("/user-management", { state: { refreshTable: true } });
+      setUserUpdated(true);
     }
   };
 
