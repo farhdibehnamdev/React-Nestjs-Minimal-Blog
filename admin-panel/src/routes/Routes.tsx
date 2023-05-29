@@ -16,7 +16,6 @@ import ProtectedRoute, {
 } from "src/components/protectedRoute/ProtectedRoute";
 import ResetPassword from "src/components/resetPassword/ResetPassword";
 import SendMessage from "src/components/sendMessage/SendMessage";
-import Settings from "src/components/settings/Settings";
 import SignIn from "src/components/signin/SignIn";
 import SignUp from "src/components/signup/SignUp";
 import AddTag from "src/components/tags/AddTag";
@@ -58,7 +57,6 @@ export const RouteApp = function () {
       <Route path="/" element={<ProtectedRoute roles={["admin", "user"]} />}>
         <Route element={<DashboardLayout />}>
           <Route index element={<Home />} />
-          <Route path="settings" element={<Settings />} />
           <Route path="profile" element={<Profile />} />
           <Route path="posts" element={<PostsLayout />}>
             <Route index element={<Posts />} />
