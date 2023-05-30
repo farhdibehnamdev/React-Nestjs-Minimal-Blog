@@ -20,18 +20,6 @@ import { Link } from "react-router-dom";
 import { signOut } from "src/store/slices/auth/authSlice";
 import { useAppSelector } from "src/store/hooks";
 import { generateThumbnail } from "src/utils/generateThumbnail";
-import { selectUserById } from "src/store/slices/user/userSlice";
-
-type imageData = {
-  fieldname: string;
-  originalname: string;
-  encoding: string;
-  mimetype: string;
-  destination: string;
-  filename: string;
-  path: string;
-  size: number;
-};
 
 const isJSON = function (file: any) {
   try {
@@ -43,16 +31,14 @@ const isJSON = function (file: any) {
 };
 
 export default function Sidebar() {
+  const { profileData } = useAppSelector((state) => state.profile);
   const { userInfo } = useAppSelector((state) => state.auth);
-  const currentUser = useAppSelector((state) =>
-    selectUserById(state, userInfo?.id as string)
-  );
 
   const { toggle } = useSelector((state: any) => state.toggle);
   const dispatch = useDispatch();
-  const { image } = !isJSON(currentUser?.avatar!)
-    ? (currentUser?.avatar! as any)
-    : (JSON.parse(currentUser?.avatar!) as any);
+  const { image } = !isJSON(profileData?.avatar)
+    ? (profileData?.avatar as any)
+    : JSON.parse(profileData?.avatar as any);
 
   const handleSignOut = function () {
     dispatch(signOut());
@@ -83,7 +69,7 @@ export default function Sidebar() {
           </StyledBadge>
           <Box className="boxUserInfoStyle">
             <Typography className="typographyName" component="h5">
-              {currentUser?.firstName} {currentUser?.lastName}
+              {profileData?.firstName} {profileData?.lastName}
             </Typography>
             <Typography component="span" className="typographyUserRoleSpan">
               {userInfo?.role === "admin" ? "مدیر" : "نویسنده"}

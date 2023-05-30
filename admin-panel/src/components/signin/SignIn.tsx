@@ -10,6 +10,7 @@ import { FormData, apiResponse } from "./signin.types";
 import { FormHeader } from "./FormHeader";
 import { Notice } from "../notice/Notice";
 import { SigninGridStyle } from "./SignInGridStyled.style";
+import { setProfile } from "src/store/slices/profile/profileSlice";
 
 const isApiResponse = function (data: any): data is apiResponse {
   return "accessToken" in data && "refreshToken" in data;
@@ -40,6 +41,13 @@ const SignIn = function () {
           localStorage.setItem("refToken", refreshToken);
           setIsLoading(true);
           showNotice("با موفقیت وارد شدید", "success");
+          dispatch(
+            setProfile({
+              firstName: userInfo.firstName,
+              lastName: userInfo.lastName,
+              avatar: userInfo.avatar,
+            })
+          );
           setTimeout(() => {
             dispatch(signIn(userInfo));
           }, 3000);

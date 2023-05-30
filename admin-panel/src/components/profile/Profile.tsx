@@ -8,11 +8,12 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useThunk from "src/hooks/useThunk";
 import { userProfileThunk } from "src/store/thunks/userThunks/userProfileThunk";
-import { useAppSelector } from "src/store/hooks";
+import { useAppDispatch, useAppSelector } from "src/store/hooks";
 import { useUserUpdated } from "src/hooks/useUserUpdated";
 import { selectUserById } from "src/store/slices/user/userSlice";
 import { isJSON } from "src/utils/generateThumbnail";
 import { validationSchema } from "./ValidationSchema";
+import { setProfile } from "src/store/slices/profile/profileSlice";
 const breadcrumbTitles: BreadcrumbsType = {
   titles: ["داشبورد", "پروفایل"],
 };
@@ -29,14 +30,15 @@ type FormUploadData = {
 const Profile = function () {
   const { setUserUpdated } = useUserUpdated();
   const { profileData } = useAppSelector((state) => state.profile);
+  const dispatch = useAppDispatch();
   const { userInfo } = useAppSelector((state) => state.auth);
   const currentUser = useAppSelector((state) =>
     selectUserById(state, userInfo?.id as string)
   );
 
-  const { image } = !isJSON(profileData?.avatar!)
-    ? (profileData?.avatar! as any)
-    : (JSON.parse(profileData?.avatar!) as any);
+  const { image } = !isJSON(currentUser?.avatar!)
+    ? (currentUser?.avatar! as any)
+    : (JSON.parse(currentUser?.avatar!) as any);
 
   const {
     register,
@@ -50,19 +52,28 @@ const Profile = function () {
       avatar: image,
     },
   });
-  const [userProfileEdit] = useThunk(userProfileThunk);
+  const [userProfileEdit, isEdittingProfile, isProfileCreatedError] =
+    useThunk(userProfileThunk);
 
   const onSubmit = function (formUploadData: FormUploadData) {
+    let file: File;
     const formData = new FormData();
     formData.append("firstName", formUploadData.firstName);
     formData.append("lastName", formUploadData.lastName);
-    if (formUploadData.avatar !== undefined) {
-      const file = formUploadData?.avatar?.[0] as File;
-      formData.append("avatar", file);
-    }
+    file = formUploadData?.avatar?.[0] as File;
+    formData.append("avatar", file);
     formData.append("newPassword", formUploadData.newPassword);
     userProfileEdit({ id: userInfo?.id, data: formData });
-    setUserUpdated(true);
+    if (isProfileCreatedError) {
+      setUserUpdated(true);
+      dispatch(
+        setProfile({
+          firstName: formUploadData.firstName,
+          lastName: formUploadData.lastName,
+          avatar: URL.createObjectURL(file) || "",
+        })
+      );
+    }
   };
 
   return (
@@ -97,7 +108,7 @@ const Profile = function () {
                 alignItems: "center",
               }}
             >
-              <AvatarUpload currentUser={currentUser} register={register} />
+              <AvatarUpload currentUser={profileData} register={register} />
             </Grid>
             <Grid item xl={8} md={8}>
               <Grid
