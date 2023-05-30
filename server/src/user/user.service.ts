@@ -31,6 +31,9 @@ export interface JWTTokens {
 
 class UserResponse {
   id: string;
+  firstName: string;
+  lastName: string;
+  avatar: string;
   email: string;
   role: string;
 }
@@ -95,6 +98,9 @@ export class UserService extends BaseService<User> {
       );
       const userInfo = new UserResponse();
       userInfo.id = user.id;
+      userInfo.firstName = user.firstName;
+      userInfo.lastName = user.lastName;
+      userInfo.avatar = user.avatar;
       userInfo.email = user.email;
       userInfo.role = user.userRole;
       return { accessToken, refreshToken, userInfo };

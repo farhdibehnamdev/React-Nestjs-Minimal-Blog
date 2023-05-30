@@ -5,7 +5,10 @@ export type FormData = {
 };
 
 export type user = {
-  id: number;
+  id: string;
+  firstName: string;
+  lastName: string;
+  avatar: string;
   email: string;
   role: string;
 };
