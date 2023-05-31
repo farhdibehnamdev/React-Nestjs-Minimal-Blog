@@ -98,18 +98,7 @@ const Profile = function () {
           onSubmit={handleSubmit((data: FormUploadData) => onSubmit(data))}
         >
           <Grid container justifyContent="space-around" alignItems="center">
-            <Grid
-              item
-              xl={3}
-              md={3}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <AvatarUpload currentUser={profileData} register={register} />
-            </Grid>
+            <AvatarUpload currentUser={profileData} register={register} />
             <Grid item xl={8} md={8}>
               <Grid
                 item
