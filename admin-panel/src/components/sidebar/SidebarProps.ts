@@ -3,6 +3,7 @@ export interface SidebarProps {
   menuTitle: string;
   menuIconMUI: any;
   path: string;
+  children: SidebarProps[] | null | JSX.Element;
 }
 
 export interface MenuListProps {
