@@ -29,5 +29,6 @@ export class Message {
   sender: User;
 
   @ManyToMany(() => User, { onDelete: 'CASCADE' })
+  @JoinTable()
   receivers: User[];
 }

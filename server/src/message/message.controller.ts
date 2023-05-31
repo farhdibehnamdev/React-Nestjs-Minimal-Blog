@@ -25,6 +25,14 @@ import { UserRole } from 'src/user/entities/user.entity';
 export class MessageController {
   constructor(private messageService: MessageService) {}
 
+  @Role(UserRole.USER, UserRole.ADMIN)
+  @UseGuards(AccessTokenGuard, RoleGuard)
+  @Version('1')
+  @Get('/inbox/:senderId')
+  async getReceivedMessages(@Param('senderId') senderId: string) {
+    return await this.messageService.getReceivedMessages(senderId);
+  }
+
   @Version('1')
   @Post()
   async createMessage(
