@@ -14,8 +14,10 @@ import Profile from "src/components/profile/Profile";
 import ProtectedRoute, {
   PublicRoute,
 } from "src/components/protectedRoute/ProtectedRoute";
+import ReceivedMessages from "src/components/receivedMessages/ReceivedMessages";
 import ResetPassword from "src/components/resetPassword/ResetPassword";
 import SendMessage from "src/components/sendMessage/SendMessage";
+import SentMessages from "src/components/sentMessages/SentMessages";
 import SignIn from "src/components/signin/SignIn";
 import SignUp from "src/components/signup/SignUp";
 import AddTag from "src/components/tags/AddTag";
@@ -74,6 +76,8 @@ export const RouteApp = function () {
             <Route path="edit/:id" element={<EditTag />} />
           </Route>
           <Route path="send-message" element={<SendMessage />} />
+          <Route path="sent-messages" element={<SentMessages />} />
+          <Route path="received-messages" element={<ReceivedMessages />} />
           <Route element={<ProtectedRoute roles={["admin", "user"]} />}>
             <Route path="user-management" element={<UserManagementLayout />}>
               <Route index element={<UserManagement />} />
