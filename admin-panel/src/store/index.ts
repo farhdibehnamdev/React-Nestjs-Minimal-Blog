@@ -18,6 +18,7 @@ import {
   REGISTER,
 } from "redux-persist";
 import { profileReducer } from "./slices/profile/profileSlice";
+import { messageReducer } from "./slices/message/messageSlice";
 const persistConfig = {
   key: "root",
   version: 1,
@@ -34,6 +35,7 @@ const reducer = combineReducers({
   users: userReducer,
   auth: authReducer,
   profile: profileReducer,
+  messages: messageReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);

@@ -23,20 +23,6 @@ export const messageSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers(builder) {
-    //============ Fetch Sent Messages =================
-    builder.addCase(fetchSentMessages.pending, (state, action) => {
-      state.isLoading = true;
-    });
-    builder.addCase(fetchSentMessages.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.data = action.payload.data;
-      state.count = action.payload.count;
-    });
-    builder.addCase(fetchSentMessages.rejected, (state, action) => {
-      state.isLoading = false;
-      state.error = action.error as string;
-    });
-
     //============ Fetch Received Messages =================
 
     builder.addCase(fetchReceivedMessages.pending, (state, action) => {
@@ -65,3 +51,5 @@ export const messageSlice = createSlice({
     });
   },
 });
+
+export const messageReducer = messageSlice.reducer;
