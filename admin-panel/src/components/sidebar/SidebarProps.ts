@@ -3,7 +3,14 @@ export interface SidebarProps {
   menuTitle: string;
   menuIconMUI: any;
   path: string;
-  children: SidebarProps[] | null | JSX.Element;
+  submenu?: SubmenuProps[];
+}
+
+export interface SubmenuProps {
+  id: number;
+  path: string;
+  menuTitle: string;
+  menuIconMUI: JSX.Element;
 }
 
 export interface MenuListProps {

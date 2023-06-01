@@ -231,6 +231,18 @@ const sidebarStyle: SxProps = {
         justifyContent: "center",
       },
     },
+    ".listSubmenuStyleItemButton": {
+      minHeight: 48,
+      px: 2.5,
+      marginRight: "20px",
+      paddingLeft: "50px",
+      width: "100%",
+
+      ".listStyleItemIcon": {
+        minWidth: 0,
+        justifyContent: "center",
+      },
+    },
     ".listStyleItemButton.menuSelected": {
       ".menuName .navText": {
         color: "#004deb",

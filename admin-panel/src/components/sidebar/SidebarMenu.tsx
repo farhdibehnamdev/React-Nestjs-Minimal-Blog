@@ -1,14 +1,26 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { MenuListProps } from "./SidebarProps";
-import { Tooltip, useMediaQuery, useTheme } from "@mui/material";
+import { MenuListProps, SidebarProps } from "./SidebarProps";
+import {
+  Collapse,
+  List,
+  Tooltip,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import menuData from "./SidebarMenuData";
 import { Link } from "react-router-dom";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 
 export const MenuList = function ({ toggle }: MenuListProps): JSX.Element {
   const theme = useTheme();
+  const [open, setOpen] = useState(false);
+  const handleClick = function () {
+    setOpen(!open);
+  };
   const mediaQ = useMediaQuery(theme.breakpoints.up("lg"));
   const [activeMenu, setActiveMenu] = React.useState<any>({});
   const handleToggleMenu = useCallback((id: any) => {
@@ -32,7 +44,10 @@ export const MenuList = function ({ toggle }: MenuListProps): JSX.Element {
                 className={`listStyleItemButton ${
                   activeMenu[item.id] ? "menuSelected" : ""
                 }`}
-                onClick={() => handleToggleMenu(item.id)}
+                onClick={() => {
+                  handleToggleMenu(item.id);
+                  handleClick();
+                }}
                 sx={{
                   justifyContent: toggle ? "initial" : "center",
                 }}
@@ -50,7 +65,49 @@ export const MenuList = function ({ toggle }: MenuListProps): JSX.Element {
                   primary={item.menuTitle}
                   sx={{ opacity: toggle ? 1 : 0 }}
                 />
+                {item.submenu?.length! > 0 ? (
+                  open ? (
+                    <ExpandLess />
+                  ) : (
+                    <ExpandMore />
+                  )
+                ) : null}
               </ListItemButton>
+              {item.submenu && (
+                <Collapse in={open} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    {item.submenu.map((child: SidebarProps) => {
+                      return (
+                        <Link
+                          className="navText"
+                          to={child.path}
+                          key={child.id}
+                        >
+                          <ListItemButton
+                            sx={{ pl: 6 }}
+                            className={`listStyleItemButton ${
+                              activeMenu[child.id] ? "menuSelected" : ""
+                            }`}
+                            onClick={() => handleToggleMenu(child.id)}
+                          >
+                            <ListItemIcon
+                              sx={{
+                                mr: toggle ? -2 : "auto",
+                              }}
+                            >
+                              {child.menuIconMUI}
+                            </ListItemIcon>
+                            <ListItemText
+                              primary={child.menuTitle}
+                              sx={{ opacity: toggle ? 1 : 0 }}
+                            />
+                          </ListItemButton>
+                        </Link>
+                      );
+                    })}
+                  </List>
+                </Collapse>
+              )}
             </Link>
           </Tooltip>
         );

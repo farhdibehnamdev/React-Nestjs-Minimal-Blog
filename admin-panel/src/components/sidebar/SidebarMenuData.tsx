@@ -6,56 +6,61 @@ import FormatListBulletedOutlinedIcon from "@mui/icons-material/FormatListBullet
 import FeaturedPlayListOutlinedIcon from "@mui/icons-material/FeaturedPlayListOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { SidebarProps } from "./SidebarProps";
-import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
+import InboxIcon from "@mui/icons-material/MoveToInbox";
 import SendIcon from "@mui/icons-material/Send";
+import DraftsIcon from "@mui/icons-material/Drafts";
 const menuData: SidebarProps[] = [
   {
     id: 1,
     path: "/",
     menuTitle: "داشبورد",
     menuIconMUI: <DashboardOutlinedIcon />,
-    children: null,
+    submenu: [],
   },
   {
     id: 2,
     path: "/posts",
     menuTitle: "پست ها",
     menuIconMUI: <FormatListBulletedOutlinedIcon />,
-    children: null,
+    submenu: [],
   },
   {
     id: 3,
     path: "/categories",
     menuTitle: "فهرست ها",
     menuIconMUI: <FeaturedPlayListOutlinedIcon />,
-    children: null,
+    submenu: [],
   },
   {
     id: 4,
     path: "/tags",
     menuTitle: "تگ ها",
     menuIconMUI: <LocalOfferOutlinedIcon />,
-    children: null,
+    submenu: [],
   },
   {
     id: 5,
-    path: "/send-message",
-    menuTitle: "ارسال پیام",
+    path: "#",
+    menuTitle: "پیام ها",
     menuIconMUI: <EmailOutlinedIcon />,
-    children: [
+    submenu: [
       {
-        id: 1,
-        path: "/sent-messages",
-        menuTitle: "پیام های ارسال شده",
-        menuIconMUI: <EmailOutlinedIcon />,
-        children: <SendIcon />,
+        id: 51,
+        path: "/send-message",
+        menuTitle: "ارسال پیام",
+        menuIconMUI: <SendIcon />,
       },
       {
-        id: 2,
+        id: 52,
+        path: "/sent-messages",
+        menuTitle: "پیام های ارسال شده",
+        menuIconMUI: <DraftsIcon />,
+      },
+      {
+        id: 53,
         path: "/received-messages",
         menuTitle: "پیام های دریافت شده",
-        menuIconMUI: <EmailOutlinedIcon />,
-        children: <MarkEmailReadIcon />,
+        menuIconMUI: <InboxIcon />,
       },
     ],
   },
@@ -64,14 +69,14 @@ const menuData: SidebarProps[] = [
     path: "/user-management",
     menuTitle: "مدیریت کاربران",
     menuIconMUI: <ManageAccountsOutlinedIcon />,
-    children: null,
+    submenu: [],
   },
   {
     id: 7,
     path: "/sign-out",
     menuTitle: "خروج",
     menuIconMUI: <LogoutIcon />,
-    children: null,
+    submenu: [],
   },
 ];
 
