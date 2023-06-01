@@ -1,26 +1,33 @@
 import { messagesDataType } from "src/components/common/common.type";
 import { paginationOptionType, URLS } from "src/config/constants";
 import api from "../api";
+import { AxiosResponse } from "axios";
 
 export type messageTitleAndPagination = {
   pagination: paginationOptionType;
   title: string;
 };
 
-export const fetchMessagesData = async (
+export type receivedMessagesDataType = {
+  data: messagesDataType[];
+  count: number;
+};
+export const fetchReceivedMessagesApi = async (
   all: boolean,
-  userId: string,
-  typeMessage: string,
+  id: string,
   paginationTitle?: messageTitleAndPagination
-) => {
+): Promise<AxiosResponse<receivedMessagesDataType>> => {
   const params = { all };
   if (paginationTitle) {
     const { pagination, title } = paginationTitle;
     Object.assign(params, { pagination, title });
   }
-  return await api.get<messagesDataType>(URLS.messageUrl, {
-    params: { typeMessage, userId },
-  });
+  return await api.get<receivedMessagesDataType>(
+    `${URLS.receivedMessageUrl}${id}`,
+    {
+      params,
+    }
+  );
 };
 
 export const createMessageApi = async (
