@@ -60,37 +60,6 @@ export class CategoryController {
     );
   }
 
-  // @Version('1')
-  // @Get()
-  // async findAll(
-  //   @Query('all') all: boolean,
-  //   @Query() paginationTitle: paginationTitleType,
-  // ) {
-  //   if (all) {
-  //     return await this.categoryService.findAll(
-  //       all,
-  //       paginationTitle.pagination,
-  //       {
-  //         title: paginationTitle.title,
-  //       },
-  //     );
-  //   } else if (
-  //     paginationTitle.title === null ||
-  //     paginationTitle.title === undefined ||
-  //     paginationTitle.title === ''
-  //   ) {
-  //     return this.categoryService.paginate(paginationTitle.pagination);
-  //   } else {
-  //     const searchCriteria: FindOptionsWhere<Category> = {
-  //       title: Like(`%${paginationTitle.title}%`),
-  //     };
-  //     return this.categoryService.findAll(
-  //       all,
-  //       paginationTitle.pagination,
-  //       searchCriteria,
-  //     );
-  //   }
-  // }
   @Role(UserRole.USER, UserRole.ADMIN)
   @UseGuards(AccessTokenGuard, RoleGuard)
   @Version('1')
