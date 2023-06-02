@@ -1,11 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import User from 'src/user/entities/user.entity';
-import { Repository } from 'typeorm';
+import { FindManyOptions, FindOptionsWhere, Repository } from 'typeorm';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { Message } from './entities/message.entity';
+import { BaseService } from 'src/common/Base.service';
+import { PaginationQueryDto } from 'src/common/pagination-query.dto';
 
 export class MessageViewDto {
+  id: number;
   firstName: string;
   lastName: string;
   messageTitle: string;
@@ -62,16 +70,68 @@ export class MessageService {
       .addSelect('sender.firstName', 'senderFirstName')
       .addSelect('sender.lastName', 'senderLastName')
       .getRawMany();
+
     const receivedMessages = messages.map((msg) => {
       let messageView = new MessageViewDto();
-      (messageView.messageTitle = msg.message_messageTitle),
+      (messageView.id = msg.message_id),
+        (messageView.messageTitle = msg.message_messageTitle),
         (messageView.messageBody = msg.message_messageBody),
         (messageView.firstName = msg.senderFirstName),
         (messageView.lastName = msg.senderLastName),
         (messageView.receivedDate = msg.message_timeStamp);
       return messageView;
     });
-    return receivedMessages;
+
+    return { data: receivedMessages, count: receivedMessages.length };
+  }
+
+  async paginate(paginationQuery: PaginationQueryDto, id: string) {
+    try {
+      const { limit, offset } = paginationQuery;
+      const newSkip = offset <= 1 ? 0 : (offset - 1) * limit;
+
+      let options: FindManyOptions = {
+        skip: newSkip,
+        take: limit,
+      };
+      let { data, count } = await this.getReceivedMessages(id);
+
+      data = data.slice(options.skip, options.skip + options.take);
+      return { data, count };
+    } catch (error) {
+      throw new HttpException(
+        'مشکلی در سرور رخ داده است لطفآ بعدآ دوباره تلاش نمایید',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async findAll(
+    id: string,
+    all: boolean,
+    paginationQuery: PaginationQueryDto,
+    searchCriteria: FindOptionsWhere<Message>,
+  ) {
+    if (all) {
+      const { data, count } = await this.getReceivedMessages(id);
+      return { data, count };
+    } else {
+      const { limit = 5, offset = 0 } =
+        paginationQuery === undefined ? {} : paginationQuery;
+
+      const newSkip = offset <= 1 ? 0 : (offset - 1) * limit;
+
+      let options: FindManyOptions = {
+        skip: newSkip,
+        take: limit,
+        where: searchCriteria,
+      };
+
+      let { data, count } = await this.getReceivedMessages(id);
+      data = data.slice(options.skip, options.skip + options.take);
+      if (!data) throw new NotFoundException("There isn't any Messages!!");
+      return { data, count };
+    }
   }
 
   async getMessagesByReceiverId(receiverId: number) {
