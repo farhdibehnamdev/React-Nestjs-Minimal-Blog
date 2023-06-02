@@ -14,7 +14,9 @@ import Profile from "src/components/profile/Profile";
 import ProtectedRoute, {
   PublicRoute,
 } from "src/components/protectedRoute/ProtectedRoute";
+import MessageView from "src/components/receivedMessages/MessageView";
 import ReceivedMessages from "src/components/receivedMessages/ReceivedMessages";
+import ReceivedMessagesLayout from "src/components/receivedMessages/ReceivedMessagesLayout";
 import ResetPassword from "src/components/resetPassword/ResetPassword";
 import SendMessage from "src/components/sendMessage/SendMessage";
 import SentMessages from "src/components/sentMessages/SentMessages";
@@ -77,7 +79,10 @@ export const RouteApp = function () {
           </Route>
           <Route path="send-message" element={<SendMessage />} />
           <Route path="sent-messages" element={<SentMessages />} />
-          <Route path="received-messages" element={<ReceivedMessages />} />
+          <Route path="received-messages" element={<ReceivedMessagesLayout />}>
+            <Route index element={<ReceivedMessages />} />
+            <Route path="edit/:id" element={<MessageView />} />
+          </Route>
           <Route element={<ProtectedRoute roles={["admin", "user"]} />}>
             <Route path="user-management" element={<UserManagementLayout />}>
               <Route index element={<UserManagement />} />
