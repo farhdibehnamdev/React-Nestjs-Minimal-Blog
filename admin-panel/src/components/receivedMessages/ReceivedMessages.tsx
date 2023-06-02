@@ -46,6 +46,14 @@ const columns = [
     width: 30,
     type: "string",
   },
+
+  {
+    colId: 6,
+    field: "readMessage",
+    headerName: "",
+    width: 30,
+    type: "readMessage",
+  },
 ];
 const ReceivedMessages = function () {
   const { userInfo } = useAppSelector((state) => state.auth);
@@ -55,12 +63,12 @@ const ReceivedMessages = function () {
 
   useEffect(() => {
     doFetchMessages({ all: false, offset: 0, limit: 5, id: userInfo?.id });
-  }, []);
+  }, [doFetchMessages, userInfo?.id]);
 
   return (
     <>
       <Grid flexDirection="column" mb={5.2}>
-        <h1>تگ ها</h1>
+        <h1>پیام های دریافت شده</h1>
         <Breadcrumbs {...breadcrumbTitles} />
       </Grid>
       <DataTable
@@ -70,6 +78,7 @@ const ReceivedMessages = function () {
         thunkFetch={fetchReceivedMessages}
         typeOperation="پیام های دریافت شده"
         dataSelector={messagesDataSelector}
+        currentUser={userInfo?.id}
       />
     </>
   );
