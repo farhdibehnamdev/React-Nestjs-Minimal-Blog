@@ -1,25 +1,29 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { messagesDataType } from "src/components/common/common.type";
-import { fetchMessagesData } from "src/config/api/messagesApi/messagesApi";
-import { fetchMessagesArgs } from "./messages.type";
+import { AxiosResponse } from "axios";
+import {
+  fetchReceivedMessagesApi,
+  receivedMessagesDataType,
+} from "src/config/api/messagesApi/messagesApi";
 
-export const fetchReceivedMessages = createAsyncThunk<
-  { data: messagesDataType[]; count: number },
-  fetchMessagesArgs,
-  { rejectValue: { errorMessage: string } }
->("receivedMessages/fetch", async ({ args, thunkApi }: any) => {
-  try {
-    const { all = false, userId, messageType, pagination, title } = args;
-    if (userId !== undefined && messageType !== undefined) {
-      const response = await fetchMessagesData(all, userId, messageType, {
-        pagination,
-        title,
-      });
+export const fetchReceivedMessages = createAsyncThunk(
+  "receivedMessages/fetch",
+  async (args: any, { rejectWithValue }) => {
+    try {
+      let response: AxiosResponse<receivedMessagesDataType>;
+      const { all, id, offset, limit, title } = args;
+
+      if (!all) {
+        response = await fetchReceivedMessagesApi(false, id, {
+          title,
+          pagination: { offset, limit },
+        });
+      } else {
+        response = await fetchReceivedMessagesApi(true, id);
+      }
+
       return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error);
     }
-  } catch (error) {
-    return thunkApi.rejectWithValue({
-      errorMessage: "مشکلی در دریافت اطلاعات وجود دارد",
-    });
   }
-});
+);
