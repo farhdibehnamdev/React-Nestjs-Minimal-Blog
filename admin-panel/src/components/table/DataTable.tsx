@@ -33,6 +33,7 @@ const DataTable = function ({
   thunkFetch,
   thunkRemove,
   dataSelector,
+  currentUser,
 }: any) {
   const [state, dispatch] = useReducer(DataTableReducer, initialState);
   const [doFetchItems, isFetchLoading, isFetchCreatedError] =
@@ -41,14 +42,14 @@ const DataTable = function ({
   const _DATA = usePagination(rows, state.perPage);
   const handleChange = async function (page: number = state.offset) {
     dispatch({ type: SET_OFFSET, payload: page });
-    await doFetchItems({ offset: page, limit: state.perPage });
+    await doFetchItems({ offset: page, limit: state.perPage, id: currentUser });
     dispatch({ type: SET_FILTER_DATA, payload: undefined });
     _DATA.jump(page);
   };
   const handleChangeRowCount = function (rowCount: number = state.perPage) {
     dispatch({ type: SET_OFFSET, payload: 1 });
     dispatch({ type: SET_PER_PAGE, payload: rowCount });
-    doFetchItems({ all: false, offset: 1, limit: rowCount });
+    doFetchItems({ all: false, offset: 1, limit: rowCount, id: currentUser });
     _DATA.jump(1);
   };
 
@@ -61,6 +62,7 @@ const DataTable = function ({
             all: false,
             offset: pageNumber,
             limit: state.perPage,
+            id: currentUser,
           });
           dispatch({ type: SET_OFFSET, payload: pageNumber });
         }
@@ -70,7 +72,14 @@ const DataTable = function ({
     return () => {
       isMounted = false;
     };
-  }, [state.offset, rows, doFetchItems, state.perPage, pageNumber]);
+  }, [
+    state.offset,
+    rows,
+    doFetchItems,
+    state.perPage,
+    pageNumber,
+    currentUser,
+  ]);
   return (
     <>
       <FilterTable

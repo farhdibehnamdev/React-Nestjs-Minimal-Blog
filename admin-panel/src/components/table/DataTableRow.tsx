@@ -13,6 +13,7 @@ import { tableRowStyle } from "./DataTable.style";
 import { UserRole } from "src/config/api/usersApi/usersApi";
 import { chipStyle } from "./DataTable.style";
 import { useAppSelector } from "src/store/hooks";
+import MarkEmailUnreadOutlinedIcon from "@mui/icons-material/MarkEmailUnreadOutlined";
 const DataTableRow = function ({
   columns,
   row,
@@ -77,6 +78,29 @@ const DataTableRow = function ({
     );
   };
 
+  const readMessage = ({ row, column }: any) => {
+    return (
+      <Grid textAlign="center">
+        <Grid item>
+          <ButtonGroup
+            disableElevation
+            variant="contained"
+            aria-label="Disabled elevation buttons"
+          >
+            <Button
+              variant="contained"
+              sx={{ background: "#27ed8d", color: "#2d2c2c" }}
+              endIcon={<MarkEmailUnreadOutlinedIcon />}
+              onClick={() => handleEdit(row.id, row)}
+            >
+              خواندن پیام
+            </Button>
+          </ButtonGroup>
+        </Grid>
+      </Grid>
+    );
+  };
+
   const getCellContent = function (row: any, column: any) {
     switch (column.type) {
       case "boolean":
@@ -95,6 +119,8 @@ const DataTableRow = function ({
         return bodyColumn({ row, column });
       case "enum":
         return enumColumn({ row, column });
+      case "readMessage":
+        return readMessage({ row, column });
       default:
         break;
     }

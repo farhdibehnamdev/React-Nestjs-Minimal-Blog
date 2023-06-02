@@ -28,7 +28,9 @@ const DataTableBody: React.FC<IDataTableProps> = function ({
     setState(row);
   };
 
-  const handleEdit = (id: number) => navigate(`edit/${id}`, { replace: true });
+  const handleEdit = (id: number, data: any) => {
+    navigate(`edit/${id}`, { state: data, replace: true });
+  };
 
   return (
     <>
@@ -45,7 +47,7 @@ const DataTableBody: React.FC<IDataTableProps> = function ({
         />
       )}
       <TableBody>
-        {data.map((row: any, index: number) => (
+        {data?.map((row: any, index: number) => (
           <DataTableRow
             key={row.id}
             row={row}
