@@ -3,6 +3,7 @@ export const URLS = {
   categoryUrl: "api/category/",
   postUrl: "api/article/",
   userUrl: "auth/users",
+  receivedMessageUrl: "api/message/inbox/",
   messageUrl: "api/message",
   signUpUrl: "auth/signup",
   signinUrl: "auth/signin",

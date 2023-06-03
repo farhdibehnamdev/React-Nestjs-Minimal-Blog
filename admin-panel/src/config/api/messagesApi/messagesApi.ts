@@ -19,8 +19,7 @@ export const fetchReceivedMessagesApi = async (
 ): Promise<AxiosResponse<receivedMessagesDataType>> => {
   const params = { all };
   if (paginationTitle) {
-    const { pagination, title } = paginationTitle;
-    Object.assign(params, { pagination, title });
+    Object.assign(params, paginationTitle);
   }
   return await api.get<receivedMessagesDataType>(
     `${URLS.receivedMessageUrl}${id}`,
