@@ -1,7 +1,8 @@
 export type messagesDataType = {
   id?: number;
-  senderId: string;
+  firstName: string;
+  lastName: string;
   messageTitle: string;
   messageBody: string;
-  receivers: string[];
+  receivedDate: Date;
 };
