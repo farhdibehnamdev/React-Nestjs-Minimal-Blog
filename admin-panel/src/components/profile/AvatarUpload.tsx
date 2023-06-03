@@ -7,9 +7,14 @@ import { useAppSelector } from "src/store/hooks";
 
 const AvatarUpload = function ({ currentUser, register }: any) {
   const { userInfo } = useAppSelector((state) => state.auth);
-  const { image } = !isJSON(currentUser?.avatar!)
-    ? (currentUser?.avatar! as any)
-    : (JSON.parse(currentUser?.avatar!) as any);
+  const { profileData } = useAppSelector((state) => state.profile);
+  const img = profileData?.avatar || currentUser?.avatar;
+
+  const { image } = img
+    ? !isJSON(img)
+    : (img as any)
+    ? (JSON.parse(img) as any)
+    : { image: "" };
 
   const [imagePreview, setImagePreview] = useState<string | null>(
     image ? generateThumbnail(image) : ""
