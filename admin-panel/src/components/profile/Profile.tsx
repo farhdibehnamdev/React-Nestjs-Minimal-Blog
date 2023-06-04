@@ -36,9 +36,13 @@ const Profile = function () {
     selectUserById(state, userInfo?.id as string)
   );
 
-  const { image } = !isJSON(currentUser?.avatar!)
-    ? (currentUser?.avatar! as any)
-    : (JSON.parse(currentUser?.avatar!) as any);
+  const img = profileData?.avatar || currentUser?.avatar;
+
+  const { image } = img
+    ? !isJSON(img!)
+    : (img as any)
+    ? (JSON.parse(img) as any)
+    : { image: "" };
 
   const {
     register,
