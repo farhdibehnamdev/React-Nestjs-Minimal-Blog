@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { messagesDataType } from "src/components/common/common.type";
-import { fetchMessagesData } from "src/config/api/messagesApi/messagesApi";
 import { fetchMessagesArgs } from "./messages.type";
+import { fetchSentMessagesApi } from "src/config/api/messagesApi/messagesApi";
 
 export const fetchSentMessages = createAsyncThunk<
   { data: messagesDataType[]; count: number },
@@ -9,8 +9,8 @@ export const fetchSentMessages = createAsyncThunk<
   { rejectValue: { errorMessage: string } }
 >("message/fetchSentMessages", async ({ args, thunkApi }: any) => {
   try {
-    const { all, userId, messageType, pagination, title } = args;
-    const response = await fetchMessagesData(all, userId, messageType, {
+    const { all, id, pagination, title } = args;
+    const response = await fetchSentMessagesApi(all, id, {
       pagination: pagination,
       title: title,
     });
